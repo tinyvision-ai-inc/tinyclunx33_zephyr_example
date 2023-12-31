@@ -13,7 +13,7 @@
 		};
 
 		zephyr_udc0: usbd@b0000000 {
-			compatible = "lattice,usb23-usbd";
+			compatible = "lattice,usb23";
 			reg = <0xb0000000 0x1000000
 				0xe0004000 0x4
 				0xe0004004 0x4
