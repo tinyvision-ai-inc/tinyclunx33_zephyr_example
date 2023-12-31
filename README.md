@@ -38,5 +38,5 @@ at the expected offset:
 
 ```
 ecpprog -o 0x00000000 tinyclunx33_zephyr_example/bin/fpga_top_som_impl.devcon23.bit
-expprog -o 0x00100000 build/zephyr/zephyr.bin
+ecpprog -o 0x00100000 build/zephyr/zephyr.bin
 ```
