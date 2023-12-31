@@ -1,0 +1,18 @@
+# Copyright (c) 2023 tinyVision.ai Inc.
+# SPDX-License-Identifier: MIT
+
+manifest:
+
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+    - name: tinyvision-ai-inc
+      url-base: https://github.com/tinyvision-ai-inc
+
+  projects:
+    - name: zephyr
+      remote: tinyvision-ai-inc
+      revision: main
+      import:
+        name-allowlist:
+          - zephyr
