@@ -12,7 +12,7 @@ manifest:
   projects:
     - name: zephyr
       remote: tinyvision-ai-inc
-      revision: main
+      revision: tinyclunx33
       import:
         name-allowlist:
           - zephyr
