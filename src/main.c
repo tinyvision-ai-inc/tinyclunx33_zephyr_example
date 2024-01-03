@@ -51,9 +51,10 @@ int main(void)
 	err = usbd_enable(&usbd_dev);
 	__ASSERT_NO_MSG(err == 0);
 
+	/* As soon as interrupts are enabled in the hardware architecture, this
+	 * can be removed */
 	while (1) {
-		LOG_DBG(".");
-		k_sleep(K_MSEC(2000));
+		k_sleep(K_MSEC(10));
 		usb23_irq_handler(DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)));
 	}
 
