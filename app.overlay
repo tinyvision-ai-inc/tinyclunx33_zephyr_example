@@ -2,7 +2,7 @@
 	chosen {
 		zephyr,flash = &flash0;
 		zephyr,console = &uart0;
-		zephyr,shell-uart = &uart1;
+		zephyr,shell-uart = &uart0;
 	};
 
 	soc {
