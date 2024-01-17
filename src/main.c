@@ -10,10 +10,11 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
 USBD_DEVICE_DEFINE(usbd_dev, DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)), 0x1209, 0x0001);
 USBD_DEVICE_QUALIFIER_DEFINE(usbd_device_qualifier);
+USBD_BOS_DEFINE(usbd_bos);
 USBD_CONFIGURATION_DEFINE(usbd_config, USB_SCD_SELF_POWERED, 200);
 USBD_DESC_LANG_DEFINE(usbd_lang);
-//USBD_DESC_MANUFACTURER_DEFINE(usbd_manufacturer, "tinyVision.ai");
-USBD_DESC_PRODUCT_DEFINE(usbd_product, "-> tinyCLUNX33 <-");
+USBD_DESC_MANUFACTURER_DEFINE(usbd_manufacturer, "tinyVision.ai");
+USBD_DESC_PRODUCT_DEFINE(usbd_product, "tinyCLUNX33");
 //USBD_DESC_SERIAL_NUMBER_DEFINE(usbd_serial_number, "0123456789ABCDEF");
 
 void si5351_i2c_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t reg_data)
@@ -37,16 +38,17 @@ int main(void)
 	uint8_t reg_model_msb = 0;
 
 	err = usbd_add_descriptor(&usbd_dev, &usbd_device_qualifier);
+	err |= usbd_add_descriptor(&usbd_dev, &usbd_bos);
 	err |= usbd_add_descriptor(&usbd_dev, &usbd_lang);
-	//err |= usbd_add_descriptor(&usbd_dev, &usbd_manufacturer);
+	err |= usbd_add_descriptor(&usbd_dev, &usbd_manufacturer);
 	err |= usbd_add_descriptor(&usbd_dev, &usbd_product);
 	//err |= usbd_add_descriptor(&usbd_dev, &usbd_serial_number);
 	err |= usbd_add_configuration(&usbd_dev, &usbd_config);
 	err |= usbd_register_class(&usbd_dev, "cdc_acm_0", 1);
 	__ASSERT_NO_MSG(err == 0);
 
-	__ASSERT_NO_MSG(err == 0);
 	err = usbd_init(&usbd_dev);
+	__ASSERT_NO_MSG(err == 0);
 
 	err = usbd_enable(&usbd_dev);
 	__ASSERT_NO_MSG(err == 0);
