@@ -53,3 +53,5 @@ start.
 
 Then, an USB device should appear, recognized as a USB serial console, with
 an access to the Zephyr shell.
+See the [doc on Zephyr](https://tinyclunx33.tinyvision.ai/md_zephyr.html) for
+how to access them.
