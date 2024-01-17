@@ -30,6 +30,17 @@ As a result, `build/zephyr/zephyr.bin` should be created, ready  to be loaded
 into the SoM flash as described below.
 
 
+## Obtain a matching RTL file from a release
+
+You can download the latest release of the
+[RTL reference design](https://tinyclunx33.tinyvision.ai/md_rtl_reference_design.html)
+from the
+[release page](https://github.com/tinyvision-ai-inc/tinyCLUNX33/releases/).
+
+It is also possible, if desired, to
+[rebuild it from source](https://github.com/tinyvision-ai-inc/tinyCLUNX33/tree/main/RTL/).
+
+
 ## Loading the images to the flash
 
 First, connect both USB cables onto the tinyCLUNX33 devboard featuring  a
@@ -43,8 +54,8 @@ documentation, it is possible to load the FPGA and Zephyr binaries to the flash
 at the expected offset:
 
 ```
-ecpprog -o 0x00000000 tinyclunx33_zephyr_example/bin/fpga_top_som_impl.devcon23.bit
-ecpprog -o 0x00100000 build/zephyr/zephyr.bin
+ecpprog -s -o 0x00000000 tinyclunx33_rtl_reference_design_v0.1.bit
+ecpprog -s -o 0x00100000 build/zephyr/zephyr.bin
 ```
 
 Once both binaries are loaded, it is necessary to unplug the FTDI Debug USB
