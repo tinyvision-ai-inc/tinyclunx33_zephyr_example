@@ -12,6 +12,7 @@ going to be restructured.
 
 These instructions will be updated once the new RTL is available.
 
+
 ## Building zephyr.bin
 
 ```
@@ -27,6 +28,7 @@ west build -p -b litex_vexriscv tinyclunx33_zephyr_example
 
 As a result, `build/zephyr/zephyr.bin` should be created, ready  to be loaded
 into the SoM flash as described below.
+
 
 ## Loading the images to the flash
 
