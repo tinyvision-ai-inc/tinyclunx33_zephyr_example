@@ -21,7 +21,7 @@ mkdir "$HOME/zephyrproject"
 cd "$HOME/zephyrproject"
 
 # Initialize the repos in that workspace
-west init -m https://github.com/josuah/tinyclunx33_zephyr_example
+west init -m https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example
 west update
 west build -p -b litex_vexriscv tinyclunx33_zephyr_example
 ```
