@@ -23,7 +23,7 @@
 				"ev_pending",
 				"ev_enable";
 			num-bidir-endpoints = <4>;
-			maximum-speed = "full-speed";
+			maximum-speed = "super-speed";
 			interrupts = <0x0 0>;
 			interrupt-names = "usb";
 			interrupt-parent = <&intc0>;
