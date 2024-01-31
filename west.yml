@@ -6,13 +6,13 @@ manifest:
   remotes:
     - name: zephyrproject-rtos
       url-base: https://github.com/zephyrproject-rtos
-    - name: tinyvision-ai-inc
-      url-base: https://github.com/tinyvision-ai-inc
+    - name: Emcraft
+      url-base: https://github.com/EmcraftSystems
 
   projects:
-    - name: zephyr
-      remote: tinyvision-ai-inc
-      revision: tinyclunx33
+    - name: zephyr-tnv
+      remote: Emcraft
+      revision: emcraft-dev
       import:
         name-allowlist:
           - zephyr
