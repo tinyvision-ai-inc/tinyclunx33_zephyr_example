@@ -17,15 +17,16 @@ USBD_DESC_MANUFACTURER_DEFINE(my_usbd_manufacturer, "tinyVision.ai");
 USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 //USBD_DESC_SERIAL_NUMBER_DEFINE(my_usbd_serial_number, "0123456789ABCDEF");
 
-struct my_usbd_bos {
+struct {
 	struct usb_bos_descriptor bos;
 	struct usb_bos_capability_lpm lpm;
-} __packed bos_desc_my_usbd_bos = {
+	struct usb_bos_capability_superspeed_usb superspeed_usb;
+} __packed my_usbd_bos_desc = {
 	.bos = {
 		.bLength = sizeof(struct usb_bos_descriptor),
 		.bDescriptorType = USB_DESC_BOS,
-		.wTotalLength = sizeof(struct my_usbd_bos),
-		.bNumDeviceCaps = 1,
+		.wTotalLength = sys_cpu_to_le16(sizeof(my_usbd_bos_desc)),
+		.bNumDeviceCaps = 2,
 	},
 	.lpm = {
 		.bLength = sizeof(struct usb_bos_capability_lpm),
@@ -33,9 +34,19 @@ struct my_usbd_bos {
 		.bDevCapabilityType = USB_BOS_CAPABILITY_EXTENSION,
 		.bmAttributes = USB_BOS_ATTRIBUTES_LPM | USB_BOS_ATTRIBUTES_BESL,
 	},
+	.superspeed_usb = {
+		.bLength = sizeof(struct usb_bos_capability_superspeed_usb),
+		.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
+		.bDevCapabilityType = USB_BOS_CAPABILITY_SUPERSPEED_USB,
+		.bmAttributes = USB_BOS_ATTRIBUTES_LPM | USB_BOS_ATTRIBUTES_BESL,
+		.wSpeedsSupported = sys_cpu_to_le16(USB_BOS_SPEED_SUPERSPEED_GEN1),
+		.bFunctionnalSupport = USB_BOS_SPEED_SUPERSPEED_GEN1,
+		.bU1DevExitLat = 10,
+		.wU2DevExitLat = sys_cpu_to_le16(2047),
+	},
 };
 static struct usbd_desc_node my_usbd_bos = {
-	.desc = &bos_desc_my_usbd_bos,
+	.desc = &my_usbd_bos_desc,
 };
 
 char const video_frames[] = {
@@ -52,7 +63,7 @@ int main(void)
 {
 	int err = 0;
 
-	/* Configure the external PLL over I2C, switching teh CPU clock over it.
+	/* Configure the external PLL over I2C, switching the CPU clock over it.
 	 * This is done by hardware, no software config to make that happen. */
 	k_sleep(K_MSEC(100));
 	LOG_INF("Initializing the si5351 PLL");
