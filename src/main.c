@@ -26,7 +26,7 @@ struct {
 		.bLength = sizeof(struct usb_bos_descriptor),
 		.bDescriptorType = USB_DESC_BOS,
 		.wTotalLength = sys_cpu_to_le16(sizeof(my_usbd_bos_desc)),
-		.bNumDeviceCaps = 2,
+		.bNumDeviceCaps = 1, // TODO: this skips superspeed_usb!
 	},
 	.lpm = {
 		.bLength = sizeof(struct usb_bos_capability_lpm),
@@ -92,9 +92,9 @@ int main(void)
 		k_sleep(K_MSEC(10));
 		usb23_irq_handler(DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)));
 
-		if (i == 100) {
-			//cdc_uvc_enqueue_in(video_frames, sizeof(video_frames));
-			i = 0;
+		if (i > 1000) {
+			cdc_uvc_enqueue_in(video_frames, sizeof(video_frames));
+			i = 1000;
 		}
 	}
 
