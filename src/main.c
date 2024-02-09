@@ -4,6 +4,7 @@
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/usb/usbd.h>
 #include <zephyr/logging/log.h>
+#include <app_version.h>
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
 #include "si5351.h"
@@ -16,6 +17,15 @@ USBD_DESC_LANG_DEFINE(usbd_lang);
 USBD_DESC_MANUFACTURER_DEFINE(usbd_manufacturer, "tinyVision.ai");
 USBD_DESC_PRODUCT_DEFINE(usbd_product, "tinyCLUNX33");
 //USBD_DESC_SERIAL_NUMBER_DEFINE(usbd_serial_number, "0123456789ABCDEF");
+
+static int cmd_fw_version(const struct shell *sh, size_t argc, char **argv)
+{
+	char * str = APP_VERSION_STRING;
+	shell_print(sh, "firmware version: %s", str);
+}
+
+SHELL_CMD_REGISTER(fw_version, NULL, "Print firmware version",
+		cmd_fw_version);
 
 void si5351_i2c_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t reg_data)
 {
