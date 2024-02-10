@@ -37,8 +37,11 @@
 			interrupt-parent = <&intc0>;
 			status = "okay";
 
-			uart1: zephyr_cdc_uvc {
-				compatible = "zephyr,cdc-uvc";
+			auto-endpoint = <0x82>;
+			auto-buffer = <0xb1000000 0x400>;
+
+			uart1: zephyr_uvc {
+				compatible = "zephyr,uvc";
 				status = "okay";
 			};
 		};
