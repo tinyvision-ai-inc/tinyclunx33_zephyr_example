@@ -77,7 +77,7 @@ int main(void)
 	err |= usbd_add_descriptor(&my_usbd_dev, &my_usbd_product);
 	//err |= usbd_add_descriptor(&my_usbd_dev, &my_usbd_serial_number);
 	err |= usbd_add_configuration(&my_usbd_dev, &my_usbd_config);
-	err |= usbd_register_class(&my_usbd_dev, "uvc_0", 1);
+	err |= usbd_register_class(&my_usbd_dev, "cdc_uvc_0", 1);
 	__ASSERT_NO_MSG(err == 0);
 
 	err = usbd_init(&my_usbd_dev);
@@ -92,10 +92,10 @@ int main(void)
 		k_sleep(K_MSEC(10));
 		usb23_irq_handler(DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)));
 
-//		if (i > 1000) {
-//			uvc_enqueue_in(video_frames, sizeof(video_frames));
-//			i = 1000;
-//		}
+		if (i > 1000) {
+			cdc_uvc_enqueue_in(video_frames, sizeof(video_frames));
+			i = 1000;
+		}
 	}
 
 	return 0;
