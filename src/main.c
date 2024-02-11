@@ -89,12 +89,15 @@ int main(void)
 	/* As soon as interrupts are enabled in the hardware architecture, this
 	 * can be removed */
 	for (int i = 0;; i++) {
-		k_sleep(K_MSEC(10));
+		//k_sleep(K_MSEC(1));
 		usb23_irq_handler(DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)));
 
-		if (i > 1000) {
+		if (i >= 4000000) {
+			if (i == 4000000) {
+				LOG_INF("Starting CDC data transfer");
+			}
 			cdc_uvc_enqueue_in(video_frames, sizeof(video_frames));
-			i = 1000;
+			i = 4000000;
 		}
 	}
 
