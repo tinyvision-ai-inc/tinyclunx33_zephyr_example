@@ -2,6 +2,7 @@
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/usb/udc.h>
 #include <zephyr/drivers/i2c.h>
+#include <zephyr/drivers/uart.h>
 #include <zephyr/usb/usbd.h>
 #include <zephyr/usb/bos.h>
 #include <zephyr/logging/log.h>
@@ -53,6 +54,8 @@ char const video_frames[] = {
 #include "data/video_frames.h"
 };
 
+extern bool usbd_cdc_uvc_data_terminal_ready;
+
 void si5351_i2c_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t reg_data)
 {
 	i2c_reg_write_byte(DEVICE_DT_GET(DT_NODELABEL(i2c0)),
@@ -68,7 +71,7 @@ int main(void)
 	k_sleep(K_MSEC(100));
 	LOG_INF("Initializing the si5351 PLL");
 	si5351_init();
-	k_sleep(K_MSEC(500));
+	k_sleep(K_MSEC(100));
 
 	err = usbd_add_descriptor(&my_usbd_dev, &my_usbd_device_qualifier);
 	err |= usbd_add_descriptor(&my_usbd_dev, &my_usbd_bos);
@@ -88,16 +91,11 @@ int main(void)
 
 	/* As soon as interrupts are enabled in the hardware architecture, this
 	 * can be removed */
-	for (int i = 0;; i++) {
-		//k_sleep(K_MSEC(1));
+	while (true) {
+		k_sleep(K_MSEC(1));
 		usb23_irq_handler(DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)));
-
-		if (i >= 4000000) {
-			if (i == 4000000) {
-				LOG_INF("Starting CDC data transfer");
-			}
+		if (usbd_cdc_uvc_data_terminal_ready) {
 			cdc_uvc_enqueue_in(video_frames, sizeof(video_frames));
-			i = 4000000;
 		}
 	}
 
