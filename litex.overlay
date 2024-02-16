@@ -62,7 +62,7 @@
 	status = "disabled";
 };
 &ram0 {
-	reg = <0x40000000 0x10000>;
+	reg = <0x40000000 0x20000>;
 };
 &dna0 {
 	status = "disabled";
