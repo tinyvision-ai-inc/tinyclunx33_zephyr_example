@@ -57,15 +57,6 @@ char const video_frames[] = {
 
 extern bool usbd_cdc_uvc_data_terminal_ready;
 
-static int cmd_fw_version(const struct shell *sh, size_t argc, char **argv)
-{
-	char * str = APP_VERSION_STRING;
-	shell_print(sh, "firmware version: %s", str);
-}
-
-SHELL_CMD_REGISTER(fw_version, NULL, "Print firmware version",
-		cmd_fw_version);
-
 void si5351_i2c_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t reg_data)
 {
 	i2c_reg_write_byte(DEVICE_DT_GET(DT_NODELABEL(i2c0)),
