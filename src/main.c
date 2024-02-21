@@ -97,11 +97,9 @@ int main(void)
 		usb23_irq_handler(DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)));
 		if (usbd_cdc_uvc_data_terminal_ready && !done) {
 			/* This memory does not contain any meaningful data,
-			 * and is just there to provide an example of what
-			 */
-			cdc_uvc_enqueue_in(
-				DT_REG_ADDR(DT_CHOSEN(lattice_usb23_dma)),
-				DT_REG_SIZE(DT_CHOSEN(lattice_usb23_dma)));
+			 * and is just there to provide an example of an
+			 * arbitrary transfer. */
+			cdc_uvc_enqueue_in(0xb1100000, 15*1024*1024);
 			done = true;
 		}
 	}
