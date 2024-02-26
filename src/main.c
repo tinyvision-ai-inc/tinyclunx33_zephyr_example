@@ -10,7 +10,7 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
 #include "si5351.h"
 
-extern bool usbd_cdc_uvc_data_terminal_ready;
+//extern bool usbd_cdc_uvc_data_terminal_ready;
 
 USBD_DEVICE_DEFINE(my_usbd_dev, DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)), 0x1209, 0x0001);
 USBD_DEVICE_QUALIFIER_DEFINE(my_usbd_device_qualifier);
@@ -22,33 +22,32 @@ USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 
 struct {
 	struct usb_bos_descriptor bos;
-	struct usb_bos_capability_lpm lpm;
-#if 0
-	struct usb_bos_capability_superspeed_usb superspeed_usb;
-#endif
+//	struct usb_bos_capability_lpm lpm;
+//	struct usb_bos_capability_superspeed_usb superspeed_usb;
 } __packed my_usbd_bos_desc = {
 	.bos = {
 		.bLength = sizeof(struct usb_bos_descriptor),
 		.bDescriptorType = USB_DESC_BOS,
 		.wTotalLength = sys_cpu_to_le16(sizeof(my_usbd_bos_desc)),
-		.bNumDeviceCaps = 1, // TODO: this skips superspeed_usb!
+		.bNumDeviceCaps = 0,
 	},
+#if 0
 	.lpm = {
 		.bLength = sizeof(struct usb_bos_capability_lpm),
 		.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
 		.bDevCapabilityType = USB_BOS_CAPABILITY_EXTENSION,
-		.bmAttributes = USB_BOS_ATTRIBUTES_LPM | USB_BOS_ATTRIBUTES_BESL,
+		.bmAttributes = USB_BOS_ATTRIBUTES_LPM, //  | USB_BOS_ATTRIBUTES_BESL
 	},
-#if 0
 	.superspeed_usb = {
 		.bLength = sizeof(struct usb_bos_capability_superspeed_usb),
 		.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
 		.bDevCapabilityType = USB_BOS_CAPABILITY_SUPERSPEED_USB,
-		.bmAttributes = USB_BOS_ATTRIBUTES_LPM | USB_BOS_ATTRIBUTES_BESL,
-		.wSpeedsSupported = sys_cpu_to_le16(USB_BOS_SPEED_SUPERSPEED_GEN1),
-		.bFunctionnalSupport = USB_BOS_SPEED_SUPERSPEED_GEN1,
+		.bmAttributes = USB_BOS_ATTRIBUTES_LPM, //| USB_BOS_ATTRIBUTES_BESL,
+		.wSpeedsSupported = sys_cpu_to_le16(USB_BOS_SPEED_SUPERSPEED_GEN1
+			| USB_BOS_SPEED_HIGHSPEED | USB_BOS_SPEED_FULLSPEED),
+		.bFunctionnalSupport = 1,
 		.bU1DevExitLat = 10,
-		.wU2DevExitLat = sys_cpu_to_le16(2047),
+		.wU2DevExitLat = sys_cpu_to_le16(1023),
 	},
 #endif
 };
@@ -81,7 +80,7 @@ int main(void)
 	err |= usbd_add_descriptor(&my_usbd_dev, &my_usbd_product);
 	//err |= usbd_add_descriptor(&my_usbd_dev, &my_usbd_serial_number);
 	err |= usbd_add_configuration(&my_usbd_dev, &my_usbd_config);
-	err |= usbd_register_class(&my_usbd_dev, "cdc_uvc_0", 1);
+	err |= usbd_register_class(&my_usbd_dev, "uvc_0", 1);
 	__ASSERT_NO_MSG(err == 0);
 
 	err = usbd_init(&my_usbd_dev);
@@ -95,6 +94,7 @@ int main(void)
 	while (true) {
 		k_sleep(K_MSEC(1));
 		usb23_irq_handler(DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)));
+#if 0
 		if (usbd_cdc_uvc_data_terminal_ready && !done) {
 			/* This memory does not contain any meaningful data,
 			 * and is just there to provide an example of an
@@ -102,6 +102,7 @@ int main(void)
 			cdc_uvc_enqueue_in(0xb1100000, 15*1024*1024);
 			done = true;
 		}
+#endif
 	}
 
 	return 0;
