@@ -10,8 +10,6 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
 #include "si5351.h"
 
-//extern bool usbd_cdc_uvc_data_terminal_ready;
-
 USBD_DEVICE_DEFINE(my_usbd_dev, DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)), 0x1209, 0x0001);
 USBD_DEVICE_QUALIFIER_DEFINE(my_usbd_device_qualifier);
 USBD_CONFIGURATION_DEFINE(my_usbd_config, USB_SCD_SELF_POWERED, 100);
@@ -64,7 +62,6 @@ void si5351_i2c_write(uint8_t i2c_addr, uint8_t reg_addr, uint8_t reg_data)
 int main(void)
 {
 	int err = 0;
-	bool done = false;
 
 	/* Configure the external PLL over I2C, switching the CPU clock over it.
 	 * This is done by hardware, no software config to make that happen. */
@@ -94,15 +91,6 @@ int main(void)
 	while (true) {
 		k_sleep(K_MSEC(1));
 		usb23_irq_handler(DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)));
-#if 0
-		if (usbd_cdc_uvc_data_terminal_ready && !done) {
-			/* This memory does not contain any meaningful data,
-			 * and is just there to provide an example of an
-			 * arbitrary transfer. */
-			cdc_uvc_enqueue_in(0xb1100000, 15*1024*1024);
-			done = true;
-		}
-#endif
 	}
 
 	return 0;
