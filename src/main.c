@@ -20,16 +20,15 @@ USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 
 struct {
 	struct usb_bos_descriptor bos;
-//	struct usb_bos_capability_lpm lpm;
-//	struct usb_bos_capability_superspeed_usb superspeed_usb;
+	struct usb_bos_capability_lpm lpm;
+	struct usb_bos_capability_superspeed_usb superspeed_usb;
 } __packed my_usbd_bos_desc = {
 	.bos = {
 		.bLength = sizeof(struct usb_bos_descriptor),
 		.bDescriptorType = USB_DESC_BOS,
 		.wTotalLength = sys_cpu_to_le16(sizeof(my_usbd_bos_desc)),
-		.bNumDeviceCaps = 0,
+		.bNumDeviceCaps = 2,
 	},
-#if 0
 	.lpm = {
 		.bLength = sizeof(struct usb_bos_capability_lpm),
 		.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
@@ -47,7 +46,6 @@ struct {
 		.bU1DevExitLat = 10,
 		.wU2DevExitLat = sys_cpu_to_le16(1023),
 	},
-#endif
 };
 static struct usbd_desc_node my_usbd_bos = {
 	.desc = &my_usbd_bos_desc,
