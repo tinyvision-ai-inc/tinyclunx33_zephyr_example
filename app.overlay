@@ -41,7 +41,7 @@
 
 			uvc_0: zephyr_uvc {
 				compatible = "zephyr,uvc";
-				video-buf-addr = <0xb2000000>;
+				video-buf-addr = <0xb1100000>;
 				video-buf-size = <128>;
 				status = "okay";
 			};
