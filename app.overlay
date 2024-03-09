@@ -31,16 +31,18 @@
 				"ev_pending",
 				"ev_enable";
 			num-bidir-endpoints = <4>;
-			maximum-speed = "super-speed";
+			maximum-speed = "full-speed";
 			interrupts = <0x0 0>;
 			interrupt-names = "usb";
 			interrupt-parent = <&intc0>;
 			status = "okay";
 
-//			auto-endpoint = <0x82>;
+			auto-endpoint = <0x81>;
 
-			uart1: zephyr_uvc {
+			uvc_0: zephyr_uvc {
 				compatible = "zephyr,uvc";
+				video-buf-addr = <0xb2000000>;
+				video-buf-size = <128>;
 				status = "okay";
 			};
 		};
