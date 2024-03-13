@@ -13,12 +13,13 @@ SECTIONS
 {
 	SECTION_PROLOGUE(usb23_dma,,)
 	{
-		/* All symbols with this name are meant to land into the memory
-		 * accessible to USB23 so it can fetch this content. */
+		/* All symbols with this section are going to a memory region
+		 * accessible to the USB23 core performing DMA requests */
 
 		. = ALIGN(16);
 		*(.bss.usb23_ctrl_buf_*);
 		*(.bss.usb23_dma_*);
+		*(.bss.uvc_payload_header_*);
 	} GROUP_LINK_IN(USB23_DMA)
 }
 

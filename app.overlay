@@ -30,19 +30,20 @@
 				"ev_status",
 				"ev_pending",
 				"ev_enable";
-			num-bidir-endpoints = <4>;
+			num-bidir-endpoints = <2>;
 			maximum-speed = "full-speed";
 			interrupts = <0x0 0>;
 			interrupt-names = "usb";
 			interrupt-parent = <&intc0>;
 			status = "okay";
 
-			auto-endpoint = <0x81>;
+			block-size = <10240>;
 
 			uvc_0: zephyr_uvc {
 				compatible = "zephyr,uvc";
-				video-buf-addr = <0xb1100000>;
-				video-buf-size = <128>;
+				// TODO use a memory region and reference the phandle
+				payload-addr = <0xb1100000>;
+				payload-size = <38400>;
 				status = "okay";
 			};
 		};
