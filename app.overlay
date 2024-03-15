@@ -16,7 +16,6 @@
 		ram1: memory@b1000000 {
 			device_type = "memory";
 			reg = <0xb1000000 0x400>;
-			//reg = <0x40008000 0x400>;
 		};
 
 		zephyr_udc0: usbd@b0000000 {
@@ -31,13 +30,11 @@
 				"ev_pending",
 				"ev_enable";
 			num-bidir-endpoints = <2>;
-			maximum-speed = "full-speed";
+			maximum-speed = "high-speed";
 			interrupts = <0x0 0>;
 			interrupt-names = "usb";
 			interrupt-parent = <&intc0>;
 			status = "okay";
-
-			block-size = <10240>;
 
 			uvc_0: zephyr_uvc {
 				compatible = "zephyr,uvc";
