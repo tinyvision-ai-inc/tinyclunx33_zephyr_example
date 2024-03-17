@@ -1,3 +1,16 @@
+&i2c0 {
+	pll0: si5351@60 {
+		reg = <0x60>;
+		compatible = "skyworks,si5351";
+		#clock-cells = <0>;
+		status = "okay";
+	};
+};
+
+&uart0 {
+	clocks = <&pll0>;
+};
+
 / {
 	chosen {
 		zephyr,flash = &flash0;
