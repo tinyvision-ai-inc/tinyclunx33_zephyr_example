@@ -52,8 +52,6 @@ int main(void)
 {
 	int err = 0;
 
-	clock_control_on(DEVICE_DT_GET(DT_NODELABEL(pll0)), NULL);
-
 	err = usbd_add_descriptor(&my_usbd_dev, &my_usbd_device_qualifier);
 	err |= usbd_add_descriptor(&my_usbd_dev, &my_usbd_bos);
 	err |= usbd_add_descriptor(&my_usbd_dev, &my_usbd_lang);
@@ -72,10 +70,7 @@ int main(void)
 
 	/* As soon as interrupts are enabled in the hardware architecture, this
 	 * can be removed */
-	while (true) {
-		k_sleep(K_MSEC(1));
-		usb23_irq_handler(DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)));
-	}
+	k_sleep(K_FOREVER);
 
 	return 0;
 }
