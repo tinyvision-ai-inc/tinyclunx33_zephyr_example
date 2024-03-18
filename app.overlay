@@ -28,7 +28,7 @@
 
 		ram1: memory@b1000000 {
 			device_type = "memory";
-			reg = <0xb1000000 0x400>;
+			reg = <0xb1000000 0x4000>;
 		};
 
 		zephyr_udc0: usbd@b0000000 {
@@ -43,7 +43,7 @@
 				"ev_pending",
 				"ev_enable";
 			num-bidir-endpoints = <2>;
-			num-endpoint-trb = <1 1 0 24>;
+			num-endpoint-trb = <1 1 0 32>;
 			maximum-speed = "high-speed";
 			interrupts = <0x0 0>;
 			interrupt-names = "usb";
