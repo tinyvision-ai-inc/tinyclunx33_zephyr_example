@@ -62,6 +62,49 @@ See the [doc on Zephyr](https://tinyclunx33.tinyvision.ai/md_zephyr.html) for
 how to access them.
 
 
+## Running the `usb_cdc_example`
+
+This uses the CDC ACM USB class, in a custom `usbd_cdc_raw.c` class to allow
+to enqueue data without using a ring buffer.
+
+After programming the device and power cycling the board, a serial interface
+would show-up, such as on `/dev/ttyACM0` on Linux, and everything written to it
+will be read back:
+
+```
+picocom /dev/ttyACM0
+```
+
+Debug logs are available from the FTDI UART interface, showing a hexdump
+of every buffer read by the device, which it then submit back.
+
+```
+picocom -q -b 192000 /dev/ttyUSB1
+```
+
+## Running the `usb_uvc_example`
+
+This uses the USB Video class (UVC), with the feed parameters for now hardcoded
+into the `usbd_uvc.c` class implementation.
+
+After programming the device and power cycling the board, a video interface
+would show-up, such as on `/dev/video2` on Linux, and can be opened with tools
+such as
+[VLC](https://www.videolan.org/vlc/),
+[Gstreamer](https://gstreamer.freedesktop.org/),
+[ffplay](https://ffmpeg.org/ffplay.html),
+[guvcview](https://guvcview.sourceforge.net/),
+or libraries such as [OpenCV](https://opencv.org/),
+or eventually [libuvc](https://github.com/libuvc/libuvc) for low-level access.
+
+```
+gst-launch-1.0 v4l2src device=/dev/video2 ! videoconvert ! autovideosink
+mpv /dev/video2
+ffplay /dev/video2
+vlc v4l2:///dev/video2
+```
+
+
 ## USB driver configuration:
 
 Some elements of the driver allow manual configuration of some elements, which
