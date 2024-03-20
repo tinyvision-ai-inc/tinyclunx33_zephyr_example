@@ -130,8 +130,7 @@ the driver or application alike.
 
 ## Configuration
 
-Some elements of the driver allow manual configuration of some elements, which
-might require tuning if writing your own application:
+Some Device Tree configuration elements introduced by this work:
 
 ### `num-bidir-endpoints`
 
@@ -164,4 +163,16 @@ this would be:
 
 ```
 num-endpoint-trb = <1 1  5 0  10 10>;
+```
+
+### `payload-addr`
+
+On an UVC instance, this describes the address at which the UVC class will
+continuously read its incoming data.
+
+The address needs to be available to the USB23 core as described in
+"Using a different data source".
+
+```
+payload-addr = <0xb1100000>;
 ```

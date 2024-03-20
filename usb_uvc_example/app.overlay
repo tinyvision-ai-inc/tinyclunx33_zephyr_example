@@ -52,7 +52,6 @@
 
 			uvc_0: zephyr_uvc {
 				compatible = "zephyr,uvc";
-				// TODO use a memory region and reference the phandle
 				payload-addr = <0xb1100000>;
 				status = "okay";
 			};
