@@ -5,7 +5,7 @@ manifest:
 
   projects:
     - name: zephyr
-      url: https://github.com/tinyvision-ai-inc/zephyr_private
+      url: git@github.com:tinyvision-ai-inc/zephyr_private
       revision: tinyclunx33
       import:
         name-allowlist:
