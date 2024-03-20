@@ -23,28 +23,32 @@ cd "$HOME/zephyrproject"
 # Initialize the repos in that workspace
 west init -m https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example
 west update
-west build -p -b tinyclunx33_uvc tinyclunx33_zephyr_example # for the UVC demo
-west build -p -b tinyclunx33_cdc tinyclunx33_zephyr_example # for the CDC demo
 ```
 
-As a result, `build/zephyr/zephyr.bin` should be created, ready  to be loaded
+Then depending on the demo to try, one of these:
+
+```
+west build -p -b litex_vexriscv tinyclunx33_zephyr_example/usb_uvc_example
+west build -p -b litex_vexriscv tinyclunx33_zephyr_example/usb_cdc_example
+```
+
+As a result, `build/zephyr/zephyr.bin` should be created, ready to be loaded
 into the SoM flash as described below.
 
 
 ## Loading the images to the flash
 
-First, connect both USB cables onto the tinyCLUNX33 devboard featuring  a
-tinyCLUNX SoM.
-One is hooked to the FTDI for debugging, one is hooked to the CrossLink-U NX
-USB interface.
+First, connect USB cables onto the tinyCLUNX33 devboard:
+- One to the FTDI side (`DEBUG`)
+- One to the CrossLinkU-NX side (`DATA`), optional
 
 Then, as documented on the
 [tinyCLUNX33 SoM flash](https://tinyclunx33.tinyvision.ai/md_som_flash.html)
 documentation, it is possible to load the FPGA and Zephyr binaries to the flash
-at the expected offset:
+at their own offset:
 
 ```
-ecpprog -s -o 0x00000000 tinyclunx33_rtl_reference_design_v0.1.bit
+ecpprog -s -o 0x00000000 tinyclunx33_rtl_reference_design_v0.5.bit
 ecpprog -s -o 0x00100000 build/zephyr/zephyr.bin
 ```
 
@@ -56,3 +60,42 @@ Then, an USB device should appear, recognized as a USB serial console, with
 an access to the Zephyr shell.
 See the [doc on Zephyr](https://tinyclunx33.tinyvision.ai/md_zephyr.html) for
 how to access them.
+
+
+## USB driver configuration:
+
+Some elements of the driver allow manual configuration of some elements, which
+might require tuning if writing your own application:
+
+### `num-bidir-endpoints`
+
+The number of USB endpoints, including the control endpoint (0x00 and 0x80),
+with the IN and OUT direction counting together as 1.
+
+So if your endpoints are: Control IN/OUT (0x00, 0x80), Bulk IN/OUT (0x01, 0x81)
+then you have 2 bidir endpoints.
+
+```
+num-bidir-endpoints = <2>;
+```
+
+### `num-endpoint-trb`
+
+The number of per-endpoint TRB buffers present in the system.
+The TRB buffers are internal queue shared between Zephyr and the hardare.
+
+The more buffers there are, the more backlog there can be on the USB bus,
+which allows to enqueue a lot of transfers then work on something in the
+meantime.
+
+This is an array where each element is grouped by 2, for the OUT and IN
+direction of each endpoint respectively.
+
+The first if for the endpoint zero, and always required to be `1` and `1`
+
+For instance, for endpoints 0x00, 0x80, 0x01, 0x81, 0x02, 0x82 respectively,
+this would be:
+
+```
+num-endpoint-trb = <1 1  5 0  10 10>;
+```
