@@ -23,22 +23,12 @@ cd "$HOME/zephyrproject"
 # Initialize the repos in that workspace
 west init -m https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example
 west update
-west build -p -b litex_vexriscv tinyclunx33_zephyr_example
+west build -p -b tinyclunx33_uvc tinyclunx33_zephyr_example # for the UVC demo
+west build -p -b tinyclunx33_cdc tinyclunx33_zephyr_example # for the CDC demo
 ```
 
 As a result, `build/zephyr/zephyr.bin` should be created, ready  to be loaded
 into the SoM flash as described below.
-
-
-## Obtain a matching RTL file from a release
-
-You can download the latest release of the
-[RTL reference design](https://tinyclunx33.tinyvision.ai/md_rtl_reference_design.html)
-from the
-[release page](https://github.com/tinyvision-ai-inc/tinyCLUNX33/releases/).
-
-It is also possible, if desired, to
-[rebuild it from source](https://github.com/tinyvision-ai-inc/tinyCLUNX33/tree/main/RTL/).
 
 
 ## Loading the images to the flash
