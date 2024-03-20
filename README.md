@@ -105,7 +105,30 @@ vlc v4l2:///dev/video2
 ```
 
 
-## USB driver configuration:
+## Using a different data source
+
+Not every address is accessible from everything: the USB23 core own DMA engine
+is only able to access what is rooted to it, while the CPU has access to
+everything.
+
+Here are some notable examples of things that are not accessible from the USB23
+core, which performs DMA requests to transfer the USB data in and out:
+
+- RISC-V main RAM: stack or heap buffers (variable, arrays, malloc() results...)
+- Flash: Variables and buffers marked as `const`
+
+On the other hand, it has a direct access to:
+
+- All cores attached to AXI64, such as high-throughput MIPI data pipes.
+- A small "scratch" RAM block is used as temporary buffer.
+
+This temporary buffer can be used to exchange data with the CPU.
+A linker script parameter is set so that each variable with a name starting by
+`usb23_dma_` gets allocated onto that exchange region, which can be used from
+the driver or application alike.
+
+
+## Configuration
 
 Some elements of the driver allow manual configuration of some elements, which
 might require tuning if writing your own application:
