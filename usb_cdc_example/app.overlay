@@ -42,8 +42,8 @@
 				"ev_status",
 				"ev_pending",
 				"ev_enable";
-			num-bidir-endpoints = <2>;
-			num-endpoint-trb = <1 1 0 32>;
+			num-bidir-endpoints = <3>;
+			num-endpoint-trb = <1 1  10 10  10 10>;
 			maximum-speed = "high-speed";
 			interrupts = <0x0 0>;
 			interrupt-names = "usb";
