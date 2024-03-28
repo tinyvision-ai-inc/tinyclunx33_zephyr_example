@@ -43,14 +43,14 @@
 				"ev_pending",
 				"ev_enable";
 			num-bidir-endpoints = <3>;
-			num-endpoint-trb = <1 1  2 2  2 950>;
+			num-endpoint-trb = <1 1  2 2  2 400>;
 			maximum-speed = "super-speed";
 			interrupts = <0x0 0>;
 			interrupt-names = "usb";
 			interrupt-parent = <&intc0>;
 			status = "okay";
 
-			raw0: zephyr_cdc_raw {
+			raw0: zephyr_cdc_raw0 {
 				compatible = "zephyr,cdc-raw";
 				status = "okay";
 			};

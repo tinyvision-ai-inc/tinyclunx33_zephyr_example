@@ -32,13 +32,13 @@ struct {
 		.bLength = sizeof(struct usb_bos_capability_lpm),
 		.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
 		.bDevCapabilityType = USB_BOS_CAPABILITY_EXTENSION,
-		.bmAttributes = USB_BOS_ATTRIBUTES_LPM, //  | USB_BOS_ATTRIBUTES_BESL
+		.bmAttributes = USB_BOS_ATTRIBUTES_LPM,
 	},
 	.superspeed_usb = {
 		.bLength = sizeof(struct usb_bos_capability_superspeed_usb),
 		.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
 		.bDevCapabilityType = USB_BOS_CAPABILITY_SUPERSPEED_USB,
-		.bmAttributes = USB_BOS_ATTRIBUTES_LPM, //| USB_BOS_ATTRIBUTES_BESL,
+		.bmAttributes = USB_BOS_ATTRIBUTES_LPM,
 		.wSpeedsSupported = sys_cpu_to_le16(USB_BOS_SPEED_SUPERSPEED_GEN1
 			| USB_BOS_SPEED_HIGHSPEED | USB_BOS_SPEED_FULLSPEED),
 		.bFunctionnalSupport = 1,
@@ -82,7 +82,7 @@ int main(void)
 
 	/* As soon as interrupts are enabled in the hardware architecture, this
 	 * can be removed */
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 400; i++) {
 		usb23_irq_handler(udc0);
 		k_sleep(K_MSEC(1));
 	}
@@ -94,10 +94,12 @@ int main(void)
 		(void *)0xb1100000, 1024 * 63, Z_TIMEOUT_NO_WAIT);
 	__ASSERT_NO_MSG(buf != NULL);
 
-	while (true) {
+	for (int i = 0;;) {
 		usb23_irq_handler(udc0);
 		k_sleep(K_MSEC(1));
-		cdc_raw_write(raw0, buf);
+		if (cdc_raw_write(raw0, buf) == 0) {
+			LOG_INF("%d", i++);
+		}
 	}
 
 	return 0;
