@@ -34,16 +34,18 @@
 		zephyr_udc0: usbd@b0000000 {
 			compatible = "lattice,usb23";
 			reg = <	0xb0000000 0x1000000
-				0xe0004000 0x4
-				0xe0004004 0x4
-				0xe0004008 0x4>;
+				0xb1000000 0x1000000
+				0xe0005800 0x4
+				0xe0005804 0x4
+				0xe0005808 0x4>;
 			reg-names =
 				"base",
+				"discard",
 				"ev_status",
 				"ev_pending",
 				"ev_enable";
 			num-bidir-endpoints = <3>;
-			num-endpoint-trb = <1 1  2 2  2 400>;
+			num-endpoint-trb = <2 2  3 3  3 400>;
 			maximum-speed = "super-speed";
 			interrupts = <0x0 0>;
 			interrupt-names = "usb";
