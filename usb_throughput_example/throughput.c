@@ -2,7 +2,7 @@
  * Prints the throughput in bytes per second of the input file by reading it
  * continuously with time is measured.
  *
- * cc -o throughput -D_POSIX_C_SOURCE=200809L -Wall -Wextra -pedantic -std=c99 throughput.c
+ * cc -o throughput throughput.c
  */
 
 #include <time.h>
@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <termios.h>
 
 struct timespec ts_prev;
 struct timespec ts_now;
@@ -57,6 +58,7 @@ static void measure(char *scratch_buf, size_t scratch_len, int fd)
 
 int main(int argc, char **argv)
 {
+	struct termios tio = {0};
 	char *scratch_buf;
 	size_t scratch_len;
 	int fd;
@@ -65,12 +67,20 @@ int main(int argc, char **argv)
 		usage(argv[0]);
 	}
 
+	/* Open the serial port */
 	fd = CK(open(argv[1], O_RDONLY));
 
+	/* Scratch buffer size */
 	scratch_len = strtoul(argv[2], NULL, 10);
 	if (scratch_len == 0) {
 		usage(argv[0]);
 	}
+
+	/* Prepare the IOCTL options */
+	cfmakeraw(&tio);
+	cfsetospeed(&tio, B115200);
+	cfsetispeed(&tio, B115200);
+	CK(tcsetattr(fd, TCSANOW, &tio));
 
 	scratch_buf = malloc(scratch_len);
 	if (scratch_buf == NULL) {
