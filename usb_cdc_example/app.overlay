@@ -1,59 +1,10 @@
-&i2c0 {
-	pll0: si5351@60 {
-		reg = <0x60>;
-		compatible = "skyworks,si5351";
-		#clock-cells = <0>;
+zephyr_udc0: &usb0 {
+	num-bidir-endpoints = <3>;
+	num-endpoint-trb = <2 2  10 10  10 10>;
+	maximum-speed = "super-speed";
+
+	raw0: zephyr_cdc_raw_0 {
+		compatible = "zephyr,cdc-raw";
 		status = "okay";
-	};
-};
-
-&uart0 {
-	clocks = <&pll0>;
-};
-
-/ {
-	chosen {
-		zephyr,flash = &flash0;
-		zephyr,console = &uart0;
-		zephyr,shell-uart = &uart0;
-		lattice,usb23-dma = &ram1;
-	};
-
-	soc {
-		flash0: flash@20100000 {
-			reg = <0x20100000 0x100000>;
-			compatible = "soc-nv-flash";
-			status = "okay";
-		};
-
-		ram1: memory@b1000000 {
-			device_type = "memory";
-			reg = <0xb1000000 0x4000>;
-		};
-
-		zephyr_udc0: usbd@b0000000 {
-			compatible = "lattice,usb23";
-			reg = <	0xb0000000 0x1000000
-				0xe0004000 0x4
-				0xe0004004 0x4
-				0xe0004008 0x4>;
-			reg-names =
-				"base",
-				"ev_status",
-				"ev_pending",
-				"ev_enable";
-			num-bidir-endpoints = <3>;
-			num-endpoint-trb = <1 1  10 10  10 10>;
-			maximum-speed = "super-speed";
-			interrupts = <0x0 0>;
-			interrupt-names = "usb";
-			interrupt-parent = <&intc0>;
-			status = "okay";
-
-			raw0: zephyr_cdc_raw {
-				compatible = "zephyr,cdc-raw";
-				status = "okay";
-			};
-		};
 	};
 };
