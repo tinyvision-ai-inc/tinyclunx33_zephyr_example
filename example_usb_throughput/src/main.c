@@ -12,55 +12,24 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 USBD_DEVICE_DEFINE(my_usbd, DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)), 0x1209, 0x0001);
 USBD_DEVICE_QUALIFIER_DEFINE(my_usbd_dev_qualifier);
 USBD_CONFIGURATION_DEFINE(my_usbd_config, USB_SCD_SELF_POWERED, 100);
+USBD_BOS_DEFINE(my_usbd_bos);
 USBD_DESC_LANG_DEFINE(my_usbd_lang);
 USBD_DESC_MANUFACTURER_DEFINE(my_usbd_manufacturer, "tinyVision.ai");
 USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 //USBD_DESC_SERIAL_NUMBER_DEFINE(my_usbd_serial_number, "0123456789ABCDEF");
-
-struct {
-	struct usb_bos_descriptor bos;
-	struct usb_bos_capability_lpm lpm;
-	struct usb_bos_capability_superspeed_usb superspeed_usb;
-} __packed my_usbd_bos_desc = {
-	.bos = {
-		.bLength = sizeof(struct usb_bos_descriptor),
-		.bDescriptorType = USB_DESC_BOS,
-		.wTotalLength = sys_cpu_to_le16(sizeof(my_usbd_bos_desc)),
-		.bNumDeviceCaps = 2,
-	},
-	.lpm = {
-		.bLength = sizeof(struct usb_bos_capability_lpm),
-		.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
-		.bDevCapabilityType = USB_BOS_CAPABILITY_EXTENSION,
-		.bmAttributes = USB_BOS_ATTRIBUTES_LPM,
-	},
-	.superspeed_usb = {
-		.bLength = sizeof(struct usb_bos_capability_superspeed_usb),
-		.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
-		.bDevCapabilityType = USB_BOS_CAPABILITY_SUPERSPEED_USB,
-		.bmAttributes = USB_BOS_ATTRIBUTES_LPM,
-		.wSpeedsSupported = sys_cpu_to_le16(USB_BOS_SPEED_SUPERSPEED_GEN1
-			| USB_BOS_SPEED_HIGHSPEED | USB_BOS_SPEED_FULLSPEED),
-		.bFunctionnalSupport = 1,
-		.bU1DevExitLat = 10,
-		.wU2DevExitLat = sys_cpu_to_le16(1023),
-	},
-};
-static struct usbd_desc_node my_usbd_bos = {
-	.desc = &my_usbd_bos_desc,
-};
 
 /* Static pool of buffer with no data in it */
 NET_BUF_POOL_DEFINE(_buf_pool, 2, 0, sizeof(struct udc_buf_info), NULL);
 
 int main(void)
 {
-	const struct device *raw0 = DEVICE_DT_GET(DT_NODELABEL(raw0));
+	const struct device *cdc0 = DEVICE_DT_GET(DT_NODELABEL(cdc0));
+	const struct device *pll0 = DEVICE_DT_GET(DT_NODELABEL(pll0));
 	struct net_buf *buf;
 	int err;
 
 	k_sleep(K_MSEC(200));
-	clock_control_on(DEVICE_DT_GET(DT_NODELABEL(pll0)), NULL);
+	clock_control_on(pll0, NULL);
 	k_sleep(K_MSEC(200));
 
 	err = usbd_add_descriptor(&my_usbd, &my_usbd_dev_qualifier);
@@ -87,19 +56,19 @@ int main(void)
 	LOG_DBG("0");
 
 	/* Wait that a serial console connects */
-	while (!cdc_raw_is_ready(raw0)) {
+	while (!cdc_raw_is_ready(cdc0)) {
 		k_sleep(K_MSEC(100));
 	}
 	LOG_DBG("1");
 
 	/* Then give a bit of time for the console to disconnect */
-	k_sleep(K_MSEC(2000));
+	k_sleep(K_SECONDS(10));
 	LOG_DBG("2");
 
 	/* Then perform the bulk throughput test */
 	for (int i = 0;;) {
-		k_sleep(K_MSEC(10));
-		if (cdc_raw_write(raw0, buf) == 0) {
+		k_sleep(K_MSEC(100));
+		if (cdc_raw_write(cdc0, buf) == 0) {
 			LOG_INF("%d", i++);
 		}
 	}

@@ -1,9 +1,9 @@
-zephyr_udc0: &usb0 {
+&zephyr_udc0 {
 	num-bidir-endpoints = <2>;
 	num-endpoint-trb = <2 2  0 32>;
 	maximum-speed = "super-speed";
 
-	zephyr_uvc_0 {
+	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
 		payload-addr = <0xb1100000>;
 		status = "okay";
