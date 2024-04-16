@@ -28,8 +28,9 @@ west update
 Then depending on the demo to try, one of these:
 
 ```
-west build -p -b litex_vexriscv tinyclunx33_zephyr_example/usb_uvc_example
-west build -p -b litex_vexriscv tinyclunx33_zephyr_example/usb_cdc_example
+west build -p -b tinyclunx33 tinyclunx33_zephyr_example/example_usb_uvc
+west build -p -b tinyclunx33 tinyclunx33_zephyr_example/example_usb_cdc
+west build -p -b tinyclunx33 tinyclunx33_zephyr_example/example_usb_throughput
 ```
 
 As a result, `build/zephyr/zephyr.bin` should be created, ready to be loaded
@@ -62,7 +63,7 @@ See the [doc on Zephyr](https://tinyclunx33.tinyvision.ai/md_zephyr.html) for
 how to access them.
 
 
-## Running the `usb_cdc_example`
+## Running the `example_usb_cdc`
 
 This uses the CDC ACM USB class, in a custom `usbd_cdc_raw.c` class to allow
 to enqueue data without using a ring buffer.
@@ -82,7 +83,7 @@ of every buffer read by the device, which it then submit back.
 picocom -q -b 192000 /dev/ttyUSB1
 ```
 
-## Running the `usb_uvc_example`
+## Running the `example_usb_uvc`
 
 This uses the USB Video class (UVC), with the feed parameters for now hardcoded
 into the `usbd_uvc.c` class implementation.
@@ -126,53 +127,3 @@ This temporary buffer can be used to exchange data with the CPU.
 A linker script parameter is set so that each variable with a name starting by
 `usb23_dma_` gets allocated onto that exchange region, which can be used from
 the driver or application alike.
-
-
-## Configuration
-
-Some Device Tree configuration elements introduced by this work:
-
-### `num-bidir-endpoints`
-
-The number of USB endpoints, including the control endpoint (0x00 and 0x80),
-with the IN and OUT direction counting together as 1.
-
-So if your endpoints are: Control IN/OUT (0x00, 0x80), Bulk IN/OUT (0x01, 0x81)
-then you have 2 bidir endpoints.
-
-```
-num-bidir-endpoints = <2>;
-```
-
-### `num-endpoint-trb`
-
-The number of per-endpoint TRB buffers present in the system.
-The TRB buffers are internal queue shared between Zephyr and the hardare.
-
-The more buffers there are, the more backlog there can be on the USB bus,
-which allows to enqueue a lot of transfers then work on something in the
-meantime.
-
-This is an array where each element is grouped by 2, for the OUT and IN
-direction of each endpoint respectively.
-
-The first if for the endpoint zero, and always required to be `1` and `1`
-
-For instance, for endpoints 0x00, 0x80, 0x01, 0x81, 0x02, 0x82 respectively,
-this would be:
-
-```
-num-endpoint-trb = <1 1  5 0  10 10>;
-```
-
-### `payload-addr`
-
-On an UVC instance, this describes the address at which the UVC class will
-continuously read its incoming data.
-
-The address needs to be available to the USB23 core as described in
-"Using a different data source".
-
-```
-payload-addr = <0xb1100000>;
-```

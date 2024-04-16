@@ -1,6 +1,11 @@
 &zephyr_udc0 {
+	/* IN and OUT counting together as one endpoint */
 	num-bidir-endpoints = <3>;
+
+	/* Number of transfer requests for each endpoint */
 	num-endpoint-trb = <2 2  10 10  10 10>;
+
+	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
 	maximum-speed = "super-speed";
 
 	cdc0: zephyr_cdc0 {
