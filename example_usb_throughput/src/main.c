@@ -21,6 +21,19 @@ USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 /* Static pool of buffer with no data in it */
 NET_BUF_POOL_DEFINE(_buf_pool, 2, 0, sizeof(struct udc_buf_info), NULL);
 
+static int _write_callback(const struct device *dev, struct net_buf *buf, int err)
+{
+	if (err) {
+		LOG_ERR("USB write error %d", err);
+		return err;
+	}
+	LOG_DBG("%s: buf=%p data=%p len=%d size=%d", __func__,
+		buf, buf->data, buf->len, buf->size);
+
+	/* Write the same buffer again immediately */
+	return cdc_raw_write(dev, buf);
+}
+
 int main(void)
 {
 	const struct device *cdc0 = DEVICE_DT_GET(DT_NODELABEL(cdc0));
@@ -28,9 +41,9 @@ int main(void)
 	struct net_buf *buf;
 	int err;
 
-	k_sleep(K_MSEC(200));
+	k_sleep(K_MSEC(500));
 	clock_control_on(pll0, NULL);
-	k_sleep(K_MSEC(200));
+	k_sleep(K_MSEC(500));
 
 	err = usbd_add_descriptor(&my_usbd, &my_usbd_dev_qualifier);
 	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos);
@@ -48,30 +61,27 @@ int main(void)
 	err = usbd_enable(&my_usbd);
 	__ASSERT_NO_MSG(err == 0);
 
+	/* Glue with the CDC RAW so that we can react to read and write completion. */
+	cdc_raw_set_write_callback(cdc0, &_write_callback);
+
 	/* Allocate a buffer with existing data */
 	buf = net_buf_alloc_with_data(&_buf_pool,
-		(void *)0xb1100000, 1024 * 63, Z_TIMEOUT_NO_WAIT);
+		(void *)0xb1100000, 1024 * 1024 * 63, Z_TIMEOUT_NO_WAIT);
 	__ASSERT_NO_MSG(buf != NULL);
 
-	LOG_DBG("0");
-
-	/* Wait that a serial console connects */
+	LOG_DBG("Waiting a serial console to connect...");
 	while (!cdc_raw_is_ready(cdc0)) {
 		k_sleep(K_MSEC(100));
 	}
-	LOG_DBG("1");
 
-	/* Then give a bit of time for the console to disconnect */
-	k_sleep(K_SECONDS(10));
-	LOG_DBG("2");
+	LOG_DBG("Waiting a bit before starting the stream...");
+	k_sleep(K_SECONDS(5));
 
-	/* Then perform the bulk throughput test */
-	for (int i = 0;;) {
-		k_sleep(K_MSEC(100));
-		if (cdc_raw_write(cdc0, buf) == 0) {
-			LOG_INF("%d", i++);
-		}
-	}
+	LOG_DBG("Starting the bulk throughput test...");
+	cdc_raw_write(cdc0, buf);
+
+	/* The callbacks will be used instead */
+	k_sleep(K_FOREVER);
 
 	return 0;
 }

@@ -23,9 +23,9 @@ NET_BUF_POOL_DEFINE(_buf_pool, 2, 0, sizeof(struct udc_buf_info), NULL);
 
 /* And then define the actual buffer that is going to be used, with a prefix
  * that makes the linker script place it on a DMA-accessible memory */
-uint8_t usb23_dma_buf[1024];
+static uint8_t usb23_dma_buf[1024];
 
-int _read_callback(const struct device *dev, struct net_buf *buf, int err)
+static int _read_callback(const struct device *dev, struct net_buf *buf, int err)
 {
 	if (err) {
 		LOG_ERR("USB read error %d", err);
@@ -39,10 +39,10 @@ int _read_callback(const struct device *dev, struct net_buf *buf, int err)
 	return cdc_raw_write(dev, buf);
 }
 
-int _write_callback(const struct device *dev, struct net_buf *buf, int err)
+static int _write_callback(const struct device *dev, struct net_buf *buf, int err)
 {
 	if (err) {
-		LOG_ERR("USB read error %d", err);
+		LOG_ERR("USB write error %d", err);
 		return err;
 	}
 
@@ -58,7 +58,9 @@ int main(void)
 	struct net_buf *buf;
 	int err;
 
+	k_sleep(K_MSEC(500));
 	clock_control_on(pll0, NULL);
+	k_sleep(K_MSEC(500));
 
 	err = usbd_add_descriptor(&my_usbd, &my_usbd_dev_qualifier);
 	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos);
@@ -80,10 +82,10 @@ int main(void)
 	cdc_raw_set_read_callback(cdc0, &_read_callback);
 	cdc_raw_set_write_callback(cdc0, &_write_callback);
 
-	/* Enqueue a first read request, the rest happens from the callbacks */
+	/* Allocate a buffer with existing data */
 	buf = net_buf_alloc_with_data(&_buf_pool,
 		usb23_dma_buf, sizeof(usb23_dma_buf), Z_TIMEOUT_NO_WAIT);
-	__ASSERT_NO_MSG(err == 0);
+	__ASSERT_NO_MSG(buf != NULL);
 
 	/* Enqueue a first read request, the rest happens from the callbacks */
 	err = cdc_raw_read(cdc0, buf);
