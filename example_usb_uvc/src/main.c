@@ -18,10 +18,7 @@ USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 
 int main(void)
 {
-	const struct device *pll0 = DEVICE_DT_GET(DT_NODELABEL(pll0));
 	int err;
-
-	clock_control_on(pll0, NULL);
 
 	err = usbd_add_descriptor(&my_usbd, &my_usbd_dev_qualifier);
 	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos);

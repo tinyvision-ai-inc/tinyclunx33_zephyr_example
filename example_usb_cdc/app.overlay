@@ -6,7 +6,7 @@
 	num-endpoint-trb = <2 2  10 10  10 10>;
 
 	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
-	maximum-speed = "super-speed";
+	maximum-speed = "high-speed";
 
 	cdc0: zephyr_cdc0 {
 		compatible = "zephyr,cdc-raw";

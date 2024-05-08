@@ -54,13 +54,8 @@ static int _write_callback(const struct device *dev, struct net_buf *buf, int er
 int main(void)
 {
 	const struct device *cdc0 = DEVICE_DT_GET(DT_NODELABEL(cdc0));
-	const struct device *pll0 = DEVICE_DT_GET(DT_NODELABEL(pll0));
 	struct net_buf *buf;
 	int err;
-
-	k_sleep(K_MSEC(500));
-	clock_control_on(pll0, NULL);
-	k_sleep(K_MSEC(500));
 
 	err = usbd_add_descriptor(&my_usbd, &my_usbd_dev_qualifier);
 	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos);

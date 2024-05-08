@@ -3,14 +3,43 @@
 	num-bidir-endpoints = <2>;
 
 	/* Number of transfer requests for each endpoint */
-	num-endpoint-trb = <2 2  0 32>;
+	num-endpoint-trb = </* EP0 */ 2 2 /* EP1 */ 0 32>;
 
 	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
 	maximum-speed = "high-speed";
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
-		payload-addr = <0xb1100000>;
 		status = "okay";
+
+		uvc0in: input-terminal {
+			compatible = "zephyr,uvc-input-terminal";
+
+			port {
+				uvc0ep: endpoint {
+					remote-endpoint = <&gen0out>;
+				};
+			};
+		};
+
+		uvc0out: output-terminal {
+			compatible = "zephyr,uvc-output-terminal";
+			source = <&uvc0in>;
+		};
+	};
+};
+
+/ {
+	soc {
+		tinygen@b1100000 {
+			compatible = "tinyvision,tinygen";
+			reg = <0xb1100000 0x0010000>;
+
+			port {
+				gen0out: endpoint {
+					remote-endpoint = <&uvc0ep>;
+				};
+			};
+		};
 	};
 };
