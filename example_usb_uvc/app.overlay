@@ -6,7 +6,7 @@
 	num-endpoint-trb = </* EP0 */ 2 2 /* EP1 */ 0 32>;
 
 	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
-	maximum-speed = "high-speed";
+	maximum-speed = "super-speed";
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
@@ -31,9 +31,9 @@
 
 / {
 	soc {
-		tinygen@b1100000 {
+		tinygen@b1200000 {
 			compatible = "tinyvision,tinygen";
-			reg = <0xb1100000 0x0010000>;
+			reg = <0xb1200000 0x00100000>;
 
 			port {
 				gen0out: endpoint {
