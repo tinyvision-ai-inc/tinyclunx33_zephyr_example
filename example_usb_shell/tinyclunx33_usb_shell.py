@@ -52,9 +52,6 @@ class TinyClunx33:
         """
         self.run_command(f'i2c write {dev} {addr:x} {reg:x} {byte:x}')
 
-    def close():
-        self.pipe.close()
-
 def main():
     ap = ArgumentParser(prog='tinyclunx33_usb_shell',
         description='Access and control of the tinyCLUNX33 shell over USB')
