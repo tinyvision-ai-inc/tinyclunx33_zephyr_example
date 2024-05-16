@@ -7,7 +7,7 @@
 #include <zephyr/usb/class/usb_cdc_raw.h>
 
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
+LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 
 USBD_DEVICE_DEFINE(my_usbd, DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)), 0x1209, 0x0001);
 USBD_DEVICE_QUALIFIER_DEFINE(my_usbd_dev_qualifier);
@@ -18,20 +18,26 @@ USBD_DESC_MANUFACTURER_DEFINE(my_usbd_manufacturer, "tinyVision.ai");
 USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 //USBD_DESC_SERIAL_NUMBER_DEFINE(my_usbd_serial_number, "0123456789ABCDEF");
 
-/* Static pool of buffer with no data in it */
-NET_BUF_POOL_DEFINE(_buf_pool, 2, 0, sizeof(struct udc_buf_info), NULL);
+/* Static pool of empty buffers: pointer given externally */
+NET_BUF_POOL_DEFINE(_pool, 1, 0, sizeof(struct udc_buf_info), NULL);
+
+#define RAM1_ADDR DT_REG_ADDR(DT_NODELABEL(ram1))
+#define RAM1_SIZE (DT_REG_SIZE(DT_NODELABEL(ram1)) * 1024)
 
 static int _write_callback(const struct device *dev, struct net_buf *buf, int err)
 {
+	struct udc_buf_info *bi = udc_get_buf_info(buf);
+
 	if (err) {
 		LOG_ERR("USB write error %d", err);
 		return err;
 	}
-	LOG_DBG("%s: buf=%p data=%p len=%d size=%d", __func__,
-		buf, buf->data, buf->len, buf->size);
+	LOG_DBG("%s: buf=%p data=%p len=%d size=%d zlp=%d", __func__,
+		buf, buf->data, buf->len, buf->size, bi->zlp);
 
-	/* Write the same buffer again immediately */
-	return cdc_raw_write(dev, buf);
+	/* Freeing here will unblock the memory pool */
+	net_buf_unref(buf);
+	return 0;
 }
 
 int main(void)
@@ -64,24 +70,21 @@ int main(void)
 	/* Glue with the CDC RAW so that we can react to read and write completion. */
 	cdc_raw_set_write_callback(cdc0, &_write_callback);
 
-	/* Allocate a buffer with existing data */
-	buf = net_buf_alloc_with_data(&_buf_pool,
-		(void *)0xb1100000, 1024 * 1024 * 63, Z_TIMEOUT_NO_WAIT);
-	__ASSERT_NO_MSG(buf != NULL);
-
-	LOG_DBG("Waiting a serial console to connect...");
+	LOG_DBG("Waiting a serial console 0 to connect...");
 	while (!cdc_raw_is_ready(cdc0)) {
 		k_sleep(K_MSEC(100));
 	}
 
 	LOG_DBG("Waiting a bit before starting the stream...");
-	k_sleep(K_SECONDS(5));
+	k_sleep(K_SECONDS(1));
 
 	LOG_DBG("Starting the bulk throughput test...");
-	cdc_raw_write(cdc0, buf);
-
-	/* The callbacks will be used instead */
-	k_sleep(K_FOREVER);
+	while (true) {
+		/* This will wait until _write_callback frees some more buffers */
+		buf = net_buf_alloc_with_data(&_pool, (void *)RAM1_ADDR, RAM1_SIZE, K_FOREVER);
+		__ASSERT_NO_MSG(buf != NULL);
+		cdc_raw_write(cdc0, buf, false);
+	}
 
 	return 0;
 }

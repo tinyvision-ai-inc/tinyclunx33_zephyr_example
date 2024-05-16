@@ -1,9 +1,9 @@
 &zephyr_udc0 {
 	/* IN and OUT counting together as one endpoint */
-	num-bidir-endpoints = <3>;
+	num-bidir-endpoints = <5>;
 
 	/* Number of transfer requests for each endpoint */
-	num-endpoint-trb = <2 2  3 3  3 400>;
+	num-endpoint-trb = </*EP0*/ 2 2 /*EP1*/ 3 3 /*EP2*/ 3 930>;
 
 	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
 	maximum-speed = "super-speed";
