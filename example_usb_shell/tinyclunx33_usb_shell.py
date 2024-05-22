@@ -42,8 +42,8 @@ class TinyClunx33:
         """
         if size > 16:
             raise ValueError("max size is 16")
-        hexdump = self.run_command(f'i2c read {dev} {addr:x} {reg:x} {size:x}')
-        return bytes(int(s, 16) for s in re.split('[ |.\r\n]+', hexdump)[2:-1])
+        hexdump = self.run_command(f'i2c read {dev} {addr:x} {reg:x} {size:x}')[:-20]
+        return bytes(int(s, 16) for s in re.split('[ \r\n]+', hexdump)[2:-1])
 
     def i2c_reg8_write(self, addr, reg, byte, dev=DEFAULT_I2C_DEVICE, timeout=3):
         """

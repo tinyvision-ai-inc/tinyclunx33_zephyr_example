@@ -18,6 +18,7 @@ USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 
 int main(void)
 {
+	const struct device *udc0 = DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0));
 	int err;
 
 	err = usbd_add_descriptor(&my_usbd, &my_usbd_dev_qualifier);
@@ -36,7 +37,10 @@ int main(void)
 	err = usbd_enable(&my_usbd);
 	__ASSERT_NO_MSG(err == 0);
 
-	k_sleep(K_FOREVER);
+	while (true) {
+		usb23_irq_handler(udc0);
+		k_sleep(K_MSEC(10));
+	}
 
 	return 0;
 }
