@@ -25,6 +25,7 @@
 		ep@81 {
 			reg = <0x81>;
 			num-trbs = <10>;
+			usb23-manager = <&usb23_manager>;
 		};
 	};
 
@@ -56,7 +57,7 @@
 	soc {
 		tinygen@b1200000 {
 			compatible = "tinyvision,tinygen";
-			reg = <0xb1200000 0x00100000>;
+			reg = <0xb1100000 0x00100000>;
 
 			port {
 				gen0out: endpoint {

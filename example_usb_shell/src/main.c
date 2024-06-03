@@ -51,8 +51,6 @@ int main(void)
 	err |= usbd_enable(&my_usbd);
 	__ASSERT_NO_MSG(err == 0);
 
-	__ASSERT_NO_MSG(err == 0);
-
 	k_sleep(K_FOREVER);
 	return 0;
 }
