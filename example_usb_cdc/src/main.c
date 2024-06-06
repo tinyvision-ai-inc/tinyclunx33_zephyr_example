@@ -36,7 +36,7 @@ static int _read_callback(const struct device *dev, struct net_buf *buf, int err
 
 	/* Once we read something, echo the same buffer back, so it is not
 	 * freed now yet... */
-	return cdc_raw_write(dev, buf);
+	return cdc_raw_write(dev, buf, true);
 }
 
 static int _write_callback(const struct device *dev, struct net_buf *buf, int err)
