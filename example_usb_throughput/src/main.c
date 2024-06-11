@@ -22,7 +22,7 @@ USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 NET_BUF_POOL_DEFINE(_pool, 1, 0, sizeof(struct udc_buf_info), NULL);
 
 #define RAM1_ADDR DT_REG_ADDR(DT_NODELABEL(ram1))
-#define RAM1_SIZE (DT_REG_SIZE(DT_NODELABEL(ram1)) * 1024)
+#define RAM1_SIZE DT_REG_SIZE(DT_NODELABEL(ram1))
 
 static int _write_callback(const struct device *dev, struct net_buf *buf, int err)
 {
