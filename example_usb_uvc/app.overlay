@@ -19,7 +19,7 @@
 
 		ep@1 {
 			reg = <0x01>;
-			num-trbs = <2>;
+			num-trbs = <3>;
 		};
 
 		ep@81 {
@@ -57,7 +57,7 @@
 	soc {
 		tinygen@b1200000 {
 			compatible = "tinyvision,tinygen";
-			reg = <0xb1100000 0x00100000>;
+			reg = <0xb1200000 0x00100000>;
 
 			port {
 				gen0out: endpoint {

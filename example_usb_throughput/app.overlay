@@ -1,6 +1,6 @@
 &zephyr_udc0 {
 	/* IN and OUT counting together as one endpoint */
-	num-bidir-endpoints = <5>;
+	num-bidir-endpoints = <3>;
 
 	endpoints {
 		compatible = "lattice,usb23-endpoints";

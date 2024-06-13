@@ -25,7 +25,7 @@ USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 //USBD_DESC_SERIAL_NUMBER_DEFINE(my_usbd_serial_number, "0123456789ABCDEF");
 
 /* Static pool of buffer with no data in it */
-NET_BUF_POOL_DEFINE(_buf_pool, 2, 0, sizeof(struct udc_buf_info), NULL);
+NET_BUF_POOL_DEFINE(_buf_pool, 5, 0, sizeof(struct udc_buf_info), NULL);
 
 #define RAM1_ADDR DT_REG_ADDR(DT_NODELABEL(ram1))
 #define RAM1_SIZE DT_REG_SIZE(DT_NODELABEL(ram1))
@@ -45,7 +45,7 @@ void sleep_ms(uint32_t msec)
 
 int main(void)
 {
-	struct net_buf *buf;
+	struct net_buf *buf0, *buf1;
 	int err;
 
 	k_sleep(K_MSEC(200));
@@ -72,8 +72,9 @@ int main(void)
 	cdc_raw_set_write_callback(cdc0, &_write_callback);
 
 	/* Allocate a buffer with existing data */
-	buf = net_buf_alloc_with_data(&_buf_pool, (void *)0xb1200000, 128 * 1024, K_NO_WAIT);
-	__ASSERT_NO_MSG(buf != NULL);
+	buf0 = net_buf_alloc_with_data(&_buf_pool, (void *)0xb1100000, 12, K_NO_WAIT);
+	buf1 = net_buf_alloc_with_data(&_buf_pool, (void *)0xb1200000, 128 * 1024, K_NO_WAIT);
+	__ASSERT_NO_MSG(buf0 && buf1);
 
 	LOG_DBG("0");
 
@@ -86,7 +87,9 @@ int main(void)
 		LOG_DBG("sending something in %d", i);
 		sleep_ms(600);
 	}
-	cdc_raw_write(CDC0, buf, false);
+
+	cdc_raw_write(CDC0, buf0, false);
+	cdc_raw_write(CDC0, buf1, true);
 
 	while (true) {
 		sleep_ms(10000);
