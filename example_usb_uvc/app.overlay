@@ -24,7 +24,7 @@
 
 		ep@81 {
 			reg = <0x81>;
-			num-trbs = <10>;
+			num-trbs = <100>;
 			usb23-manager = <&usb23_manager>;
 		};
 	};

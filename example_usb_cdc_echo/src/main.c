@@ -9,7 +9,10 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
-USBD_DEVICE_DEFINE(my_usbd, DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)), 0x1209, 0x0001);
+#define UDC0 DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0))
+#define CDC0 DEVICE_DT_GET(DT_NODELABEL(cdc0))
+
+USBD_DEVICE_DEFINE(my_usbd, UDC0, 0x1209, 0x0001);
 USBD_DEVICE_QUALIFIER_DEFINE(my_usbd_dev_qualifier);
 USBD_CONFIGURATION_DEFINE(my_usbd_config, USB_SCD_SELF_POWERED, 100);
 USBD_BOS_DEFINE(my_usbd_bos);
@@ -34,6 +37,15 @@ static int _read_callback(const struct device *dev, struct net_buf *buf, int err
 
 	LOG_HEXDUMP_DBG(buf->data, buf->len, "USB read complete");
 
+	/* Convert to uppercase to proove we received and modifed it in the way */
+	for (size_t i = 0; i < buf->len; i++) {
+		char *s = (char *)buf->data + i;
+
+		if (*s >= 'a' && *s <= 'z') {
+			*s += 'A' - 'a';
+		}
+	}
+
 	/* Once we read something, echo the same buffer back, so it is not
 	 * freed now yet... */
 	return cdc_raw_write(dev, buf, true);
@@ -53,7 +65,6 @@ static int _write_callback(const struct device *dev, struct net_buf *buf, int er
 
 int main(void)
 {
-	const struct device *cdc0 = DEVICE_DT_GET(DT_NODELABEL(cdc0));
 	struct net_buf *buf;
 	int err;
 
@@ -74,19 +85,26 @@ int main(void)
 	__ASSERT_NO_MSG(err == 0);
 
 	/* Glue with the CDC RAW so that we can react to read and write completion. */
-	cdc_raw_set_read_callback(cdc0, &_read_callback);
-	cdc_raw_set_write_callback(cdc0, &_write_callback);
+	cdc_raw_set_read_callback(CDC0, &_read_callback);
+	cdc_raw_set_write_callback(CDC0, &_write_callback);
 
 	/* Allocate a buffer with existing data */
 	buf = net_buf_alloc_with_data(&_buf_pool,
 		usb23_dma_buf, sizeof(usb23_dma_buf), Z_TIMEOUT_NO_WAIT);
 	__ASSERT_NO_MSG(buf != NULL);
 
+	while (!cdc_raw_is_ready(CDC0)) {
+		usb23_irq_handler(UDC0);
+		k_sleep(K_MSEC(5));
+	}
+
 	/* Enqueue a first read request, the rest happens from the callbacks */
-	err = cdc_raw_read(cdc0, buf);
+	err = cdc_raw_read(CDC0, buf);
 	__ASSERT_NO_MSG(err == 0);
 
-	k_sleep(K_FOREVER);
-
+	while (true) {
+		usb23_irq_handler(UDC0);
+		k_sleep(K_MSEC(5));
+	}
 	return 0;
 }

@@ -8,7 +8,9 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
-USBD_DEVICE_DEFINE(my_usbd, DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)), 0x1209, 0x0001);
+#define UDC0 DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0))
+
+USBD_DEVICE_DEFINE(my_usbd, UDC0, 0x1209, 0x0001);
 
 int main(void)
 {
@@ -51,6 +53,10 @@ int main(void)
 	err |= usbd_enable(&my_usbd);
 	__ASSERT_NO_MSG(err == 0);
 
-	k_sleep(K_FOREVER);
+
+	while (true) {
+		usb23_irq_handler(UDC0);
+		k_sleep(K_MSEC(5));
+	}
 	return 0;
 }
