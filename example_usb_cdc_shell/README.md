@@ -45,4 +45,4 @@ Available commands:
 uart:~$
 ```
 
-The baudrate can be ignored: there is no physical UART involved: directly USB.
+The baudrate can be ignored: there is no physical UART involved.
