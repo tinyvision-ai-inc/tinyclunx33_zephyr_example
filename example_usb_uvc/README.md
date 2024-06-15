@@ -1,44 +1,41 @@
 # USB UVC Example
 
-This uses the USB Video class (UVC), with the feed parameters for now hardcoded
-into the `usbd_uvc.c` class implementation.
+This uses the USB Video class (UVC) to display a test pattern.
 
 After programming the device and power cycling the board, a video interface
-would show-up, such as on `/dev/video2` on Linux, and can be opened with tools
-such as
-[VLC](https://www.videolan.org/vlc/),
-[Gstreamer](https://gstreamer.freedesktop.org/),
-[ffplay](https://ffmpeg.org/ffplay.html),
-[guvcview](https://guvcview.sourceforge.net/),
-or libraries such as [OpenCV](https://opencv.org/),
-or eventually [libuvc](https://github.com/libuvc/libuvc) for low-level access.
+would show-up, such as on `/dev/video0` on Linux.
 
 ```
-gst-launch-1.0 v4l2src device=/dev/video2 ! videoconvert ! autovideosink
-mpv /dev/video2
-ffplay /dev/video2
-vlc v4l2:///dev/video2
+# Use a web browser to open the camera
+
+# Or play it using https://gstreamer.freedesktop.org/
+gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! autovideosink
+
+# Or play it using https://mpv.io/
+mpv /dev/video0
+
+# Or play it using https://www.videolan.org/vlc/
+vlc v4l2:///dev/video0
+
+# Or play it using https://ffmpeg.org/ffplay.html
+ffplay /dev/video0
+
+# Or record it using https://ffmpeg.org/
+ffmpeg -i /dev/video0 tinyclunx33_capture.mp4
+
+# Or record it using https://guvcview.sourceforge.net/
+guvcview --device=/dev/video0
+
+# Or record the raw data using V4L2 utilities
+v4l2-ctl --device /dev/video0 --stream-mmap --stream-count=500 --stream-to=tinyclunx33_capture.bin
+
+# Or play it using https://opencv.org/
+import cv2
+cv2.namedWindow("preview")
+vc = cv2.VideoCapture(0)
+while (val := vc.read())[0]:
+    cv2.waitKey(20)
+    cv2.imshow("preview", val[1])
+cv2.destroyWindow("preview")
+vc.release()
 ```
-
-
-## Using a different data source
-
-Not every address is accessible from everything: the USB23 core own DMA engine
-is only able to access what is rooted to it, while the CPU has access to
-everything.
-
-Here are some notable examples of things that are not accessible from the USB23
-core, which performs DMA requests to transfer the USB data in and out:
-
-- RISC-V main RAM: stack or heap buffers (variable, arrays, malloc() results...)
-- Flash: Variables and buffers marked as `const`
-
-On the other hand, it has a direct access to:
-
-- All cores attached to AXI64, such as high-throughput MIPI data pipes.
-- A small "scratch" RAM block is used as temporary buffer.
-
-This temporary buffer can be used to exchange data with the CPU.
-A linker script parameter is set so that each variable with a name starting by
-`usb23_dma_` gets allocated onto that exchange region, which can be used from
-the driver or application alike.
