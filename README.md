@@ -27,9 +27,9 @@ west build -b tinyclunx33
 west flash
 
 # Program the FPGA image, only needed the first time
-latest=v0.5/tinyclunx33_rtl_reference_design_v0.5.bit
+latest=v0.7/tinyclunx33_rtl_reference_design_v0.7.bit
 wget https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/download/$latest
-sudo ecpprog tinyclunx33_rtl_reference_design_v0.5.bit
+sudo ecpprog tinyclunx33_rtl_reference_design_v0.7.bit
 
 # Power-cycle the board
 
