@@ -3,7 +3,7 @@
 Sample project showing how run Zephyr on a VexRiscv CPU running on the
 tinyCLUNX33.
 
-```
+```shell
 # Setup a venv into which install dependencies
 python3 -m venv ~/zephyrproject/.venv
 . ~/zephyrproject/.venv/bin/activate
@@ -15,7 +15,10 @@ west init -m https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example
 west update
 
 # Visit the example directory you wish to run
-cd tinyclunx33_zephyr_example/example_usb_*
+cd tinyclunx33_zephyr_example/example_usb_cdc_echo/
+cd tinyclunx33_zephyr_example/example_usb_cdc_shell/
+cd tinyclunx33_zephyr_example/example_usb_cdc_throughput/
+cd tinyclunx33_zephyr_example/example_usb_uvc/
 
 # To build for the tinyVision.ai tinyCLUNX33 board:
 west build -b tinyclunx33
@@ -39,4 +42,4 @@ sudo dmesg -w
 # Connect the DATA USB interface and observe the effect in dmesg
 ```
 
-There is a README present in each example directory for usage instructions of each examplex.
+There is a README present in each example directory for usage instructions of each example.
