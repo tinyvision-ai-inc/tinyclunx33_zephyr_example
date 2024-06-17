@@ -1,34 +1,27 @@
 from pexpect import replwrap, popen_spawn
 from argparse import ArgumentParser
-import sys, os, re
+import sys, os, re, time
 
 DEFAULT_SERIAL_PORT = '/dev/ttyACM0'
 DEFAULT_I2C_DEVICE = 'i2c@e0005000'
 DEFAULT_I2C_ADDRESS = '0x10'
 
 class TinyClunx33:
-    def __init__(self, serial_port, verbose=False, timeout=3):
+    def __init__(self, serial_port, verbose=False):
         self.verbose = verbose
 
-        self.proc = popen_spawn.PopenSpawn(f'picocom -q {serial_port}',
-            timeout=timeout)
+        self.proc = popen_spawn.PopenSpawn(f'picocom -q {serial_port}')
         self.proc.echo = False
         if verbose:
-            self.proc.logfile = sys.stdout.buffer
+            self.proc.logfile = sys.stderr.buffer
         esc = '\x1b\[[^A-Za-z]*[A-Za-z]'
         self.prompt = f'{esc}uart:~[$] {esc}'
 
-        # Make the prompt appear, skip previous command if any
-        self.proc.sendline('')
-        self.proc.expect(self.prompt)
-
-        # Avoid the text being sent back at us
-        self.proc.sendline('shell echo off')
-        self.proc.expect(self.prompt)
-
     def run_command(self, text, timeout=3):
         self.proc.sendline(text)
+        self.proc.expect(text + '\r\n', timeout=timeout)
         self.proc.expect(self.prompt, timeout=timeout)
+        print('=> ' + self.proc.before.decode('utf8'), end='', file=sys.stderr)
         return self.proc.before.decode('utf8')
 
     def i2c_scan(self, dev=DEFAULT_I2C_DEVICE, timeout=3):
@@ -37,13 +30,14 @@ class TinyClunx33:
     def i2c_reg8_read(self, addr, reg, size=1, dev=DEFAULT_I2C_DEVICE, timeout=3):
         """
         Read 'size' bytes from the 8-bit register 'reg' of I2C
-        peripheral at address 'addr' on I2C bus 'dev' and return the bytearray
+        peripheral at address 'addr' on I2C bus 'dev' and return the list
         of values read as a result
         """
         if size > 16:
             raise ValueError("max size is 16")
-        hexdump = self.run_command(f'i2c read {dev} {addr:x} {reg:x} {size:x}')[:-20]
-        return bytes(int(s, 16) for s in re.split('[ \r\n]+', hexdump)[2:-1])
+        n = len("00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00")
+        hexdump = self.run_command(f'i2c read {dev} {addr:x} {reg:x} {size:x}')[10:n]
+        return list(int(s, 16) for s in re.split('[ \r\n]+', hexdump)[:-1])
 
     def i2c_reg8_write(self, addr, reg, byte, dev=DEFAULT_I2C_DEVICE, timeout=3):
         """
