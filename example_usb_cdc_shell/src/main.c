@@ -2,13 +2,16 @@
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/usb/udc.h>
 #include <zephyr/drivers/video.h>
+#include <zephyr/drivers/i2c.h>
 #include <zephyr/usb/usbd.h>
 #include <zephyr/usb/bos.h>
+#include <zephyr/shell/shell.h>
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
 #define UDC0 DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0))
+#define I2C0 DEVICE_DT_GET(DT_NODELABEL(i2c0))
 
 USBD_DEVICE_DEFINE(my_usbd, UDC0, 0x1209, 0x0001);
 
@@ -53,10 +56,52 @@ int main(void)
 	err |= usbd_enable(&my_usbd);
 	__ASSERT_NO_MSG(err == 0);
 
-
 	while (true) {
 		usb23_irq_handler(UDC0);
 		k_sleep(K_MSEC(5));
 	}
 	return 0;
 }
+
+static int cmd_example123_subcommand1(const struct shell *sh, size_t argc, char **argv)
+{
+	uint8_t addr = 0x10;
+	uint8_t reg = 0x41;
+	uint8_t val = 0xff;
+	int ret;
+
+	ret = i2c_reg_write_byte(I2C0, addr, reg, val);
+	if (ret < 0) {
+		shell_error(sh, "write failed: addr=0x%02x reg=0x%02x val=0x%02x", addr, reg, val);
+		return ret;
+	}
+
+	shell_print(sh, "wrote to addr=0x%02x reg=0x%02x val=0x%02x", addr, reg, val);
+	return 0;
+}
+
+static int cmd_example123_subcommand2(const struct shell *sh, size_t argc, char **argv)
+{
+	uint8_t addr = 0x10;
+	const char wbuf[] = {0x00};
+	char rbuf[10];
+	int ret;
+
+	ret = i2c_write_read(I2C0, addr, wbuf, sizeof(wbuf), rbuf, sizeof(rbuf));
+	if (ret < 0) {
+		shell_error(sh, "read failed: addr=0x%02x reg=0x%02x size=%d", addr, wbuf[0],
+			    sizeof(rbuf));
+		return ret;
+	}
+
+	shell_hexdump(sh, rbuf, sizeof(rbuf));
+	return 0;
+}
+
+SHELL_STATIC_SUBCMD_SET_CREATE(sub_example123,
+			       SHELL_CMD(subcommand1, NULL, "First example command",
+					 &cmd_example123_subcommand1),
+			       SHELL_CMD(subcommand2, NULL, "Second example command",
+					 &cmd_example123_subcommand2),
+			       SHELL_SUBCMD_SET_END);
+SHELL_CMD_REGISTER(example123, &sub_example123, "Demo commands", NULL);
