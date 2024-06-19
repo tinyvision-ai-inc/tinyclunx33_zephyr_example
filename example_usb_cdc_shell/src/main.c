@@ -1,6 +1,6 @@
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/usb/udc.h>
-#include <zephyr/drivers/video.h>
+#include <zephyr/drivers/uart.h>
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/usb/usbd.h>
 #include <zephyr/usb/bos.h>
@@ -9,20 +9,30 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
-static const struct usb_bos_capability_superspeed_usb cap_ss = {
+#define SPEEDS (USB_BOS_SPEED_SUPERSPEED_GEN1 | USB_BOS_SPEED_HIGHSPEED | USB_BOS_SPEED_FULLSPEED)
+
+static const struct usb_bos_capability_superspeed_usb bos_cap_ss = {
 	.bLength = sizeof(struct usb_bos_capability_superspeed_usb),
 	.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
 	.bDevCapabilityType = USB_BOS_CAPABILITY_SUPERSPEED_USB,
 	.bmAttributes = 0,
-	.wSpeedsSupported = sys_cpu_to_le16(USB_BOS_SPEED_SUPERSPEED_GEN1 |
-					    USB_BOS_SPEED_HIGHSPEED | USB_BOS_SPEED_FULLSPEED),
+	.wSpeedsSupported = sys_cpu_to_le16(SPEEDS),
 	.bFunctionnalSupport = 1,
 	.bU1DevExitLat = 10,
 	.wU2DevExitLat = sys_cpu_to_le16(1023),
 };
-USBD_DESC_BOS_DEFINE(my_usbd_bos_cap_ss, sizeof(cap_ss), &cap_ss);
+USBD_DESC_BOS_DEFINE(my_usbd_bos_cap_ss, sizeof(bos_cap_ss), &bos_cap_ss);
+
+static const struct usb_bos_capability_lpm bos_cap_lpm = {
+	.bLength = sizeof(struct usb_bos_capability_lpm),
+	.bDescriptorType = USB_DESC_DEVICE_CAPABILITY,
+	.bDevCapabilityType = USB_BOS_CAPABILITY_EXTENSION,
+	.bmAttributes = USB_BOS_ATTRIBUTES_LPM,
+};
+USBD_DESC_BOS_DEFINE(my_usbd_bos_cap_lpm, sizeof(bos_cap_lpm), &bos_cap_lpm);
 
 #define UDC0 DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0))
+#define CDC0 DEVICE_DT_GET(DT_NODELABEL(cdc0))
 #define I2C0 DEVICE_DT_GET(DT_NODELABEL(i2c0))
 
 USBD_DEVICE_DEFINE(my_usbd, UDC0, 0x1209, 0x0001);
@@ -37,6 +47,7 @@ int main(void)
 #endif
 	USBD_DESC_LANG_DEFINE(my_usbd_lang);
 	err |= usbd_add_descriptor(&my_usbd, &my_usbd_lang);
+	LOG_DBG("print err=%d", err);
 	__ASSERT_NO_MSG(err == 0);
 
 	USBD_DESC_MANUFACTURER_DEFINE(my_usbd_manufacturer, "tinyVision.ai");
@@ -55,8 +66,16 @@ int main(void)
 	err |= usbd_add_configuration(&my_usbd, USBD_SPEED_SS, &my_usbd_config);
 	__ASSERT_NO_MSG(err == 0);
 
-	//err |= usbd_register_class(&my_usbd, "cdc_acm_0", USBD_SPEED_SS, 1);
-	//__ASSERT_NO_MSG(err == 0);
+	err = usbd_register_all_classes(&my_usbd, USBD_SPEED_SS, 1);
+	__ASSERT_NO_MSG(err == 0);
+
+	usbd_device_set_code_triple(&my_usbd, USBD_SPEED_SS, USB_BCC_MISCELLANEOUS, 0x02, 0x01);
+
+	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos_cap_lpm);
+	__ASSERT_NO_MSG(err == 0);
+
+	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos_cap_ss);
+	__ASSERT_NO_MSG(err == 0);
 
 	err |= usbd_init(&my_usbd);
 	__ASSERT_NO_MSG(err == 0);
@@ -64,10 +83,7 @@ int main(void)
 	err |= usbd_enable(&my_usbd);
 	__ASSERT_NO_MSG(err == 0);
 
-	while (true) {
-		usb23_irq_handler(UDC0);
-		k_sleep(K_MSEC(5));
-	}
+	k_sleep(K_FOREVER);
 	return 0;
 }
 
@@ -83,7 +99,6 @@ static int cmd_example123_subcommand1(const struct shell *sh, size_t argc, char 
 		shell_error(sh, "write failed: addr=0x%02x reg=0x%02x val=0x%02x", addr, reg, val);
 		return ret;
 	}
-
 	shell_print(sh, "wrote to addr=0x%02x reg=0x%02x val=0x%02x", addr, reg, val);
 	return 0;
 }
