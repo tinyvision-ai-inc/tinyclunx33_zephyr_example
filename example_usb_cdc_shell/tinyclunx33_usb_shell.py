@@ -33,9 +33,21 @@ class TinyClunx33:
         peripheral at address 'addr' on I2C bus 'dev' and return the list
         of values read as a result
         """
+        result = []
+        while size > 0:
+            n = min(size, 16)
+            result.extend(self.i2c_reg8_read16(addr, reg, n, dev=dev, timeout=timeout))
+            size -= n
+            reg += n
+        return result
+
+    def i2c_reg8_read16(self, addr, reg, size=1, dev=DEFAULT_I2C_DEVICE, timeout=3):
+        """
+        Same as i2c_reg8_read() but reads at most 16 bytes
+        """
         if size > 16:
             raise ValueError("max size is 16")
-        n = len("00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00")
+        n = len("00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 ")
         hexdump = self.run_command(f'i2c read {dev} {addr:x} {reg:x} {size:x}')[10:n]
         return list(int(s, 16) for s in re.split('[ \r\n]+', hexdump)[:-1])
 
