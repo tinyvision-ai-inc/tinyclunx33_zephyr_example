@@ -41,9 +41,9 @@
 
 / {
 	soc {
-		tinygen: tinygen@b1200000 {
+		tinygen: tinygen@b1100000 {
 			compatible = "tinyvision,tinygen";
-			reg = <0xb1200000 0x00100000>;
+			reg = <0xb1100000 0x00100000>;
 		};
 	};
 };
