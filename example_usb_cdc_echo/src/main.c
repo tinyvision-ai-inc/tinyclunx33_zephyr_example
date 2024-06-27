@@ -102,8 +102,6 @@ int main(void)
 
 	usbd_device_set_code_triple(&my_usbd, USBD_SPEED_SS, USB_BCC_MISCELLANEOUS, 0x02, 0x01);
 
-	err |= usbd_register_all_classes(&my_usbd, USBD_SPEED_FS, 1);
-	err |= usbd_register_all_classes(&my_usbd, USBD_SPEED_HS, 1);
 	err |= usbd_register_all_classes(&my_usbd, USBD_SPEED_SS, 1);
 	__ASSERT_NO_MSG(err == 0);
 
