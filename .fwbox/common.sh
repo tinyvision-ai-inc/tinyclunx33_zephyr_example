@@ -1,10 +1,17 @@
 # Configuration common to all boxes
 
+rtl=v0.7
+rtl=https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/download/$rtl/tinyclunx33_rtl_reference_design_$rtl.bit
+
 FWBOX_GPIO="${FWBOX:?} picocom,port=/dev/ttyACM0 repl"
 FWBOX_LOGS="${FWBOX:?} console,port=/dev/ttyUSB1,baud=153600"
 
 fwbox_do_flash_zephyr() {
     fwbox_flash_ecpprog 0x100000 <build/zephyr/zephyr.bin
+}
+
+fwbox_do_flash_rtl() {
+    curl -Ls "$rtl" | fwbox_flash_ecpprog 0x000000
 }
 
 fwbox_do_all() (

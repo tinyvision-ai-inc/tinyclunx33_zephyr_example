@@ -122,7 +122,8 @@ int main(void)
 	__ASSERT_NO_MSG(buf != NULL);
 
 	while (!cdc_raw_is_ready(CDC0)) {
-		k_sleep(K_MSEC(100));
+		usb23_irq_handler(UDC0);
+		k_sleep(K_MSEC(10));
 	}
 
 	/* Enqueue a first read request, the rest happens from the callbacks */
