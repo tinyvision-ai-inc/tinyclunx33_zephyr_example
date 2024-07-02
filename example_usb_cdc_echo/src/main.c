@@ -130,6 +130,9 @@ int main(void)
 	err = cdc_raw_read(CDC0, buf);
 	__ASSERT_NO_MSG(err == 0);
 
-	k_sleep(K_FOREVER);
+	while (true) {
+		usb23_irq_handler(UDC0);
+		k_sleep(K_MSEC(10));
+	}
 	return 0;
 }

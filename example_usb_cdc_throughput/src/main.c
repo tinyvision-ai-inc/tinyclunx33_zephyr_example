@@ -68,7 +68,7 @@ void sleep_ms(uint32_t msec)
 {
 	for (int ms = 0; ms < msec; ms += 20) {
 		k_sleep(K_MSEC(10));
-		//usb23_irq_handler(UDC0);
+		usb23_irq_handler(UDC0);
 	}
 }
 
