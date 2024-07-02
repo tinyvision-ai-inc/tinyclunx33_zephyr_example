@@ -1,13 +1,19 @@
+#include <zephyr/kernel.h>
 #include <zephyr/devicetree.h>
+#include <zephyr/drivers/clock_control.h>
 #include <zephyr/drivers/usb/udc.h>
-#include <zephyr/drivers/uart.h>
 #include <zephyr/drivers/i2c.h>
+#include <zephyr/shell/shell.h>
 #include <zephyr/usb/usbd.h>
 #include <zephyr/usb/bos.h>
-#include <zephyr/shell/shell.h>
+#include <zephyr/usb/class/usb_cdc_raw.h>
 
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
+LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
+
+#define UDC0 DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0))
+#define CDC0 DEVICE_DT_GET(DT_NODELABEL(cdc0))
+#define I2C0 DEVICE_DT_GET(DT_NODELABEL(i2c0))
 
 #define SPEEDS (USB_BOS_SPEED_SUPERSPEED_GEN1 | USB_BOS_SPEED_HIGHSPEED | USB_BOS_SPEED_FULLSPEED)
 
@@ -31,50 +37,29 @@ static const struct usb_bos_capability_lpm bos_cap_lpm = {
 };
 USBD_DESC_BOS_DEFINE(my_usbd_bos_cap_lpm, sizeof(bos_cap_lpm), &bos_cap_lpm);
 
-#define UDC0 DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0))
-#define CDC0 DEVICE_DT_GET(DT_NODELABEL(cdc0))
-#define I2C0 DEVICE_DT_GET(DT_NODELABEL(i2c0))
-
 USBD_DEVICE_DEFINE(my_usbd, UDC0, 0x1209, 0x0001);
+USBD_CONFIGURATION_DEFINE(my_usbd_config, USB_SCD_SELF_POWERED, 100);
+USBD_DESC_MANUFACTURER_DEFINE(my_usbd_manufacturer, "tinyVision.ai");
+USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
+USBD_DESC_LANG_DEFINE(my_usbd_lang);
+USBD_DESC_SERIAL_NUMBER_DEFINE(my_usbd_serial_number);
 
 int main(void)
 {
 	int err = 0;
-#if 0
-	USBD_DEVICE_QUALIFIER_DEFINE(my_usbd_dev_qualifier);
-	err |= usbd_add_descriptor(&my_usbd, &my_usbd_dev_qualifier);
-	__ASSERT_NO_MSG(err == 0);
-#endif
-	USBD_DESC_LANG_DEFINE(my_usbd_lang);
+
 	err |= usbd_add_descriptor(&my_usbd, &my_usbd_lang);
-	LOG_DBG("print err=%d", err);
-	__ASSERT_NO_MSG(err == 0);
-
-	USBD_DESC_MANUFACTURER_DEFINE(my_usbd_manufacturer, "tinyVision.ai");
 	err |= usbd_add_descriptor(&my_usbd, &my_usbd_manufacturer);
-	__ASSERT_NO_MSG(err == 0);
-
-	USBD_DESC_PRODUCT_DEFINE(my_usbd_product, "tinyCLUNX33");
 	err |= usbd_add_descriptor(&my_usbd, &my_usbd_product);
-	__ASSERT_NO_MSG(err == 0);
-#if 0
-	USBD_DESC_SERIAL_NUMBER_DEFINE(my_usbd_serial_number);
-	err |= usbd_add_descriptor(&my_usbd, &my_usbd_serial_number);
-	__ASSERT_NO_MSG(err == 0);
-#endif
-	USBD_CONFIGURATION_DEFINE(my_usbd_config, USB_SCD_SELF_POWERED, 100);
+	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos_cap_lpm);
+	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos_cap_ss);
+	//err |= usbd_add_descriptor(&my_usbd, &my_usbd_serial_number);
 	err |= usbd_add_configuration(&my_usbd, USBD_SPEED_SS, &my_usbd_config);
-	__ASSERT_NO_MSG(err == 0);
-
-	err = usbd_register_all_classes(&my_usbd, USBD_SPEED_SS, 1);
 	__ASSERT_NO_MSG(err == 0);
 
 	usbd_device_set_code_triple(&my_usbd, USBD_SPEED_SS, USB_BCC_MISCELLANEOUS, 0x02, 0x01);
 
-	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos_cap_lpm);
-	__ASSERT_NO_MSG(err == 0);
-
-	err |= usbd_add_descriptor(&my_usbd, &my_usbd_bos_cap_ss);
+	err |= usbd_register_all_classes(&my_usbd, USBD_SPEED_SS, 1);
 	__ASSERT_NO_MSG(err == 0);
 
 	err |= usbd_init(&my_usbd);
