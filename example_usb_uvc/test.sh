@@ -11,7 +11,7 @@ fwbox_use idefix
 fwbox_do_all
 
 # Give it time to enumerate
-sleep 5
+sleep 10
 
 # Probe the console
 fwbox_do_video_capture
