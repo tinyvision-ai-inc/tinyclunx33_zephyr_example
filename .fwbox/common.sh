@@ -17,7 +17,7 @@ fwbox_do_flash_rtl() {
 
 fwbox_do_all() (
     set -eu
-    west build
+    west build -b tinyclunx33
     fwbox_do_flash_zephyr
     fwbox_do_power_cycle
     fwbox_do_reset
