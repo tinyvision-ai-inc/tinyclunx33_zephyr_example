@@ -11,10 +11,8 @@ fwbox_use idefix
 fwbox_do_all
 
 # Give it time to enumerate
-sleep 10
+sleep 5
 
 # Probe the console
-fwbox_run picocom --exit-after 200 /dev/ttyACM1
-
-# Start performing a transfer
-fwbox_run timeout 10 dd if=/dev/ttyACM1 of=/dev/null bs=$((0x00100000)) count=10G status=progress
+(sleep 0.4; printf '\x01\x11'; sleep 1) | fwbox_run picocom --quiet /dev/ttyACM1
+fwbox_run timeout 10 dd if=/dev/ttyACM1 of=/dev/null bs=1M count=10 iflag=fullblock status=progress

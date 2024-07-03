@@ -14,7 +14,7 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 #define CDC0 DEVICE_DT_GET(DT_NODELABEL(cdc0))
 #define PLL0 DEVICE_DT_GET(DT_NODELABEL(pll0))
 #define DUMP_ADDR 0xb1100000
-#define DUMP_SIZE (15*1024*1024)
+#define DUMP_SIZE 0x00010000
 
 #define SPEEDS (USB_BOS_SPEED_SUPERSPEED_GEN1 | USB_BOS_SPEED_HIGHSPEED | USB_BOS_SPEED_FULLSPEED)
 
@@ -112,14 +112,14 @@ int main(void)
 
 	LOG_INF("Starting the bulk throughput test...");
 	while (true) {
+		sleep_ms(10);
+
 		/* This will wait until _write_callback frees some more buffers */
 		buf = net_buf_alloc_with_data(&_buf_pool, (void *)DUMP_ADDR, DUMP_SIZE, K_NO_WAIT);
 		if (buf != NULL) {
 			LOG_DBG("buf=%p size=%u len=%u data=%p", buf, buf->size, buf->len, buf->data);
 			cdc_raw_write(CDC0, buf, false);
 		}
-
-		sleep_ms(10);
 	}
 
 	return 0;
