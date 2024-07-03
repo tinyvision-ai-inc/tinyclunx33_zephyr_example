@@ -14,4 +14,4 @@ fwbox_gpioset() {
     fwbox_gpioset_zephyr "$@"
 }
 
-. $FWBOX_PATH/common.sh
+. $FWBOX_PATH/.fwbox/common.sh

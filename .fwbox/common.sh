@@ -1,10 +1,12 @@
 # Configuration common to all boxes
 
+: ${BAUD:=153600}
+
 rtl=v0.7
 rtl=https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/download/$rtl/tinyclunx33_rtl_reference_design_$rtl.bit
 
 FWBOX_GPIOSET="${FWBOX:?} picocom,port=/dev/ttyACM0 repl"
-FWBOX_CONSOLE="${FWBOX:?} console,port=/dev/ttyUSB1,baud=153600"
+FWBOX_CONSOLE="${FWBOX:?} console,port=/dev/ttyUSB1,baud=$BAUD"
 FWBOX_USB3CDC="${FWBOX:?} console,port=/dev/ttyACM1"
 
 fwbox_do_flash_zephyr() {
