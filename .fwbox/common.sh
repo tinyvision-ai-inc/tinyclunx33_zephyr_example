@@ -8,11 +8,11 @@ FWBOX_CONSOLE="${FWBOX:?} console,port=/dev/ttyUSB1,baud=153600"
 FWBOX_USB3CDC="${FWBOX:?} console,port=/dev/ttyACM1"
 
 fwbox_do_flash_zephyr() {
-    fwbox_flash_ecpprog 0x100000 <build/zephyr/zephyr.bin
+    fwbox_ecpprog 0x100000 <build/zephyr/zephyr.bin
 }
 
 fwbox_do_flash_rtl() {
-    curl -Ls "$rtl" | fwbox_flash_ecpprog 0x000000
+    curl -Ls "$rtl" | fwbox_ecpprog 0x000000
 }
 
 fwbox_do_all() (
