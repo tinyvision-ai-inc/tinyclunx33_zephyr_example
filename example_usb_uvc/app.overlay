@@ -24,8 +24,8 @@
 
 		ep@81 {
 			reg = <0x81>;
-			num-trbs = <100>;
-			usb23-manager = <&usb23_manager>;
+			num-trbs = <15>;
+			//usb23-manager = <&usb23_manager>;
 		};
 	};
 
@@ -35,35 +35,15 @@
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
 		status = "okay";
-
-		uvc0in: input-terminal {
-			compatible = "zephyr,uvc-input-terminal";
-
-			port {
-				uvc0ep: endpoint {
-					remote-endpoint = <&gen0out>;
-				};
-			};
-		};
-
-		uvc0out: output-terminal {
-			compatible = "zephyr,uvc-output-terminal";
-			source = <&uvc0in>;
-		};
+		source = <&tinygen>;
 	};
 };
 
 / {
 	soc {
-		tinygen@b1200000 {
+		tinygen: tinygen@b1100000 {
 			compatible = "tinyvision,tinygen";
-			reg = <0xb1200000 0x00100000>;
-
-			port {
-				gen0out: endpoint {
-					remote-endpoint = <&uvc0ep>;
-				};
-			};
+			reg = <0xb1100000 0x00100000>;
 		};
 	};
 };
