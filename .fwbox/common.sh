@@ -36,3 +36,7 @@ fwbox_do_video_capture() (
 fwbox_do_usb3cdc() {
     FWBOX_CONSOLE="$FWBOX_USB3CDC" fwbox_do_console
 }
+
+fwbox_do_lsusb() {
+    fwbox_run lsusb -v -d 1209:0001
+}
