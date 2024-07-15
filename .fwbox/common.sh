@@ -7,6 +7,7 @@ rtl=https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/download/$r
 
 FWBOX_GPIOSET="${FWBOX:?} picocom,port=/dev/ttyACM0 repl"
 FWBOX_CONSOLE="${FWBOX:?} console,port=/dev/ttyUSB1,baud=$BAUD"
+FWBOX_PICOCOM="${FWBOX:?} picocom,port=/dev/ttyUSB1,baud=$BAUD"
 FWBOX_USB3CDC="${FWBOX:?} console,port=/dev/ttyACM1"
 
 fwbox_do_flash_zephyr() {
@@ -29,7 +30,7 @@ fwbox_do_video_capture() (
     set -eu 
     echo "fwbox: capturing to localhost:/tmp/video0.mp4" >&2
     echo 0xffffffff | fwbox_run dd of=/sys/module/uvcvideo/parameters/trace
-    fwbox_run ffmpeg -y -t 3 -i /dev/video0 /tmp/video0.mp4
+    fwbox_run ffmpeg -y -t 5 -i /dev/video0 /tmp/video0.mp4
     fwbox_run cat /tmp/video0.mp4 >/tmp/video0.mp4
 )
 
@@ -39,4 +40,9 @@ fwbox_do_usb3cdc() {
 
 fwbox_do_lsusb() {
     fwbox_run lsusb -v -d 1209:0001
+}
+
+fwbox_do_usb_capture() {
+    fwbox_run modprobe usb
+    fwbox_run tcpdump -i usbmon0 -AX
 }
