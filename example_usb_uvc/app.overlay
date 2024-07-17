@@ -24,8 +24,8 @@
 
 		ep@81 {
 			reg = <0x81>;
-			num-trbs = <15>;
-			//usb23-manager = <&usb23_manager>;
+			num-trbs = <20>;
+			uvcmanager = <&uvcmanager>;
 		};
 	};
 
@@ -35,15 +35,6 @@
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
 		status = "okay";
-		source = <&tinygen>;
-	};
-};
-
-/ {
-	soc {
-		tinygen: tinygen@b1100000 {
-			compatible = "tinyvision,tinygen";
-			reg = <0xb1100000 0x00100000>;
-		};
+		source = <&uvcmanager>;
 	};
 };
