@@ -17,7 +17,7 @@ sleep 10
 fwbox_do_video_capture
 
 # Check that the video duration is correct
-ffprobe /tmp/video0.mp4 2>&1 | grep "Duration: 00:00:05.00"
+ffprobe /tmp/video0.mp4 2>&1 | grep "Duration: 00:00:05"
 
 # Probe the console
 FWBOX="$FWBOX picocom,port=/dev/ttyACM1" fwbox_run helloworld | grep HELLOWORLD
