@@ -44,7 +44,8 @@
 
 		ep@83 {
 			reg = <0x83>;
-			num-trbs = <10>;
+			num-trbs = <20>;
+			uvcmanager = <&uvcmanager>;
 		};
 	};
 
@@ -59,15 +60,6 @@
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
 		status = "okay";
-		source = <&tinygen>;
-	};
-};
-
-/ {
-	soc {
-		tinygen: tinygen@b1100000 {
-			compatible = "tinyvision,tinygen";
-			reg = <0xb1100000 0x00100000>;
-		};
+		source = <&uvcmanager>;
 	};
 };

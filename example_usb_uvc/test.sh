@@ -17,4 +17,4 @@ sleep 10
 fwbox_do_video_capture
 
 # Check that the video duration is correct
-ffprobe /tmp/video0.mp4 2>&1 | grep "Duration: 00:00:03.00"
+ffprobe /tmp/video0.mp4 2>&1 | grep "Duration: 00:00:05.00"
