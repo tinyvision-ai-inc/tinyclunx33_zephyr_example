@@ -1,6 +1,6 @@
 # Configuration common to all boxes
 
-: ${BAUD:=153600}
+: ${BAUD:=192000}
 
 rtl=v0.7
 rtl=https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/download/$rtl/tinyclunx33_rtl_reference_design_$rtl.bit
