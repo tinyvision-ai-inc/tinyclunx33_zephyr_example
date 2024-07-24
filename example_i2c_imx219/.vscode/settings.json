@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "video.h": "c",
+        "stdio.h": "c",
+        "i2c.h": "c",
+        "typeinfo": "c"
+    }
+}
