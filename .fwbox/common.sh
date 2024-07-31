@@ -2,7 +2,7 @@
 
 : ${BAUD:=192000}
 
-rtl=v0.7
+rtl=v0.8
 rtl=https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/download/$rtl/tinyclunx33_rtl_reference_design_$rtl.bit
 
 FWBOX_GPIOSET="${FWBOX:?} picocom,port=/dev/ttyACM0 repl"

@@ -4,41 +4,41 @@
 #define MUX_ADDR 0x71
 const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
 
-static void cam_init() {
+static void cam_init(void)
+{
 
-    //const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
-    if (video_dev == NULL)
-    {
-        printf("Could not get IMX219 device\n");
-        return;
-    }
-    
+	// const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
+	if (video_dev == NULL) {
+		printf("Could not get IMX219 device\n");
+		return;
+	}
+
 	printf("Video device: %s\n", video_dev->name);
 
-    int ret = device_init(video_dev);
-    if(ret != 0){
-        printf("device not found or failed to init\n");
-        return;
-    }
+	int ret = device_init(video_dev);
+	if (ret != 0) {
+		printf("device not found or failed to init\n");
+		return;
+	}
 
-    printf("Device initialized successfully ......\n");
+	printf("Device initialized successfully ......\n");
 }
 
-static void cam_start() {
-    
-    struct video_format fmt;
-    struct video_caps caps;
-    int i = 0;
+static void cam_start(void)
+{
 
-    //const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
-    if (video_dev == NULL || !device_is_ready(video_dev))
-    {
-        printf("Could not get I2C cam device\n");
-        return;
-    }
+	struct video_format fmt;
+	struct video_caps caps;
+	int i = 0;
+
+	// const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
+	if (video_dev == NULL || !device_is_ready(video_dev)) {
+		printf("Could not get I2C cam device\n");
+		return;
+	}
 	printf("Video device: %s\n", video_dev->name);
 
-    /* Get capabilities */
+	/* Get capabilities */
 	if (video_get_caps(video_dev, VIDEO_EP_OUT, &caps)) {
 		printf("Unable to retrieve video capabilities\n");
 		return;
@@ -56,7 +56,7 @@ static void cam_start() {
 		i++;
 	}
 
-    if (video_get_format(video_dev, VIDEO_EP_OUT, &fmt)) {
+	if (video_get_format(video_dev, VIDEO_EP_OUT, &fmt)) {
 		printf("Unable to retrieve video format\n");
 		return;
 	}
@@ -65,39 +65,34 @@ static void cam_start() {
 	       (char)(fmt.pixelformat >> 8), (char)(fmt.pixelformat >> 16),
 	       (char)(fmt.pixelformat >> 24), fmt.width, fmt.height);
 
-
-    /* Start video capture */
+	/* Start video capture */
 	if (video_stream_start(video_dev)) {
 		printf("Unable to start capture (interface)\n");
 		return;
 	}
-    printf("Streaming......\n");
+	printf("Streaming......\n");
 }
 
-static void cam_stop() {
+static void cam_stop(void)
+{
 
-    //const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
-    if (video_dev == NULL || !device_is_ready(video_dev))
-    {
-        printf("Could not get I2C cam device\n");
-        return;
-    }
+	// const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
+	if (video_dev == NULL || !device_is_ready(video_dev)) {
+		printf("Could not get I2C cam device\n");
+		return;
+	}
 	printf("Video device: %s\n", video_dev->name);
 
 	if (video_stream_stop(video_dev)) {
 		printf("Unable to start capture (interface)\n");
 		return;
 	}
-    printf("stoping camera......\n");
+	printf("stoping camera......\n");
 }
 
-SHELL_STATIC_SUBCMD_SET_CREATE(cam_sub,
-                                SHELL_CMD(cam_init, NULL, "Initialize camera",
-                                         &cam_init),
-                                SHELL_CMD(cam_start, NULL, "start camera streaming",
-                                         &cam_start),
-                                SHELL_CMD(cam_stop, NULL, "stop camera streaming",
-                                         &cam_stop),      
-                               SHELL_SUBCMD_SET_END);
+SHELL_STATIC_SUBCMD_SET_CREATE(cam_sub, SHELL_CMD(cam_init, NULL, "Initialize camera", &cam_init),
+			       SHELL_CMD(cam_start, NULL, "start camera streaming", &cam_start),
+			       SHELL_CMD(cam_stop, NULL, "stop camera streaming", &cam_stop),
+			       SHELL_SUBCMD_SET_END);
 
 SHELL_CMD_REGISTER(imx219, &cam_sub, "camera command", NULL);

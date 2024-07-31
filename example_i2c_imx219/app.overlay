@@ -48,3 +48,14 @@
 	};
 };
 
+&i2c0 {
+        imx219: imx219@10 {
+                reg = <0x10>;
+                zephyr,deferred-init;
+                compatible = "sony,imx219";
+                status = "okay";
+        };
+
+};
+
+
