@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/video.h>
-#define MUX_ADDR 0x71
 const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
 
 static void cam_init() {
