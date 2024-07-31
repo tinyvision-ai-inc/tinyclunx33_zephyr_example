@@ -1,28 +1,7 @@
 #include <stdio.h>
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/video.h>
-#define MUX_ADDR 0x71
 const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
-
-static void cam_init(void)
-{
-
-	// const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
-	if (video_dev == NULL) {
-		printf("Could not get IMX219 device\n");
-		return;
-	}
-
-	printf("Video device: %s\n", video_dev->name);
-
-	int ret = device_init(video_dev);
-	if (ret != 0) {
-		printf("device not found or failed to init\n");
-		return;
-	}
-
-	printf("Device initialized successfully ......\n");
-}
 
 static void cam_start(void)
 {
@@ -90,8 +69,7 @@ static void cam_stop(void)
 	printf("stoping camera......\n");
 }
 
-SHELL_STATIC_SUBCMD_SET_CREATE(cam_sub, SHELL_CMD(cam_init, NULL, "Initialize camera", &cam_init),
-			       SHELL_CMD(cam_start, NULL, "start camera streaming", &cam_start),
+SHELL_STATIC_SUBCMD_SET_CREATE(cam_sub, SHELL_CMD(cam_start, NULL, "start camera streaming", &cam_start),
 			       SHELL_CMD(cam_stop, NULL, "stop camera streaming", &cam_stop),
 			       SHELL_SUBCMD_SET_END);
 

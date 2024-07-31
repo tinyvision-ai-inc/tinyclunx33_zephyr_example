@@ -49,13 +49,27 @@
 };
 
 &i2c0 {
-        imx219: imx219@10 {
+
+	status = "okay";
+	mux: pca9542a@71 {
+		compatible = "nxp,pca9542a";
+		reg = <0x71>;
+		status = "okay";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		mux_i2c@0 {
+			compatible = "nxp,pca9542a-channel";
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			imx219: imx219@10 {
+				compatible = "sony,imx219";
                 reg = <0x10>;
-                zephyr,deferred-init;
-                compatible = "sony,imx219";
                 status = "okay";
-        };
+        		};
+			
+		};
+	};     
 
 };
-
-

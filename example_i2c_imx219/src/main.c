@@ -8,7 +8,6 @@
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/video.h>
-#include <zephyr/drivers/i2c.h>
 
 void main(void)
 {
