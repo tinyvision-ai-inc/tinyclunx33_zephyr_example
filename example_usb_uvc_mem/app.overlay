@@ -1,3 +1,15 @@
+/ {
+	video0 {
+		compatibe = "zephyr,sw-generator";
+
+		port {
+			video0_source: endpoint {
+				remote-endpoint = <&uvc0_sink>;
+			};
+		};
+	};
+};
+
 &zephyr_udc0 {
 	/* IN and OUT counting together as one endpoint */
 	num-bidir-endpoints = <2>;
@@ -31,12 +43,44 @@
 	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
 	maximum-speed = "super-speed";
 
-	video0: zephyr_sw_generator {
-		compatibe = "zephyr,sw-generator";
-	};
-
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
 		status = "okay";
+
+		port {
+			uvc0_sink: endpoint {
+				remote-endpoint = <&video0_source>;
+			};
+		};
+
+		format_mjpeg {
+			compatible = "zephyr,uvc-format-mjpeg";
+
+			640x400 {
+				size = <640 400>;
+				max-fps = <15>;
+			};
+
+			64x64 {
+				size = <64 64>;
+				max-fps = <30>;
+			};
+		};
+
+		format_uncompressed {
+			compatible = "zephyr,uvc-format-uncompressed";
+			guid = [32 59 55 59  00 00  00 10  80 00  00 AA 00 38 9B 71];
+			bits-per-pixel = <16>;
+
+			640x400 {
+				size = <640 400>;
+				max-fps = <15>;
+			};
+
+			64x64 {
+				size = <64 64>;
+				max-fps = <30>;
+			};
+		};
 	};
 };

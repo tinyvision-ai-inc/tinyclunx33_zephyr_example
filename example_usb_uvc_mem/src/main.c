@@ -97,6 +97,8 @@ static int cmd_video_frame(const struct shell *sh, size_t argc, char **argv)
 	}
 
 	byte ^= 0xff;
+
+	return 0;
 }
 
 SHELL_STATIC_SUBCMD_SET_CREATE(sub_video,
