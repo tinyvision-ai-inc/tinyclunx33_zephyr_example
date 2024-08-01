@@ -54,32 +54,32 @@
 		};
 
 		format_mjpeg {
-			compatible = "zephyr,uvc-format-mjpeg";
+			compatible = "zephyr,uvc-format-mjpeg", "zephyr,uvc-format";
 
 			640x400 {
 				size = <640 400>;
-				max-fps = <15>;
+				fps = <15>;
 			};
 
 			64x64 {
 				size = <64 64>;
-				max-fps = <30>;
+				fps = <15>;
 			};
 		};
 
 		format_uncompressed {
-			compatible = "zephyr,uvc-format-uncompressed";
+			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
 			guid = [32 59 55 59  00 00  00 10  80 00  00 AA 00 38 9B 71];
 			bits-per-pixel = <16>;
 
 			640x400 {
 				size = <640 400>;
-				max-fps = <15>;
+				fps = <15>;
 			};
 
 			64x64 {
 				size = <64 64>;
-				max-fps = <30>;
+				fps = <30>;
 			};
 		};
 	};
