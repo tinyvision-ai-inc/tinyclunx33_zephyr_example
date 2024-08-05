@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include <zephyr/kernel.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/usb/udc.h>

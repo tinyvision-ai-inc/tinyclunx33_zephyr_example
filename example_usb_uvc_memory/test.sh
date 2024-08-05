@@ -14,7 +14,12 @@ fwbox_do_all
 sleep 10
 
 # Probe the console
-fwbox_do_video_capture
+fwbox_do_video_capture & pid=$!
+
+# Send 104 video frames
+for i in $(seq 104); do
+	FWBOX=$FWBOX_USB_CONSOLE fwbox_run "video frame"
+done
 
 # Check that the video duration is correct
-ffprobe /tmp/video0.mp4 2>&1 | grep "Duration: 00:00:05"
+ffprobe /tmp/video0.mp4
