@@ -8,13 +8,14 @@ rtl=https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/download/$r
 FWBOX_GPIOSET="${FWBOX:?} picocom,port=/dev/ttyACM0 repl"
 FWBOX_CONSOLE="${FWBOX:?} console,port=/dev/ttyUSB1,baud=$BAUD"
 FWBOX_PICOCOM="${FWBOX:?} picocom,port=/dev/ttyUSB1,baud=$BAUD"
-FWBOX_USB_CDC="${FWBOX:?} console,port=/dev/ttyACM1"
+FWBOX_USB_CONSOLE="${FWBOX:?} console,port=/dev/ttyACM1"
 
 fwbox_do_flash_zephyr() {
     fwbox_ecpprog 0x100000 <build/zephyr/zephyr.bin
 }
 
 fwbox_do_flash_rtl() {
+    echo "$rtl"
     curl -Ls "$rtl" | fwbox_ecpprog 0x000000
 }
 
@@ -34,8 +35,8 @@ fwbox_do_video_capture() (
     fwbox_run cat /tmp/video0.mkv >/tmp/video0.mkv
 )
 
-fwbox_do_usb_cdc() {
-    FWBOX_CONSOLE="$FWBOX_USB_CDC" fwbox_do_console
+fwbox_do_usb_console() {
+    FWBOX_CONSOLE="$FWBOX_USB_CONSOLE" fwbox_do_console
 }
 
 fwbox_do_lsusb() {
