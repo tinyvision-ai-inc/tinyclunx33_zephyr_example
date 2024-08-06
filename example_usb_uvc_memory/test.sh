@@ -14,12 +14,18 @@ fwbox_do_all
 sleep 10
 
 # Probe the console
-fwbox_do_video_capture & pid=$!
+fwbox_do_video_capture 15 & pid=$!
 
-# Send 104 video frames
-for i in $(seq 104); do
-	FWBOX=$FWBOX_USB_CONSOLE fwbox_run "video frame"
-done
+# Trigger 15 video frames
+FWBOX=$FWBOX_USB_REPL fwbox_run "video frame" "video frame" "video frame"
+FWBOX=$FWBOX_USB_REPL fwbox_run "video frame" "video frame" "video frame"
+FWBOX=$FWBOX_USB_REPL fwbox_run "video frame" "video frame" "video frame"
+FWBOX=$FWBOX_USB_REPL fwbox_run "video frame" "video frame" "video frame"
+FWBOX=$FWBOX_USB_REPL fwbox_run "video frame" "video frame" "video frame"
+
+# Give some time for the video capture to complete
+clear
+sleep 1
 
 # Check that the video duration is correct
-ffprobe /tmp/video0.mp4
+test "$(fwbox_frame_count /tmp/video0.mkv)" = 15
