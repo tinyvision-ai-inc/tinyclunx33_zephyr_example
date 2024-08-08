@@ -1,3 +1,11 @@
+#include <zephyr/dt-bindings/usb/video.h>
+
+/ {
+	chosen {
+		zephyr,shell-uart = &cdc0;
+	};
+};
+
 &zephyr_udc0 {
 	/* IN and OUT counting together as one endpoint */
 	num-bidir-endpoints = <4>;
@@ -19,33 +27,32 @@
 
 		ep@1 {
 			reg = <0x01>;
-			num-trbs = <10>;
+			num-trbs = <3>;
 		};
 
 		ep@81 {
 			reg = <0x81>;
-			num-trbs = <10>;
+			num-trbs = <3>;
 		};
 
 		ep@2 {
 			reg = <0x02>;
-			num-trbs = <10>;
+			num-trbs = <3>;
 		};
 
 		ep@82 {
 			reg = <0x82>;
-			num-trbs = <10>;
+			num-trbs = <3>;
 		};
 
 		ep@3 {
 			reg = <0x03>;
-			num-trbs = <10>;
+			num-trbs = <3>;
 		};
 
 		ep@83 {
 			reg = <0x83>;
-			num-trbs = <20>;
-			uvcmanager = <&uvcmanager>;
+			num-trbs = <3>;
 		};
 	};
 
@@ -53,13 +60,29 @@
 	maximum-speed = "super-speed";
 
 	cdc0: zephyr_cdc0 {
-		compatible = "zephyr,cdc-raw";
+		compatible = "zephyr,cdc-acm-uart";
 		status = "okay";
 	};
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
 		status = "okay";
-		source = <&uvcmanager>;
+
+		format_uncompressed {
+			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
+			fourcc = "YUYV";
+			guid = [UVC_GUID_YUY2];
+			bits-per-pixel = <16>;
+
+			256x20 {
+				size = <128 20>;
+				max-fps = <1>;
+			};
+
+			64x64 {
+				size = <64 64>;
+				max-fps = <1>;
+			};
+		};
 	};
 };

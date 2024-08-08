@@ -14,7 +14,7 @@ fwbox_do_all
 sleep 10
 
 # Probe the console
-fwbox_do_video_capture
+fwbox_do_video_capture 6
 
 # Check that the video duration is correct
-ffprobe /tmp/video0.mp4 2>&1 | grep "Duration: 00:00:05"
+test "$(fwbox_frame_count /tmp/video0.mkv)" = 6

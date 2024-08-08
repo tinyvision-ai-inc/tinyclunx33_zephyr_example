@@ -27,7 +27,7 @@ West is the build tool used by Zephyr.
 Install west globally on your machine:
 
 ```
-pip3 install --user -U west
+pip3 install --user -U west pyelftools
 echo 'export PATH=~/.local/bin:"$PATH"' >>~/.bashrc
 source ~/.bashrc
 west zephyr-export
