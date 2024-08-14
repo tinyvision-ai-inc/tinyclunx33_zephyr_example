@@ -1,38 +1,12 @@
 #include <zephyr/dt-bindings/usb/video.h>
 
 &zephyr_udc0 {
-	/* IN and OUT counting together as one endpoint */
-	num-bidir-endpoints = <2>;
-
 	endpoints {
-		compatible = "lattice,usb23-endpoints";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		ep@0 {
-			reg = <0x00>;
-			num-trbs = <2>;
-		};
-
-		ep@80 {
-			reg = <0x80>;
-			num-trbs = <2>;
-		};
-
-		ep@1 {
-			reg = <0x01>;
-			num-trbs = <3>;
-		};
-
 		ep@81 {
-			reg = <0x81>;
-			num-trbs = <20>;
+			num-trbs = <16>;
 			uvcmanager = <&uvcmanager>;
 		};
 	};
-
-	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
-	maximum-speed = "super-speed";
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
@@ -50,9 +24,24 @@
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
 
-			1920x1080 {
+			4k {
+				size = <3840 2160>;
+				max-fps = <22>;
+			};
+
+			FHD {
 				size = <1920 1080>;
-				max-fps = <60>;
+				max-fps = <87>;
+			};
+
+			VGA {
+				size = <640 480>;
+				max-fps = <589>;
+			};
+
+			qVGA {
+				size = <640 480>;
+				max-fps = <2347>;
 			};
 		};
 	};
