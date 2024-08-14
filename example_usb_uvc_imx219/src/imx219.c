@@ -1,11 +1,19 @@
 #include <stdio.h>
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/video.h>
+#include <zephyr/kernel.h>
+#include <zephyr/logging/log.h>
+LOG_MODULE_REGISTER(app2, LOG_LEVEL_DBG);
+
+#define STACKSIZE 500
+#define PRIORITY 5
+
 const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
 
 static void cam_start(void)
 {
-
+	LOG_DBG("sleep 10 sec ...");
+	k_sleep(K_SECONDS(10));
 	struct video_format fmt;
 	struct video_caps caps;
 	int i = 0;
@@ -68,6 +76,10 @@ static void cam_stop(void)
 	}
 	printf("stoping camera......\n");
 }
+
+
+K_THREAD_DEFINE(blink0_id, STACKSIZE, cam_start, NULL, NULL, NULL,
+		PRIORITY, 0, 0);
 
 SHELL_STATIC_SUBCMD_SET_CREATE(cam_sub, SHELL_CMD(cam_start, NULL, "start camera streaming", &cam_start),
 			       SHELL_CMD(cam_stop, NULL, "stop camera streaming", &cam_stop),
