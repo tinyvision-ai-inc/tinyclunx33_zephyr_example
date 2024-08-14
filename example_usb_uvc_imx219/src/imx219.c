@@ -78,7 +78,7 @@ static void cam_stop(void)
 }
 
 
-K_THREAD_DEFINE(blink0_id, STACKSIZE, cam_start, NULL, NULL, NULL,
+K_THREAD_DEFINE(cam_start_id, STACKSIZE, cam_start, NULL, NULL, NULL,
 		PRIORITY, 0, 0);
 
 SHELL_STATIC_SUBCMD_SET_CREATE(cam_sub, SHELL_CMD(cam_start, NULL, "start camera streaming", &cam_start),
