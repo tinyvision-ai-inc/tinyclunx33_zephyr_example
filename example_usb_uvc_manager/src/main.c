@@ -35,10 +35,5 @@ int main(void)
 		return 0;
 	}
 
-	while (true) {
-		usb23_irq_handler(udc0_dev);
-		k_sleep(K_MSEC(10));
-	}
-
 	return 0;
 }
