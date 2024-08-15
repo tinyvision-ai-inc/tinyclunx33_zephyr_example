@@ -6,7 +6,6 @@
 LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
 
 static const struct device *uvc0_dev = DEVICE_DT_GET(DT_NODELABEL(uvc0));
-static const struct device *udc0_dev = DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0));
 
 int main(void)
 {
@@ -35,5 +34,6 @@ int main(void)
 		return 0;
 	}
 
+	k_sleep(K_FOREVER);
 	return 0;
 }

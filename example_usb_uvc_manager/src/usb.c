@@ -34,9 +34,6 @@ static const struct usb_bos_capability_lpm bos_cap_lpm = {
 };
 USBD_DESC_BOS_DEFINE(usbd_bos_cap_lpm, sizeof(bos_cap_lpm), &bos_cap_lpm);
 
-struct usbd_desc_node *const usbd_descs[] = {&usbd_lang, &usbd_manufacturer, &usbd_product,
-					     &usbd_bos_cap_lpm, &usbd_bos_cap_ss};
-
 USBD_CONFIGURATION_DEFINE(usbd_config, USB_SCD_SELF_POWERED, 100);
 
 int
@@ -45,12 +42,30 @@ app_usb_init(void)
 	int ret;
 
 	LOG_DBG("Adding USB descriptors");
-	for (size_t i = 0; i < ARRAY_SIZE(usbd_descs); i++) {
-		ret = usbd_add_descriptor(&usbd, usbd_descs[i]);
-		if (ret) {
-			LOG_ERR("failed to add descriptor %u/%u", i, ARRAY_SIZE(usbd_descs));
-			return ret;
-		}
+	ret = usbd_add_descriptor(&usbd, &usbd_lang);
+	if (ret) {
+		LOG_ERR("failed to add lang descriptor");
+		return ret;
+	}
+	ret = usbd_add_descriptor(&usbd, &usbd_manufacturer);
+	if (ret) {
+		LOG_ERR("failed to add manufacturer descriptor");
+		return ret;
+	}
+	ret = usbd_add_descriptor(&usbd, &usbd_product);
+	if (ret) {
+		LOG_ERR("failed to add product descriptor");
+		return ret;
+	}
+	ret = usbd_add_descriptor(&usbd, &usbd_bos_cap_lpm);
+	if (ret) {
+		LOG_ERR("failed to add bos_cap_lpm descriptor");
+		return ret;
+	}
+	ret = usbd_add_descriptor(&usbd, &usbd_bos_cap_ss);
+	if (ret) {
+		LOG_ERR("failed to add bos_cap_ss descriptor");
+		return ret;
 	}
 
 	LOG_DBG("Adding USB configuration");
