@@ -1,7 +1,7 @@
 # Configuration common to all boxes
 
-#BAUD=192000 # 100 MHz
-BAUD=156200 # 80 MHz
+BAUD=192000 # 100 MHz
+#BAUD=156200 # 80 MHz
 
 FWBOX_GPIOSET="${FWBOX:?} picocom,port=/dev/ttyACM0 repl"
 FWBOX_CONSOLE="${FWBOX:?} console,port=/dev/ttyUSB1,baud=$BAUD"

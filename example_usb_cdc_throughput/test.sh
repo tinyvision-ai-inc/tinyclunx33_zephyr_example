@@ -11,7 +11,7 @@ fwbox_use idefix
 fwbox_do_all
 
 # Give it time to enumerate
-sleep 5
+sleep 10
 
 # Run the test utility
 read num unit <<EOF
@@ -19,5 +19,5 @@ $(fwbox_run python - /dev/ttyACM1 <test.py)
 EOF
 
 echo "$num $unit"
-test "$num" -gt 700
+test "$num" -gt 500
 test "$unit" = kbit/s

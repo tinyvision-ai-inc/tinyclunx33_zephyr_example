@@ -12,7 +12,7 @@ NET_BUF_POOL_DEFINE(app_buf_pool, 2, 0, sizeof(struct udc_buf_info), NULL);
 
 static const struct device *cdc0_dev = DEVICE_DT_GET(DT_NODELABEL(cdc0));
 
-uint8_t usb23_dma_buf[1024];
+uint8_t usb23_dma_buf[2048];
 
 static int _write_callback(const struct device *dev, struct net_buf *buf, int err)
 {
@@ -36,7 +36,9 @@ int main(void)
 	int err;
 
 	/* Data that can be easily recognized */
-	memset(usb23_dma_buf, '!', sizeof(usb23_dma_buf));
+	for (size_t i = 0; i < sizeof(usb23_dma_buf); i++) {
+		usb23_dma_buf[i] = i;
+	}
 
 	/* Hook the callback called used once a write is completed */
 	cdc_raw_set_write_callback(cdc0_dev, &_write_callback);
