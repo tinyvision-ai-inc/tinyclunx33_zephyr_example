@@ -10,13 +10,8 @@
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
+		source = <&uvcmanager>;
 		status = "okay";
-
-		port {
-			uvc0_in: endpoint {
-				remote-endpoint = <&uvcmanager>;
-			};
-		};
 
 		format_uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
