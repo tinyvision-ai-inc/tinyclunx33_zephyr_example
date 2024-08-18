@@ -1,7 +1,7 @@
 # Configuration common to all boxes
 
-BAUD=192000 # 100 MHz
-#BAUD=156200 # 80 MHz
+#BAUD=192000 # 100 MHz
+BAUD=156200 # 80 MHz
 
 FWBOX_GPIOSET="${FWBOX:?} picocom,port=/dev/ttyACM0 repl"
 FWBOX_CONSOLE="${FWBOX:?} console,port=/dev/ttyUSB1,baud=$BAUD"
@@ -31,8 +31,8 @@ fwbox_do_video_capture() ( local frames=${1:-50}
     set -eu 
     echo "fwbox: capturing to localhost:/tmp/video0.mkv" >&2
     echo 0xffffffff | fwbox_run dd of=/sys/module/uvcvideo/parameters/trace
-    fwbox_run ffmpeg -y -i /dev/video0 -c copy -frames "$frames" /tmp/video0.mkv
-    fwbox_run cat /tmp/video0.mkv >/tmp/video0.mkv
+    fwbox_run ffmpeg -y -i "/dev/$FWBOX_VIDEO" -c copy -frames "$frames" "/tmp/$FWBOX_VIDEO.mkv"
+    fwbox_run cat "/tmp/$FWBOX_VIDEO.mkv" >/tmp/$FWBOX_VIDEO.mkv
 )
 
 fwbox_do_usb_console() {
