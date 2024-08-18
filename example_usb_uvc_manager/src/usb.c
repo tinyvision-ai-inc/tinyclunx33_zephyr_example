@@ -36,66 +36,65 @@ USBD_DESC_BOS_DEFINE(usbd_bos_cap_lpm, sizeof(bos_cap_lpm), &bos_cap_lpm);
 
 USBD_CONFIGURATION_DEFINE(usbd_config, USB_SCD_SELF_POWERED, 100);
 
-int
-app_usb_init(void)
+int app_usb_init(void)
 {
-	int ret;
+	int err;
 
 	LOG_DBG("Adding USB descriptors");
-	ret = usbd_add_descriptor(&usbd, &usbd_lang);
-	if (ret) {
+	err = usbd_add_descriptor(&usbd, &usbd_lang);
+	if (err) {
 		LOG_ERR("failed to add lang descriptor");
-		return ret;
+		return err;
 	}
-	ret = usbd_add_descriptor(&usbd, &usbd_manufacturer);
-	if (ret) {
+	err = usbd_add_descriptor(&usbd, &usbd_manufacturer);
+	if (err) {
 		LOG_ERR("failed to add manufacturer descriptor");
-		return ret;
+		return err;
 	}
-	ret = usbd_add_descriptor(&usbd, &usbd_product);
-	if (ret) {
+	err = usbd_add_descriptor(&usbd, &usbd_product);
+	if (err) {
 		LOG_ERR("failed to add product descriptor");
-		return ret;
+		return err;
 	}
-	ret = usbd_add_descriptor(&usbd, &usbd_bos_cap_lpm);
-	if (ret) {
+	err = usbd_add_descriptor(&usbd, &usbd_bos_cap_lpm);
+	if (err) {
 		LOG_ERR("failed to add bos_cap_lpm descriptor");
-		return ret;
+		return err;
 	}
-	ret = usbd_add_descriptor(&usbd, &usbd_bos_cap_ss);
-	if (ret) {
+	err = usbd_add_descriptor(&usbd, &usbd_bos_cap_ss);
+	if (err) {
 		LOG_ERR("failed to add bos_cap_ss descriptor");
-		return ret;
+		return err;
 	}
 
 	LOG_DBG("Adding USB configuration");
-	ret = usbd_add_configuration(&usbd, USBD_SPEED_SS, &usbd_config);
-	if (ret) {
+	err = usbd_add_configuration(&usbd, USBD_SPEED_SS, &usbd_config);
+	if (err) {
 		LOG_ERR("failed to add SuperSpeed, configuration");
-		return ret;
+		return err;
 	}
 
 	usbd_device_set_code_triple(&usbd, USBD_SPEED_SS, USB_BCC_MISCELLANEOUS, 0x02, 0x01);
 
 	LOG_DBG("Adding USB classes");
-	ret = usbd_register_all_classes(&usbd, USBD_SPEED_SS, 1);
-	if (ret) {
+	err = usbd_register_all_classes(&usbd, USBD_SPEED_SS, 1);
+	if (err) {
 		LOG_ERR("failed to register USB clases");
-		return ret;
+		return err;
 	}
 
 	LOG_DBG("Finalize USB configuration");
-	ret = usbd_init(&usbd);
-	if (ret) {
+	err = usbd_init(&usbd);
+	if (err) {
 		LOG_ERR("failed to initialize USB");
-		return ret;
+		return err;
 	}
 
 	LOG_DBG("Starting USB operation");
-	ret = usbd_enable(&usbd);
-	if (ret) {
+	err = usbd_enable(&usbd);
+	if (err) {
 		LOG_ERR("failed to enable the USB device");
-		return ret;
+		return err;
 	}
 
 	return 0;
