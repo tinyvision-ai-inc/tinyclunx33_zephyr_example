@@ -16,7 +16,7 @@ int main(void)
 
 	ret = video_stream_start(uvc0_dev);
 	if (ret) {
-		LOG_DBG("could not");
+		LOG_DBG("could not start UVC device");
 		return ret;
 	}
 
@@ -37,7 +37,7 @@ static int cmd_video_frame(const struct shell *sh, size_t argc, char **argv)
 {
 	struct video_buffer *vbuf;
 	struct video_format fmt = {0};
-	static uint8_t byte = 0x00;
+	static uint8_t toggle = 0x00;
 	int ret;
 
 	ret = video_get_format(uvc0_dev, VIDEO_EP_IN, &fmt);
@@ -56,7 +56,9 @@ static int cmd_video_frame(const struct shell *sh, size_t argc, char **argv)
 		return -ENOMEM;
 	}
 
-	memset(vbuf->buffer, byte, vbuf->size);
+	for (size_t i = 0; i < vbuf->size; i++) {
+		vbuf->buffer[i] = i ^ toggle;
+	}
 	vbuf->bytesused = vbuf->size;
 	vbuf->flags = VIDEO_BUF_EOF;
 
@@ -71,8 +73,7 @@ static int cmd_video_frame(const struct shell *sh, size_t argc, char **argv)
 		shell_error(sh, "could not dequeue video buffer");
 		goto end;
 	}
-
-	byte ^= 0xff;
+	toggle ^= 0xff;
 end:
 	video_buffer_release(vbuf);
 	return ret;

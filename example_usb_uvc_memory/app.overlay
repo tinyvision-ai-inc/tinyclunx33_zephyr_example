@@ -22,12 +22,12 @@
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
 
-			256x20 {
+			rectangle {
 				size = <128 20>;
 				max-fps = <1>;
 			};
 
-			64x64 {
+			square {
 				size = <64 64>;
 				max-fps = <1>;
 			};
