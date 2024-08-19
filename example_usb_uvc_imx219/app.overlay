@@ -41,9 +41,24 @@
 };
 
 &i2c0 {
-	imx219: imx219@10 {
-		reg = <0x10>;
-		compatible = "sony,imx219";
-		status = "okay";	
+	pca9542a@72 {
+		compatible = "nxp,pca9542a";
+		reg = <0x72>;
+		status = "okay";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ch@0 {
+			compatible = "nxp,pca9542a-channel";
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			imx219: imx219@10 {
+				reg = <0x10>;
+				compatible = "sony,imx219";
+				status = "okay";
+			};
+		};
 	};
 };
