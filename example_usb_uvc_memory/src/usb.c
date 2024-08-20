@@ -34,7 +34,9 @@ static const struct usb_bos_capability_lpm bos_cap_lpm = {
 };
 USBD_DESC_BOS_DEFINE(usbd_bos_cap_lpm, sizeof(bos_cap_lpm), &bos_cap_lpm);
 
-USBD_CONFIGURATION_DEFINE(usbd_config, USB_SCD_SELF_POWERED, 100);
+USBD_CONFIGURATION_DEFINE(usbd_config_fs, USB_SCD_SELF_POWERED, 100);
+USBD_CONFIGURATION_DEFINE(usbd_config_hs, USB_SCD_SELF_POWERED, 100);
+USBD_CONFIGURATION_DEFINE(usbd_config_ss, USB_SCD_SELF_POWERED, 100);
 
 int app_usb_init(void)
 {
@@ -68,18 +70,40 @@ int app_usb_init(void)
 	}
 
 	LOG_DBG("Adding USB configuration");
-	err = usbd_add_configuration(&usbd, USBD_SPEED_SS, &usbd_config);
+	err = usbd_add_configuration(&usbd, USBD_SPEED_FS, &usbd_config_fs);
+	if (err) {
+		LOG_ERR("failed to add FullSpeed, configuration");
+		return err;
+	}
+	err = usbd_add_configuration(&usbd, USBD_SPEED_HS, &usbd_config_hs);
+	if (err) {
+		LOG_ERR("failed to add HighSpeed, configuration");
+		return err;
+	}
+	err = usbd_add_configuration(&usbd, USBD_SPEED_SS, &usbd_config_ss);
 	if (err) {
 		LOG_ERR("failed to add SuperSpeed, configuration");
 		return err;
 	}
 
+	usbd_device_set_code_triple(&usbd, USBD_SPEED_FS, USB_BCC_MISCELLANEOUS, 0x02, 0x01);
+	usbd_device_set_code_triple(&usbd, USBD_SPEED_HS, USB_BCC_MISCELLANEOUS, 0x02, 0x01);
 	usbd_device_set_code_triple(&usbd, USBD_SPEED_SS, USB_BCC_MISCELLANEOUS, 0x02, 0x01);
 
 	LOG_DBG("Adding USB classes");
+	err = usbd_register_all_classes(&usbd, USBD_SPEED_FS, 1);
+	if (err) {
+		LOG_ERR("failed to register FullSpeed USB clases");
+		return err;
+	}
+	err = usbd_register_all_classes(&usbd, USBD_SPEED_HS, 1);
+	if (err) {
+		LOG_ERR("failed to register HighSpeed USB clases");
+		return err;
+	}
 	err = usbd_register_all_classes(&usbd, USBD_SPEED_SS, 1);
 	if (err) {
-		LOG_ERR("failed to register USB clases");
+		LOG_ERR("failed to register SuperSpeed USB clases");
 		return err;
 	}
 
