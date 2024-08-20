@@ -41,9 +41,9 @@
 };
 
 &i2c0 {
-	pca9542a@72 {
+	pca9542a@71 {
 		compatible = "nxp,pca9542a";
-		reg = <0x72>;
+		reg = <0x71>;
 		status = "okay";
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -55,8 +55,8 @@
 			#size-cells = <0>;
 
 			imx219: imx219@10 {
-				reg = <0x10>;
 				compatible = "sony,imx219";
+				reg = <0x10>;
 				status = "okay";
 			};
 		};
