@@ -5,6 +5,7 @@
 #include <zephyr/usb/usbd.h>
 #include <zephyr/usb/bos.h>
 #include <zephyr/logging/log.h>
+#include <stdio.h>
 LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
 
 #define UDC0 DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0))

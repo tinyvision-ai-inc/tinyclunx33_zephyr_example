@@ -36,6 +36,7 @@
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
+		source = <&imx219>;
 		status = "okay";
 
 		port {
