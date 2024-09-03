@@ -1,11 +1,12 @@
 FWBOX="local"
 
-FWBOX_GPIO_RESET="gpio@48000000 0"
-FWBOX_GPIO_POWER="gpio@48000000 1"
-
 fwbox_gpioset() {
     fwbox_gpioset_zephyr "$@"
 }
+
+FWBOX_GPIO_RESET="gpio@48000000 1"
+FWBOX_GPIO_POWER="gpio@48000000 0"
+FWBOX_VIDEO="video2"
 
 . $FWBOX_PATH/.fwbox/common.sh
 

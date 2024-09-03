@@ -9,6 +9,7 @@ fi
 
 FWBOX_GPIO_RESET="x 22"
 FWBOX_GPIO_POWER="x 20"
+FWBOX_VIDEO="video0"
 
 fwbox_gpioset() {
     fwbox_gpioset_micropython "$@"

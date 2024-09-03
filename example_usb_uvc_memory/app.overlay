@@ -7,58 +7,6 @@
 };
 
 &zephyr_udc0 {
-	/* IN and OUT counting together as one endpoint */
-	num-bidir-endpoints = <4>;
-
-	endpoints {
-		compatible = "lattice,usb23-endpoints";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		ep@0 {
-			reg = <0x00>;
-			num-trbs = <2>;
-		};
-
-		ep@80 {
-			reg = <0x80>;
-			num-trbs = <2>;
-		};
-
-		ep@1 {
-			reg = <0x01>;
-			num-trbs = <3>;
-		};
-
-		ep@81 {
-			reg = <0x81>;
-			num-trbs = <3>;
-		};
-
-		ep@2 {
-			reg = <0x02>;
-			num-trbs = <3>;
-		};
-
-		ep@82 {
-			reg = <0x82>;
-			num-trbs = <3>;
-		};
-
-		ep@3 {
-			reg = <0x03>;
-			num-trbs = <3>;
-		};
-
-		ep@83 {
-			reg = <0x83>;
-			num-trbs = <3>;
-		};
-	};
-
-	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
-	maximum-speed = "super-speed";
-
 	cdc0: zephyr_cdc0 {
 		compatible = "zephyr,cdc-acm-uart";
 		status = "okay";
@@ -74,12 +22,12 @@
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
 
-			256x20 {
+			rectangle {
 				size = <128 20>;
 				max-fps = <1>;
 			};
 
-			64x64 {
+			square {
 				size = <64 64>;
 				max-fps = <1>;
 			};

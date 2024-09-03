@@ -11,8 +11,13 @@ fwbox_use idefix
 fwbox_do_all
 
 # Give it time to enumerate
-sleep 5
+sleep 10
 
-# Probe the console
-(sleep 0.4; printf '\x01\x11'; sleep 1) | fwbox_run picocom --quiet /dev/ttyACM1
-fwbox_run timeout 10 dd if=/dev/ttyACM1 of=/dev/null bs=1M count=10 iflag=fullblock status=progress
+# Run the test utility
+read num unit <<EOF
+$(fwbox_run python - /dev/ttyACM1 <test.py)
+EOF
+
+echo "$num $unit"
+test "$num" -gt 500
+test "$unit" = kbit/s

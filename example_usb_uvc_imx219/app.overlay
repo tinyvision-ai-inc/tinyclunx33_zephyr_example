@@ -1,49 +1,24 @@
 #include <zephyr/dt-bindings/usb/video.h>
 
+/*
+ * This builds a complete configuration chain through "source = <&...>;":
+ * - USB Video Class (UVC), exposing the controls to the host and communicating with it.
+ * - UVC Manager, controlled by the UVC class protocol, doing I/O between the sensor and USB.
+ * - IMX219 sensor, with configuration coming from the UVC Manager and the host before it.
+ */
+
 &zephyr_udc0 {
-	/* IN and OUT counting together as one endpoint */
-	num-bidir-endpoints = <2>;
-
 	endpoints {
-		compatible = "lattice,usb23-endpoints";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		ep@0 {
-			reg = <0x00>;
-			num-trbs = <2>;
-		};
-
-		ep@80 {
-			reg = <0x80>;
-			num-trbs = <2>;
-		};
-
-		ep@1 {
-			reg = <0x01>;
-			num-trbs = <3>;
-		};
-
 		ep@81 {
-			reg = <0x81>;
-			num-trbs = <20>;
+			num-trbs = <16>;
 			uvcmanager = <&uvcmanager>;
 		};
 	};
 
-	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
-	maximum-speed = "super-speed";
-
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
-		source = <&imx219>;
+		source = <&uvcmanager>;
 		status = "okay";
-
-		port {
-			uvc0_in: endpoint {
-				remote-endpoint = <&uvcmanager>;
-			};
-		};
 
 		format_uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
@@ -51,7 +26,8 @@
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
 
-			1920x1080 {
+			FHD {
+				/* There are 2 rows and columns less as required to do debayer. */
 				size = <1918 1078>;
 				max-fps = <60>;
 			};
@@ -59,29 +35,30 @@
 	};
 };
 
-&i2c0 {
+&uvcmanager {
+	/* The UVC Manager will add 2 pixels itself when setting the format of the image sensor. */
+	source = <&imx219>;
+};
 
-	status = "okay";
-	mux: pca9542a@71 {
+&i2c0 {
+	pca9542a@71 {
 		compatible = "nxp,pca9542a";
 		reg = <0x71>;
 		status = "okay";
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		mux_i2c@0 {
+		ch@0 {
 			compatible = "nxp,pca9542a-channel";
 			reg = <0>;
 			#address-cells = <1>;
 			#size-cells = <0>;
+
 			imx219: imx219@10 {
 				compatible = "sony,imx219";
-                reg = <0x10>;
-                status = "okay";
-        		};
-			
+				reg = <0x10>;
+				status = "okay";
+			};
 		};
-	};     
-
+	};
 };
-
