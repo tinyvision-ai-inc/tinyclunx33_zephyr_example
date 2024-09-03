@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/video.h>
+#include <zephyr/kernel.h>
+#include <zephyr/logging/log.h>
+LOG_MODULE_REGISTER(app2, LOG_LEVEL_DBG);
+
+#define STACKSIZE 500
+#define PRIORITY 5
+
 const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
 
 static void cam_init() {
