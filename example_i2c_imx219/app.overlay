@@ -1,49 +1,24 @@
 #include <zephyr/dt-bindings/usb/video.h>
 
+/*
+ * This builds a complete configuration chain through "source = <&...>;":
+ * - USB Video Class (UVC), exposing the controls to the host and communicating with it.
+ * - UVC Manager, controlled by the UVC class protocol, doing I/O between the sensor and USB.
+ * - IMX219 sensor, with configuration coming from the UVC Manager and the host before it.
+ */
+
 &zephyr_udc0 {
-	/* IN and OUT counting together as one endpoint */
-	num-bidir-endpoints = <2>;
-
 	endpoints {
-		compatible = "lattice,usb23-endpoints";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		ep@0 {
-			reg = <0x00>;
-			num-trbs = <2>;
-		};
-
-		ep@80 {
-			reg = <0x80>;
-			num-trbs = <2>;
-		};
-
-		ep@1 {
-			reg = <0x01>;
-			num-trbs = <3>;
-		};
-
 		ep@81 {
-			reg = <0x81>;
-			num-trbs = <20>;
-			uvcmanager = <&uvcmanager>;
+			num-trbs = <16>;
+			uvcmanager = <&uvcmanager0>;
 		};
 	};
 
-	/* full-speed: 12 Mhz, high-speed: 480 Mhz, super-speed: 5000 Mhz */
-	maximum-speed = "super-speed";
-
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
-		source = <&imx219>;
+		source = <&uvcmanager0>;
 		status = "okay";
-
-		port {
-			uvc0_in: endpoint {
-				remote-endpoint = <&uvcmanager>;
-			};
-		};
 
 		format_uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
@@ -51,11 +26,31 @@
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
 
-			1920x1080 {
+			FHD {
+				/* There are 2 rows and columns less as required to do debayer. */
 				size = <1918 1078>;
 				max-fps = <60>;
 			};
 		};
 	};
+
+	uvc1: zephyr_uvc1 {
+		compatible = "zephyr,uvc";
+		status = "okay";
+
+		format_uncompressed {
+			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
+			fourcc = "YUYV";
+			guid = [UVC_GUID_YUY2];
+			bits-per-pixel = <16>;
+
+			FHD {
+				/* There are 2 rows and columns less as required to do debayer. */
+				size = <128 5>;
+				max-fps = <60>;
+			};
+		};
+	};
+
 };
 
