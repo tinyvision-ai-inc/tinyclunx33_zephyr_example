@@ -31,12 +31,20 @@
 		uvc0cam: cam {
 			compatible = "zephyr,uvc-control-camera";
 			control-ids = <	UVC_CONTROL_CAMERA_AE_MODE
-					UVC_CONTROL_CAMERA_EXPOSURE_ABSOLUTE>;
+					UVC_CONTROL_CAMERA_EXPOSURE_TIME_ABSOLUTE
+					UVC_CONTROL_CAMERA_AE_PRIORITY>;
 			control-target = <&imx219>;
+		};
+		uvc0isp: isp {
+			compatible = "zephyr,uvc-control-processing";
+			control-ids = <UVC_CONTROL_PROCESSING_GAIN>;
+			control-target = <&imx219>;
+			source-entity = <&uvc0cam>;
 		};
 		uvc0out: out {
 			compatible = "zephyr,uvc-control-output";
-			source-entity = <&uvc0cam>;
+			control-target = <&uvcmanager>;
+			source-entity = <&uvc0isp>;
 		};
 
 		/* This lists the formats supported by the video device which
