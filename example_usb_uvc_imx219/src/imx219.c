@@ -10,74 +10,75 @@ LOG_MODULE_REGISTER(app2, LOG_LEVEL_DBG);
 
 const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
 
-/* cam_start not using any more, still keeping for debugging */
-static void cam_start(void)
-{
-	struct video_format fmt;
-	struct video_caps caps;
-	int i = 0;
+static int gain_control(const struct shell *shell, size_t argc, char **argv) {
+    if (argc != 2) {
+        shell_print(shell, "Usage: camera gain <increase|decrease> <scale>");
+        return -1;
+    }
 
-	// const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
+    int scale_value = 1;
+    scale_value = atoi(argv[1]);
+    if (scale_value == 0) {
+        shell_print(shell, "scale_value Usage: camera gain <increase|decrease> <scale>");
+        return -1;
+    }
+
 	if (video_dev == NULL || !device_is_ready(video_dev)) {
 		printf("Could not get I2C cam device\n");
-		return;
+		return -1;
 	}
 	printf("Video device: %s\n", video_dev->name);
 
-	/* Get capabilities */
-	if (video_get_caps(video_dev, VIDEO_EP_OUT, &caps)) {
-		printf("Unable to retrieve video capabilities\n");
-		return;
-	}
+	shell_print(shell, "first value: %s\n", argv[0]);
 
-	printf("Capabilities:\n");
-	while (caps.format_caps[i].pixelformat) {
-		const struct video_format_cap *fcap = &caps.format_caps[i];
-		/* fourcc to string */
-		printf("  %c%c%c%c width [%u; %u; %u] height [%u; %u; %u]\n",
-		       (char)fcap->pixelformat, (char)(fcap->pixelformat >> 8),
-		       (char)(fcap->pixelformat >> 16), (char)(fcap->pixelformat >> 24),
-		       fcap->width_min, fcap->width_max, fcap->width_step, fcap->height_min,
-		       fcap->height_max, fcap->height_step);
-		i++;
-	}
+    uint8_t value;
+    if(video_get_ctrl(video_dev,VIDEO_CID_CAMERA_GAIN,&value)){
+            shell_print(shell, "Unable to set gain value = %d.\n", value);
+            return -1;
+    }
 
-	if (video_get_format(video_dev, VIDEO_EP_OUT, &fmt)) {
-		printf("Unable to retrieve video format\n");
-		return;
-	}
+    if (strcmp(argv[0], "increase") == 0) {
+        value += scale_value;
 
-	printf("Default format: %c%c%c%c %ux%u\n", (char)fmt.pixelformat,
-	       (char)(fmt.pixelformat >> 8), (char)(fmt.pixelformat >> 16),
-	       (char)(fmt.pixelformat >> 24), fmt.width, fmt.height);
-
-	/* Start video capture */
-	if (video_stream_start(video_dev)) {
-		printf("Unable to start capture (interface)\n");
-		return;
-	}
-	printf("Streaming......\n");
+		if(video_set_ctrl(video_dev,VIDEO_CID_CAMERA_GAIN,&value)){
+			 shell_print(shell, "Unable to set gain value = %d.\n", value);
+			 return -1;
+		}
+        shell_print(shell, "Gain increased to %d.\n", value);
+    } else if (strcmp(argv[0], "decrease") == 0) {
+        value -= scale_value;
+		if(video_set_ctrl(video_dev,VIDEO_CID_CAMERA_GAIN,&value)){
+			 shell_print(shell, "Unable to set gain value = %d.\n", value);
+			 return -1;
+		}
+        shell_print(shell, "Gain decreased to %d.\n", value);
+    } else {
+        shell_print(shell, "Invalid argument: %s. Use 'increase' or 'decrease'.", argv[0]);
+        return -1;
+    }
+    return 0;
 }
 
-static void cam_stop(void)
-{
-
-	// const struct device *video_dev = DEVICE_DT_GET(DT_NODELABEL(imx219));
-	if (video_dev == NULL || !device_is_ready(video_dev)) {
-		printf("Could not get I2C cam device\n");
-		return;
-	}
-	printf("Video device: %s\n", video_dev->name);
-
-	if (video_stream_stop(video_dev)) {
-		printf("Unable to start capture (interface)\n");
-		return;
-	}
-	printf("stoping camera......\n");
+static int exposure_control(const struct shell *shell, size_t argc, char **argv) {
+    shell_print(shell, "Usage: camera exposure <increase|decrease>");
+    return 0;
 }
 
-SHELL_STATIC_SUBCMD_SET_CREATE(cam_sub, SHELL_CMD(cam_start, NULL, "start camera streaming", &cam_start),
-			       SHELL_CMD(cam_stop, NULL, "stop camera streaming", &cam_stop),
-			       SHELL_SUBCMD_SET_END);
+SHELL_STATIC_SUBCMD_SET_CREATE(sub_gain,
+    SHELL_CMD_ARG(increase, NULL, "Increase camera gain", gain_control, 2, 0),
+    SHELL_CMD_ARG(decrease, NULL, "Decrease camera gain", gain_control, 2, 0),
+    SHELL_SUBCMD_SET_END
+);
 
-SHELL_CMD_REGISTER(imx219, &cam_sub, "camera command", NULL);
+SHELL_STATIC_SUBCMD_SET_CREATE(sub_exposure,
+    SHELL_CMD_ARG(increase, NULL, "Increase camera exposure", exposure_control, 2, 0),
+    SHELL_CMD_ARG(decrease, NULL, "Decrease camera exposure", exposure_control, 2, 0),
+    SHELL_SUBCMD_SET_END
+);
+
+SHELL_STATIC_SUBCMD_SET_CREATE(cam_ctrls, 
+			SHELL_CMD(gain, &sub_gain, "increase or decrease camera gain", NULL),
+			SHELL_CMD(exposur, &sub_exposure, "increase or decrease camera exposure", NULL),
+			SHELL_SUBCMD_SET_END);
+
+SHELL_CMD_REGISTER(imx219, &cam_ctrls, "camera controls", NULL);
