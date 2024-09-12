@@ -10,8 +10,15 @@
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
-		source = <&uvcmanager>;
-		status = "okay";
+
+		uvc0in: in {
+			compatible = "zephyr,uvc-control-input";
+		};
+		uvc0out: out {
+			compatible = "zephyr,uvc-control-output";
+			control-target = <&uvcmanager>;
+			source-entity = <&uvc0in>;
+		};
 
 		format_uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
