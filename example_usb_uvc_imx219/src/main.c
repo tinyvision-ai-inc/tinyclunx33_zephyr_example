@@ -11,13 +11,20 @@ int main(void)
 {
 	struct video_buffer vbuf = {0};
 	struct video_format fmt = {0};
-	int ret = 0;
+	int err;
 
-	/* Get the video format selected by the host */
-	ret = video_get_format(uvc0_dev, VIDEO_EP_IN, &fmt);
-	if (ret != 0) {
-		LOG_ERR("failed to get the video format");
-		return ret;
+	/* Get the video format once it is selected by the host */
+	while (true) {
+		err = video_get_format(uvc0_dev, VIDEO_EP_IN, &fmt);
+		if (err == 0) {
+			break;
+		}
+		if (err != -EAGAIN) {
+			LOG_ERR("failed to get the video format");
+			return err;
+		}
+
+		k_sleep(K_MSEC(10));
 	}
 
 	/* The buffer address is the FIFO endpoint */
@@ -28,10 +35,10 @@ int main(void)
 	LOG_DBG("frame %ux%u, %u bytes, addr %p", fmt.width, fmt.height, fmt.pitch * fmt.height, vbuf.buffer);
 
 	/* Only the first buffer needs to be enqueued when using the UVC Manager */
-	ret = video_enqueue(uvc0_dev, VIDEO_EP_IN, &vbuf);
-	if (ret != 0) {
+	err = video_enqueue(uvc0_dev, VIDEO_EP_IN, &vbuf);
+	if (err) {
 		LOG_ERR("failed to enqueue the video buffer");
-		return 0;
+		return err;
 	}
 
 	k_sleep(K_FOREVER);
