@@ -16,14 +16,12 @@
 		compatible = "zephyr,uvc";
 		status = "okay";
 
-		uvc0_out: ctl1 {
-			compatible = "zephyr,uvc-control-output";
-			source-entity = <&uvc0_in>;
+		uvc0in: in {
+			compatible = "zephyr,uvc-control-input";
 		};
-
-		uvc0_in: ctl0 {
-			compatible = "zephyr,uvc-control-camera";
-			control-ids = <1 2 3>;
+		uvc0out: out {
+			compatible = "zephyr,uvc-control-output";
+			source-entity = <&uvc0in>;
 		};
 
 		format_uncompressed {

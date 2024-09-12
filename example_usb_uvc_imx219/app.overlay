@@ -22,7 +22,6 @@
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
-		source = <&uvcmanager>;
 
 		/* This builds a control chain to explain the organization
 		 * of the video system to the host, changing the topology
@@ -43,6 +42,7 @@
 		};
 		uvc0out: out {
 			compatible = "zephyr,uvc-control-output";
+			/* Receives .stream_start() and .set_format() */
 			control-target = <&uvcmanager>;
 			source-entity = <&uvc0isp>;
 		};
