@@ -15,7 +15,7 @@
 &zephyr_udc0 {
 	endpoints {
 		ep@81 {
-			num-trbs = <16>;
+			num-trbs = <32>;
 			uvcmanager = <&uvcmanager>;
 		};
 	};
@@ -27,30 +27,29 @@
 		 * of the video system to the host, changing the topology
 		 * here will not affect how the device works.
 		 */
-		uvc0cam: cam {
-			compatible = "zephyr,uvc-control-camera";
-			control-ids = <	UVC_CONTROL_CAMERA_AE_MODE
-					UVC_CONTROL_CAMERA_EXPOSURE_TIME_ABSOLUTE
-					UVC_CONTROL_CAMERA_AE_PRIORITY>;
+		uvc0ct: camera_terminal {
+			compatible = "zephyr,uvc-control-ct";
+			control-ae-mode;
+			control-exposure-time-absolute;
 			control-target = <&imx219>;
 		};
-		uvc0isp: isp {
-			compatible = "zephyr,uvc-control-processing";
-			control-ids = <UVC_CONTROL_PROCESSING_GAIN>;
+		uvc0pu: processing_unit {
+			compatible = "zephyr,uvc-control-pu";
+			control-gain;
 			control-target = <&imx219>;
-			source-entity = <&uvc0cam>;
+			source-entity = <&uvc0ct>;
 		};
-		uvc0out: out {
-			compatible = "zephyr,uvc-control-output";
+		uvc0ot: output_terminal {
+			compatible = "zephyr,uvc-control-ot";
 			/* Receives .stream_start() and .set_format() */
 			control-target = <&uvcmanager>;
-			source-entity = <&uvc0isp>;
+			source-entity = <&uvc0pu>;
 		};
 
 		/* This lists the formats supported by the video device which
 		 * can be selected by the host at runtime.
 		 */
-		format_uncompressed {
+		format-uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed";
 			fourcc = "YUYV";
 			guid = [UVC_GUID_YUY2];
