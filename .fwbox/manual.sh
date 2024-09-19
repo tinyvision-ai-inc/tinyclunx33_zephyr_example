@@ -1,14 +1,15 @@
 FWBOX="local"
-FWBOX_VIDEO="video2"
-
-. $FWBOX_PATH/.fwbox/common.sh
+FWBOX_DEV_VIDEO="/dev/video2"
+FWBOX_DEV_ACM="/dev/ttyACM0"
 
 fwbox_do_power_cycle() {
-	echo -n "Power cycle the board and press [enter]: " >/dev/tty
-	read
+	printf 'Power cycle the board and press [enter]: \a' >/dev/tty
+	read </dev/tty
 }
 
 fwbox_do_reset() {
-	echo -n "Hit SW1 and press [enter]: " >/dev/tty
-	read
+	printf 'Hit SW1 and press [enter]: \a' >/dev/tty
+	read </dev/tty
 }
+
+. $FWBOX_PATH/.fwbox/common.sh
