@@ -1,13 +1,18 @@
-# Configuration common to all boxes
+# Common configuration
 
-#BAUD=192000 # 100 MHz
-BAUD=156200 # 80 MHz
+# Default values that can be overriden
+: ${FWBOX_BAUD:=192000} # 100 MHz
+: ${FWBOX_BAUD:=156200} # 80 MHz
+: ${FWBOX_DEV_VIDEO:=/dev/video2}
+: ${FWBOX_DEV_TTYACM:=/dev/ttyACM0}
+: ${FWBOX_DEV_TTYUSB:=/dev/ttyUSB1}
 
-FWBOX_GPIOSET="${FWBOX:?} picocom,port=/dev/ttyACM0 repl"
-FWBOX_CONSOLE="${FWBOX:?} console,port=/dev/ttyUSB1,baud=$BAUD"
-FWBOX_PICOCOM="${FWBOX:?} picocom,port=/dev/ttyUSB1,baud=$BAUD"
-FWBOX_USB_CONSOLE="${FWBOX:?} console,port=/dev/ttyACM1"
-FWBOX_USB_REPL="${FWBOX:?} picocom,port=/dev/ttyACM1 repl"
+# Values derived from above
+FWBOX_CONSOLE="${FWBOX:?} console,port=$FWBOX_DEV_TTYUSB,baud=$FWBOX_BAUD"
+FWBOX_PICOCOM="${FWBOX:?} picocom,port=$FWBOX_DEV_TTYUSB,baud=$FWBOX_BAUD"
+FWBOX_USB_CONSOLE="${FWBOX:?} console,port=$FWBOX_DEV_TTYACM"
+FWBOX_USB_REPL="${FWBOX:?} picocom,port=$FWBOX_DEV_TTYACM repl"
+FWBOX_TMP_VIDEO=/tmp/${FWBOX_DEV_VIDEO##*/}
 
 fwbox_do_flash_zephyr() {
     fwbox_ecpprog 0x100000 <build/zephyr/zephyr.bin
@@ -24,15 +29,16 @@ fwbox_do_all() (
     west build -b tinyclunx33
     fwbox_do_flash_zephyr
     fwbox_do_power_cycle
-    fwbox_do_reset
 )
 
 fwbox_do_video_capture() ( local frames=${1:-50}
+    tmp=$(mktemp)
     set -eu 
-    echo "fwbox: capturing to localhost:/tmp/video0.mkv" >&2
+    echo "fwbox: capturing to localhost:$FWBOX_TMP_VIDEO.mkv" >&2
     #echo 0xffffffff | fwbox_run dd of=/sys/module/uvcvideo/parameters/trace
-    fwbox_run ffmpeg -y -i "/dev/$FWBOX_VIDEO" -c copy -frames "$frames" "/tmp/$FWBOX_VIDEO.mkv"
-    fwbox_run cat "/tmp/$FWBOX_VIDEO.mkv" >/tmp/$FWBOX_VIDEO.mkv
+    fwbox_run ffmpeg -y -i "$FWBOX_DEV_VIDEO" -c copy -frames "$frames" "$FWBOX_TMP_VIDEO.mkv"
+    fwbox_run cat "$FWBOX_TMP_VIDEO.mkv" >$tmp
+    mv "$tmp" "$FWBOX_TMP_VIDEO.mkv"
 )
 
 fwbox_do_usb_console() {

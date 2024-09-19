@@ -11,17 +11,17 @@
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
 
-		uvc0in: in {
-			compatible = "zephyr,uvc-control-input";
+		uvc0it: input_terminal {
+			compatible = "zephyr,uvc-control-it";
 		};
-		uvc0out: out {
-			compatible = "zephyr,uvc-control-output";
+		uvc0ot: output_terminal {
+			compatible = "zephyr,uvc-control-ot";
 			control-target = <&uvcmanager>;
-			source-entity = <&uvc0in>;
+			source-entity = <&uvc0it>;
 		};
 
 		format_uncompressed {
-			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
+			compatible = "zephyr,uvc-format-uncompressed";
 			fourcc = "YUYV";
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;

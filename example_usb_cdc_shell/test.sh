@@ -4,14 +4,12 @@
 # Exit on first failure
 set -eu
 
-# Select which board to use for testing
-fwbox_use idefix
-
 # Build and upload the firmware
+fwbox_use
 fwbox_do_all
 
 # Give it time to enumerate
 sleep 5
 
 # Probe the console
-FWBOX="$FWBOX picocom,port=/dev/ttyACM1 repl" fwbox_run "device list" | grep usb@b0000000
+FWBOX="$FWBOX_USB_REPL" fwbox_run "device list" | grep usb@b0000000
