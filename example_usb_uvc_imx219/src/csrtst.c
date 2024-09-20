@@ -13,7 +13,7 @@ static void CsrRegTest(void)
 	unsigned int val, adr;
 
 	// Read back a bunch of registers from the CSR
-	adr = WISHBONE_BASE_ADDR + 0x02000000;
+	adr = WISHBONE_BASE_ADDR + 0x04000000;
 	for (int i = 0; i <= 10; i++) {
 		reg_32b_read(adr, &val);
 		printf("0x%x = 0x%x\n\r", adr, val);
