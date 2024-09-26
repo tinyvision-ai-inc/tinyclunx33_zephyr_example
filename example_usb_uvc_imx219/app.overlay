@@ -17,7 +17,7 @@
 		/* For UVC */
 		ep@81 {
 			reg = <0x81>;
-			num-trbs = <32>;
+			num-trbs = <4>;
 			uvcmanager = <&uvcmanager>;
 		};
 	};
