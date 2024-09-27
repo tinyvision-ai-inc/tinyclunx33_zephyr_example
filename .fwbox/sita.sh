@@ -7,10 +7,9 @@ else
     exit 1
 fi
 
-FWBOX_DEV_VIDEO="/dev/video0"
-FWBOX_DEV_ACM="/dev/ttyACM1"
 FWBOX_GPIO_RESET="x 22"
 FWBOX_GPIO_POWER="x 20"
+FWBOX_VIDEO="video0"
 
 fwbox_gpioset() {
     fwbox_gpioset_micropython "$@"

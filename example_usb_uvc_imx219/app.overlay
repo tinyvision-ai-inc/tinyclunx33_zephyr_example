@@ -39,11 +39,18 @@
 			control-target = <&imx219>;
 			source-entity = <&uvc0ct>;
 		};
+		uvc0xu: extension_unit {
+			compatible = "zephyr,uvc-control-xu";
+			guid = [00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00];
+			control-num = <5>;
+			control-target = <&imx219>;
+			source-entity = <&uvc0pu>;
+		};
 		uvc0ot: output_terminal {
 			compatible = "zephyr,uvc-control-ot";
 			/* Receives .stream_start() and .set_format() */
 			control-target = <&uvcmanager>;
-			source-entity = <&uvc0pu>;
+			source-entity = <&uvc0xu>;
 		};
 
 		/* This lists the formats supported by the video device which

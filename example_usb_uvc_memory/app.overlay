@@ -9,21 +9,23 @@
 &zephyr_udc0 {
 	cdc0: zephyr_cdc0 {
 		compatible = "zephyr,cdc-acm-uart";
+		status = "okay";
 	};
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
+		status = "okay";
 
-		uvc0it: input_terminal {
-			compatible = "zephyr,uvc-control-it";
+		uvc0in: in {
+			compatible = "zephyr,uvc-control-input";
 		};
-		uvc0ot: output_terminal {
-			compatible = "zephyr,uvc-control-ot";
-			source-entity = <&uvc0it>;
+		uvc0out: out {
+			compatible = "zephyr,uvc-control-output";
+			source-entity = <&uvc0in>;
 		};
 
 		format_uncompressed {
-			compatible = "zephyr,uvc-format-uncompressed";
+			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
 			fourcc = "YUYV";
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;

@@ -7,9 +7,9 @@ else
     exit 1
 fi
 
-FWBOX_DEV_VIDEO="/dev/video0"
 FWBOX_GPIO_RESET="gpio@48000000 1"
 FWBOX_GPIO_POWER="gpio@48000000 0"
+FWBOX_VIDEO="video0"
 
 fwbox_gpioset() {
     fwbox_gpioset_zephyr "$@"
