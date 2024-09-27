@@ -65,8 +65,8 @@ int main(void)
 	cdc_raw_set_write_callback(cdc0_dev, &my_write_callback);
 
 	/* Allocate a buffer with existing data */
-	buf = net_buf_alloc_with_data(&app_buf_pool, usb23_dma_buf, sizeof(usb23_dma_buf),
-		Z_TIMEOUT_NO_WAIT);
+	buf = net_buf_alloc_with_data(&app_buf_pool,
+		usb23_dma_buf, sizeof(usb23_dma_buf), Z_TIMEOUT_NO_WAIT);
 	if (buf == NULL) {
 		LOG_ERR("failed creating a pre-allocated buffer");
 		return -ENOMEM;

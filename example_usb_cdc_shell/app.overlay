@@ -5,21 +5,6 @@
 };
 
 &zephyr_udc0 {
-	endpoints {
-		ep@1 {
-			reg = <0x01>;
-			num-trbs = <4>;
-		};
-		ep@81 {
-			reg = <0x81>;
-			num-trbs = <4>;
-		};
-		ep@82 {
-			reg = <0x82>;
-			num-trbs = <4>;
-		};
-	};
-
 	cdc0: zephyr_cdc0 {
 		compatible = "zephyr,cdc-acm-uart";
 		status = "okay";
