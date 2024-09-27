@@ -12,7 +12,7 @@ const struct device *const uvc0_dev = DEVICE_DT_GET(DT_NODELABEL(uvc0));
 
 int main(void)
 {
-	int ret;
+	int ret = 0;
 
 	ret = video_stream_start(uvc0_dev);
 	if (ret) {

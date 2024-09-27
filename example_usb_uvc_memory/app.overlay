@@ -16,16 +16,6 @@
 		compatible = "zephyr,uvc";
 		status = "okay";
 
-		uvc0_out: ctl1 {
-			compatible = "zephyr,uvc-control-output";
-			source-entity = <&uvc0_in>;
-		};
-
-		uvc0_in: ctl0 {
-			compatible = "zephyr,uvc-control-camera";
-			control-ids = <1 2 3>;
-		};
-
 		format_uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
 			fourcc = "YUYV";

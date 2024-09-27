@@ -1,12 +1,7 @@
 #include <zephyr/dt-bindings/usb/video.h>
 
-/ {
-	chosen {
-		zephyr,shell-uart = &uart0;
-	};
-};
-
-/* This builds a complete chain through "source = <&...>;":
+/*
+ * This builds a complete configuration chain through "source = <&...>;":
  * - USB Video Class (UVC), exposing the controls to the host and communicating with it.
  * - UVC Manager, controlled by the UVC class protocol, doing I/O between the sensor and USB.
  * - IMX219 sensor, with configuration coming from the UVC Manager and the host before it.
@@ -22,26 +17,20 @@
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
-		status = "okay";
 		source = <&uvcmanager>;
+		status = "okay";
 
-		/* This builds a control chain to explain the organization
-		 * of the video system to the host, changing the topology
-		 * here will not affect how the device works.
-		 */
-		uvc0cam: cam {
+		uvc0_in: ctl0 {
 			compatible = "zephyr,uvc-control-camera";
 			control-ids = <1 2 3>;
 			control-target = <&imx219>;
 		};
-		uvc0out: out {
+
+		uvc0_out: ctl1 {
 			compatible = "zephyr,uvc-control-output";
-			source-entity = <&uvc0cam>;
+			source-entity = <&uvc0_in>;
 		};
 
-		/* This lists the formats supported by the video device which
-		 * can be selected by the host at runtime.
-		 */
 		format_uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed";
 			fourcc = "YUYV";
@@ -63,9 +52,24 @@
 };
 
 &i2c0 {
-	imx219: imx219@10 {
-		compatible = "sony,imx219";
-		reg = <0x10>;
+	pca9542a@71 {
+		compatible = "nxp,pca9542a";
+		reg = <0x71>;
 		status = "okay";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ch@0 {
+			compatible = "nxp,pca9542a-channel";
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			imx219: imx219@10 {
+				compatible = "sony,imx219";
+				reg = <0x10>;
+				status = "okay";
+			};
+		};
 	};
 };
