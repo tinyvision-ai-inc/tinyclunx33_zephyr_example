@@ -32,13 +32,13 @@ fwbox_do_all() (
 )
 
 fwbox_do_video_capture() ( local frames=${1:-50}
+    tmp=$(mktemp)
     set -eu 
-
-    # for advanced debug logs:
-    # echo 0xffffffff | sudo dd of=/sys/module/uvcvideo/parameters/trace
-
     echo "fwbox: capturing to localhost:$FWBOX_TMP_VIDEO.mkv" >&2
+    #echo 0xffffffff | fwbox_run dd of=/sys/module/uvcvideo/parameters/trace
     fwbox_run ffmpeg -y -i "$FWBOX_DEV_VIDEO" -c copy -frames "$frames" "$FWBOX_TMP_VIDEO.mkv"
+    fwbox_run cat "$FWBOX_TMP_VIDEO.mkv" >$tmp
+    mv "$tmp" "$FWBOX_TMP_VIDEO.mkv"
 )
 
 fwbox_do_usb_console() {

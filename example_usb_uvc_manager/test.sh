@@ -12,7 +12,7 @@ fwbox_do_all
 sleep 10
 
 # Probe the console
-fwbox_do_video_capture 3
+fwbox_do_video_capture 6
 
 # Check that the video duration is correct
-test "$(fwbox_frame_count "$FWBOX_TMP_VIDEO.mkv")" = 3
+test "$(fwbox_frame_count "$FWBOX_TMP_VIDEO.mkv")" = 6
