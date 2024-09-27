@@ -5,3 +5,4 @@ target_sources(app PRIVATE src/main.c src/usb.c)
 
 # Run some code from RAM for performance during enumeration
 zephyr_code_relocate(LIBRARY drivers__usb__udc LOCATION RAM)
+zephyr_code_relocate(LIBRARY drivers__usbd LOCATION RAM)
