@@ -9,11 +9,11 @@ for example in example_*; do
 
     log "$example" START 30
     if [ -f "$bin" ];then
-        log "$example" DONE 30
+        log "$example" PAST 32
     elif ! (cd "$example" && sh test.sh) >test_$example.log 2>&1; then
         log "$example" FAIL 31
     else
         cp "$example/build/zephyr/zephyr.bin" "$bin"
-        log "$example" DONE 32
+        log "$example" PASS 32
     fi
 done
