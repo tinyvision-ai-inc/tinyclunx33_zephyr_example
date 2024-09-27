@@ -31,8 +31,7 @@
 		 */
 		uvc0cam: cam {
 			compatible = "zephyr,uvc-control-camera";
-			control-ids = <	UVC_CONTROL_CAMERA_AE_MODE
-					UVC_CONTROL_CAMERA_EXPOSURE_ABSOLUTE>;
+			control-ids = <1 2 3>;
 			control-target = <&imx219>;
 		};
 		uvc0out: out {
