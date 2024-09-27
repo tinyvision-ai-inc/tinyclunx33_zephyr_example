@@ -14,9 +14,7 @@
 
 &zephyr_udc0 {
 	endpoints {
-		/* For UVC */
 		ep@81 {
-			reg = <0x81>;
 			num-trbs = <32>;
 			uvcmanager = <&uvcmanager>;
 		};

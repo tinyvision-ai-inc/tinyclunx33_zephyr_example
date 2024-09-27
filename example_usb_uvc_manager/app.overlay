@@ -2,9 +2,7 @@
 
 &zephyr_udc0 {
 	endpoints {
-		/* For USB UVC */
 		ep@81 {
-			reg = <0x81>;
 			num-trbs = <16>;
 			uvcmanager = <&uvcmanager>;
 		};
