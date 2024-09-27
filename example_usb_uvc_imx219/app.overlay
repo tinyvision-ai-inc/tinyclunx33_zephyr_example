@@ -20,19 +20,8 @@
 		source = <&uvcmanager>;
 		status = "okay";
 
-		uvc0_in: ctl0 {
-			compatible = "zephyr,uvc-control-camera";
-			control-ids = <1 2 3>;
-			control-target = <&imx219>;
-		};
-
-		uvc0_out: ctl1 {
-			compatible = "zephyr,uvc-control-output";
-			source-entity = <&uvc0_in>;
-		};
-
 		format_uncompressed {
-			compatible = "zephyr,uvc-format-uncompressed";
+			compatible = "zephyr,uvc-format-uncompressed", "zephyr,uvc-format";
 			fourcc = "YUYV";
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
