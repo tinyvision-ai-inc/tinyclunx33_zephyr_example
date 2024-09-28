@@ -60,7 +60,7 @@
 			FHD {
 				/* There are 2 rows and columns less as required to do debayer. */
 				size = <1918 1078>;
-				max-fps = <60>;
+				max-fps = <30>;
 			};
 		};
 	};
