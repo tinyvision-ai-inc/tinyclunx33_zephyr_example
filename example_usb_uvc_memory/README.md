@@ -1,7 +1,14 @@
 # USB UVC from Memory Example
 
+Release:
+[2024_09_28.bin](https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example/releases/download/2024_09_28/tinyclunx33_zephyr_example_usb_uvc_memory_2024_09_28.bin)
+
+Works with:
+[RTLv0.8](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.8),
+[RTLv0.10](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.10)
+
 This uses the USB Video class (UVC) to display a solid color image pink or green,
-generated with `memset()`
+generated with `memset()`.
 
 Every time a the shell command `video frame` is run, a new frame is produced,
 with a different color.

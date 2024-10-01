@@ -1,5 +1,12 @@
 # USB IMX219 Example
 
+Release:
+[2024_09_28.bin](https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example/releases/download/2024_09_28/tinyclunx33_zephyr_example_usb_uvc_imx219_2024_09_28.bin)
+
+Works with:
+[RTLv0.9](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.9),
+[RTLv0.10](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.10)
+
 This uses the USB Video class (UVC) to display a test pattern.
 
 Crafting guide:
@@ -17,7 +24,6 @@ Crafting guide:
 
 After programming the device and power cycling the board, a video interface
 would show-up, such as `/dev/video0` or `/dev/video2` on Linux.
-
 
 ```
 # Use a web browser to open the camera, such as https://meet.jit.si/
