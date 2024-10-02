@@ -7,7 +7,7 @@ Works with:
 [RTLv0.9](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.9),
 [RTLv0.10](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.10)
 
-This uses the USB Video class (UVC) to display a test pattern.
+This uses the USB Video class (UVC) to display the image feed from an IMX219 camera over MIPI.
 
 Crafting guide:
 
