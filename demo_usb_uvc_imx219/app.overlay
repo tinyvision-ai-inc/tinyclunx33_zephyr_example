@@ -4,6 +4,11 @@
 	chosen {
 		zephyr,shell-uart = &uart0;
 	};
+
+	sw_generator: sw_generator {
+		compatible = "zephyr,sw-generator";
+		status = "okay";
+	};
 };
 
 /* This builds a complete chain through "source = <&...>;":
@@ -13,12 +18,19 @@
  */
 
 &zephyr_udc0 {
+
 	endpoints {
-		/* For UVC */
+		/* For UVC0 */
 		ep@81 {
 			reg = <0x81>;
 			num-trbs = <4>;
 			uvcmanager = <&uvcmanager>;
+		};
+
+		/* For UVC1 */
+		ep@82 {
+			reg = <0x82>;
+			num-trbs = <32>;
 		};
 	};
 
@@ -29,38 +41,72 @@
 		 * of the video system to the host, changing the topology
 		 * here will not affect how the device works.
 		 */
-		uvc0ct: camera_terminal {
+
+		uvc0_ct: camera_terminal {
 			compatible = "zephyr,uvc-control-ct";
 			control-ae-mode;
 			control-exposure-time-absolute;
 			control-target = <&imx219>;
 		};
-		uvc0pu: processing_unit {
+
+		uvc0_pu: processing_unit {
 			compatible = "zephyr,uvc-control-pu";
 			control-gain;
 			control-target = <&imx219>;
-			source-entity = <&uvc0ct>;
+			source-entity = <&uvc0_ct>;
 		};
-		uvc0ot: output_terminal {
+
+		uvc0_ot: output_terminal {
 			compatible = "zephyr,uvc-control-ot";
 			/* Receives .stream_start() and .set_format() */
 			control-target = <&uvcmanager>;
-			source-entity = <&uvc0pu>;
+			source-entity = <&uvc0_pu>;
 		};
 
-		/* This lists the formats supported by the video device which
-		 * can be selected by the host at runtime.
-		 */
 		format-uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed";
 			fourcc = "YUYV";
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
 
+			/* Lists of formats presented to the host */
+
 			FHD {
 				/* There are 2 rows and columns less as required to do debayer. */
 				size = <1918 1078>;
 				max-fps = <30>;
+			};
+		};
+	};
+
+	uvc1: zephyr_uvc1 {
+		compatible = "zephyr,uvc";
+
+		uvc1_it: input_terminal {
+			compatible = "zephyr,uvc-control-it";
+		};
+
+		uvc1_ot: output_terminal {
+			compatible = "zephyr,uvc-control-ot";
+			/* Receives .stream_start() and .set_format() */
+			control-target = <&sw_generator>;
+			source-entity = <&uvc1_it>;
+		};
+
+		/* This lists the formats supported by the video device which
+		 * can be selected by the host at runtime.
+		 */
+
+		format-uncompressed {
+			compatible = "zephyr,uvc-format-uncompressed";
+			fourcc = "YUYV";
+			guid = [UVC_GUID_YUY2];
+			bits-per-pixel = <16>;
+
+			rectangle {
+				/* There are 2 rows and columns less as required to do debayer. */
+				size = <128 1>;
+				max-fps = <10>;
 			};
 		};
 	};
