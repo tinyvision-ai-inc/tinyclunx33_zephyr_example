@@ -86,11 +86,20 @@
 			compatible = "zephyr,uvc-control-it";
 		};
 
+		uvc1_pu: processing_unit {
+			compatible = "zephyr,uvc-control-pu";
+			control-hue;
+			control-saturation;
+			control-brightness;
+			control-target = <&sw_generator>;
+			source-entity = <&uvc1_it>;
+		};
+
 		uvc1_ot: output_terminal {
 			compatible = "zephyr,uvc-control-ot";
 			/* Receives .stream_start() and .set_format() */
 			control-target = <&sw_generator>;
-			source-entity = <&uvc1_it>;
+			source-entity = <&uvc1_pu>;
 		};
 
 		/* This lists the formats supported by the video device which
@@ -105,7 +114,7 @@
 
 			rectangle {
 				/* There are 2 rows and columns less as required to do debayer. */
-				size = <128 1>;
+				size = <224 13>;
 				max-fps = <10>;
 			};
 		};
