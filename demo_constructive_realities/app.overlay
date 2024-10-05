@@ -1,6 +1,6 @@
 #include <zephyr/dt-bindings/usb/video.h>
 
-/* This builds a complete chain through "source = <&...>;":
+/* Build a chain of video devices through "source = <&...>;":
  * - USB Video Class (UVC), exposing the controls to the host and communicating with it.
  * - UVC Manager, controlled by the UVC class protocol, doing I/O between the sensor and USB.
  * - IMX219 sensor, with configuration coming from the UVC Manager and the host before it.
@@ -19,38 +19,31 @@
 		/* For UVC1 */
 		ep@82 {
 			reg = <0x82>;
-			num-trbs = <32>;
+			num-trbs = <4>;
+			uvcmanager = <&uvcmanager1>;
 		};
 	};
 
 	uvc0: zephyr_uvc0 {
 		compatible = "zephyr,uvc";
 
-		/* This builds a control chain to explain the organization
-		 * of the video system to the host, changing the topology
-		 * here will not affect how the device works.
+		/* A simplified topology of the device presented to the host,
+		 * so that it can point at which element it controls.
 		 */
 
 		uvc0_ct: camera_terminal {
-			compatible = "zephyr,uvc-control-ct";
-			control-ae-mode;
-			control-exposure-time-absolute;
+			compatible = "zephyr,uvc-control-it";
 			control-target = <&imx219>;
-		};
-
-		uvc0_pu: processing_unit {
-			compatible = "zephyr,uvc-control-pu";
-			control-gain;
-			control-target = <&imx219>;
-			source-entity = <&uvc0_ct>;
 		};
 
 		uvc0_ot: output_terminal {
 			compatible = "zephyr,uvc-control-ot";
 			/* Receives .stream_start() and .set_format() */
 			control-target = <&uvcmanager0>;
-			source-entity = <&uvc0_pu>;
+			source-entity = <&uvc0_it>;
 		};
+
+		/* Lists of formats presented to the host */
 
 		format-uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed";
@@ -58,11 +51,8 @@
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
 
-			/* Lists of formats presented to the host */
-
 			FHD {
-				/* There are 2 rows and columns less as required to do debayer. */
-				size = <1918 1078>;
+				size = <1920 1080>;
 				max-fps = <30>;
 			};
 		};
@@ -71,29 +61,32 @@
 	uvc1: zephyr_uvc1 {
 		compatible = "zephyr,uvc";
 
-		uvc1_it: input_terminal {
-			compatible = "zephyr,uvc-control-it";
+		/* A simplified topology of the device presented to the host,
+		 * so that it can point at which element it controls.
+		 */
+
+		uvc1_ct: camera_terminal {
+			compatible = "zephyr,uvc-control-ct";
+			control-ae-mode;
+			control-exposure-time-absolute;
+			control-target = <&imx219>;
 		};
 
 		uvc1_pu: processing_unit {
 			compatible = "zephyr,uvc-control-pu";
-			control-hue;
-			control-saturation;
-			control-brightness;
-			control-target = <&sw_generator>;
-			source-entity = <&uvc1_it>;
+			control-gain;
+			control-target = <&imx219>;
+			source-entity = <&uvc1_ct>;
 		};
 
 		uvc1_ot: output_terminal {
 			compatible = "zephyr,uvc-control-ot";
 			/* Receives .stream_start() and .set_format() */
-			control-target = <&sw_generator>;
+			control-target = <&uvcmanager1>;
 			source-entity = <&uvc1_pu>;
 		};
 
-		/* This lists the formats supported by the video device which
-		 * can be selected by the host at runtime.
-		 */
+		/* Lists of formats presented to the host */
 
 		format-uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed";
@@ -101,18 +94,23 @@
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
 
-			rectangle {
-				/* There are 2 rows and columns less as required to do debayer. */
-				size = <224 13>;
-				max-fps = <10>;
+			FHD {
+				size = <1920 1080>;
+				max-fps = <30>;
 			};
 		};
 	};
 };
 
 &uvcmanager0 {
-	/* The UVC Manager will add 2 pixels itself when setting the format of the image sensor. */
 	source = <&imx219>;
+	fourcc = "BA81";
+	status = "okay";
+};
+
+&uvcmanager1 {
+	source = <&imx219>;
+	fourcc = "BA81";
 	status = "okay";
 };
 
@@ -136,6 +134,11 @@
 		};
 	};
 };
+
+/* Use a customized flash offset at which the program will be executed.
+ * This affects the linker script, the firmware configuration, and the
+ * "west flash" command which invokes "ecpprog -o 0x200000 zephyr.bin".
+ */
 
 &slot0_partition {
 	reg = <0x200000 0x100000>;
