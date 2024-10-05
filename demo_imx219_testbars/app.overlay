@@ -26,7 +26,7 @@
 		/* For UVC1 */
 		ep@82 {
 			reg = <0x82>;
-			num-trbs = <32>;
+			num-trbs = <4>;
 		};
 	};
 
@@ -118,8 +118,10 @@
 };
 
 &uvcmanager0 {
-	/* The UVC Manager will add 2 pixels itself when setting the format of the image sensor. */
 	source = <&imx219>;
+	fourcc = "BA81";
+	/* The 2 pixels are required for dong the debayer */
+	size-adjust = <2 2>;
 	status = "okay";
 };
 
