@@ -18,7 +18,7 @@
 		ep@81 {
 			reg = <0x81>;
 			num-trbs = <4>;
-			uvcmanager = <&uvcmanager>;
+			uvcmanager = <&uvcmanager0>;
 		};
 	};
 
@@ -29,33 +29,37 @@
 		 * of the video system to the host, changing the topology
 		 * here will not affect how the device works.
 		 */
+
 		uvc0ct: camera_terminal {
 			compatible = "zephyr,uvc-control-ct";
 			control-ae-mode;
 			control-exposure-time-absolute;
 			control-target = <&imx219>;
 		};
+
 		uvc0pu: processing_unit {
 			compatible = "zephyr,uvc-control-pu";
 			control-gain;
 			control-target = <&imx219>;
 			source-entity = <&uvc0ct>;
 		};
+
 		uvc0ot: output_terminal {
 			compatible = "zephyr,uvc-control-ot";
 			/* Receives .stream_start() and .set_format() */
-			control-target = <&uvcmanager>;
+			control-target = <&uvcmanager0>;
 			source-entity = <&uvc0pu>;
 		};
 
-		/* This lists the formats supported by the video device which
-		 * can be selected by the host at runtime.
-		 */
+		/* This example uses the YUYV format */
+
 		format-uncompressed {
 			compatible = "zephyr,uvc-format-uncompressed";
 			fourcc = "YUYV";
 			guid = [UVC_GUID_YUY2];
 			bits-per-pixel = <16>;
+
+			/* List of resolutions presented to the host. */
 
 			FHD {
 				/* There are 2 rows and columns less as required to do debayer. */
@@ -66,7 +70,7 @@
 	};
 };
 
-&uvcmanager {
+&uvcmanager0 {
 	/* The UVC Manager will add 2 pixels itself when setting the format of the image sensor. */
 	source = <&imx219>;
 };

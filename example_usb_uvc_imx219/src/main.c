@@ -28,7 +28,7 @@ int main(void)
 	}
 
 	/* The buffer address is the FIFO endpoint */
-	vbuf.buffer = (void *)DT_REG_ADDR_BY_NAME(DT_NODELABEL(uvcmanager), fifo);
+	vbuf.buffer = (void *)DT_REG_ADDR_BY_NAME(DT_NODELABEL(uvcmanager0), fifo);
 	vbuf.size = vbuf.bytesused = fmt.pitch * fmt.height;
 	vbuf.flags = VIDEO_BUF_EOF;
 
