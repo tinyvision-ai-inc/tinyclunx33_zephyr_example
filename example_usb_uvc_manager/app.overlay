@@ -6,7 +6,7 @@
 		ep@81 {
 			reg = <0x81>;
 			num-trbs = <16>;
-			uvcmanager = <&uvcmanager>;
+			uvcmanager = <&uvcmanager0>;
 		};
 	};
 
@@ -18,7 +18,7 @@
 		};
 		uvc0ot: output_terminal {
 			compatible = "zephyr,uvc-control-ot";
-			control-target = <&uvcmanager>;
+			control-target = <&uvcmanager0>;
 			source-entity = <&uvc0it>;
 		};
 
