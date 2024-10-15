@@ -18,7 +18,7 @@
 		ep@81 {
 			reg = <0x81>;
 			num-trbs = <4>;
-			uvcmanager = <&uvcmanager>;
+			uvcmanager = <&uvcmanager0>;
 		};
 	};
 
@@ -47,7 +47,7 @@
 		uvc0ot: output_terminal {
 			compatible = "zephyr,uvc-control-ot";
 			/* Receives .stream_start() and .set_format() */
-			control-target = <&uvcmanager>;
+			control-target = <&uvcmanager0>;
 			source-entity = <&uvc0pu>;
 		};
 
@@ -70,7 +70,7 @@
 	};
 };
 
-&uvcmanager {
+&uvcmanager0 {
 	source = <&imx219>;
 	fourcc = "BGGR";
 	/* The UVC Manager will add 2 pixels itself when setting the format of the image sensor. */
