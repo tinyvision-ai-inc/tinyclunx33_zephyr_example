@@ -14,7 +14,9 @@
 
 &zephyr_udc0 {
 	endpoints {
+		/* For UVC */
 		ep@81 {
+			reg = <0x81>;
 			num-trbs = <32>;
 			uvcmanager = <&uvcmanager>;
 		};
@@ -67,6 +69,7 @@
 &uvcmanager {
 	/* The UVC Manager will add 2 pixels itself when setting the format of the image sensor. */
 	source = <&imx219>;
+	csr-reg = <0xb7000000>;
 };
 
 &i2c0 {
