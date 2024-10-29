@@ -5,6 +5,10 @@
 		compatible = "zephyr,sw-generator";
 		status = "okay";
 	};
+
+	chosen {
+		zephyr,shell-uart = &cdc0;
+	};
 };
 
 /* This builds a complete chain through "source = <&...>;":
@@ -16,6 +20,7 @@
 &zephyr_udc0 {
 
 	endpoints {
+
 		/* For UVC0 */
 		ep@81 {
 			reg = <0x81>;
@@ -26,6 +31,20 @@
 		/* For UVC1 */
 		ep@82 {
 			reg = <0x82>;
+			num-trbs = <4>;
+		};
+
+		/* For CDC0 */
+		ep@1 {
+			reg = <0x01>;
+			num-trbs = <4>;
+		};
+		ep@83 {
+			reg = <0x83>;
+			num-trbs = <4>;
+		};
+		ep@84 {
+			reg = <0x84>;
 			num-trbs = <4>;
 		};
 	};
@@ -110,10 +129,15 @@
 
 			rectangle {
 				/* There are 2 rows and columns less as required to do debayer. */
-				size = <224 13>;
+				size = <124 10>;
 				max-fps = <10>;
 			};
 		};
+	};
+
+	cdc0: zephyr_cdc0 {
+		compatible = "zephyr,cdc-acm-uart";
+		status = "okay";
 	};
 };
 
