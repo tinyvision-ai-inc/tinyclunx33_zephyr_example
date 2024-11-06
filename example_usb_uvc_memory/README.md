@@ -28,3 +28,7 @@ v4l2-ctl --device=/dev/video0 --stream-mmap --stream-count=1 --stream-to=video0.
 # Record an MKV video without re-encoding the data and preserving the timing of every frame
 ffmpeg -i /dev/video0 -c copy video0.mkv
 ```
+
+![](screenshot_1.png)
+
+![](screenshot_2.png)
