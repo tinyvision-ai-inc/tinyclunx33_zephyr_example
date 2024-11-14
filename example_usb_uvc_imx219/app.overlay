@@ -75,6 +75,7 @@
 	fourcc = "BGGR";
 	/* The UVC Manager will add 2 pixels itself when setting the format of the image sensor. */
 	size-adjust = <2 2>;
+	status = "okay";
 };
 
 &i2c0 {
