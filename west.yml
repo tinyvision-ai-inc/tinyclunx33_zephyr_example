@@ -1,12 +1,16 @@
 # Copyright (c) 2023-2024 tinyVision.ai Inc.
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: Apache-2.0
 
 manifest:
-
   projects:
+
     - name: zephyr
-      url: git@github.com:tinyvision-ai-inc/zephyr_private
-      revision: 6eb6df6fe3c
+      url: https://github.com/zephyrproject-rtos/zephyr
+      revision: main
       import:
         name-allowlist:
           - zephyr
+
+    - name: tinyclunx33_sdk
+      url: ../tinyclunx33_sdk
+      revision: main
