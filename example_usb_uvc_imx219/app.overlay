@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2024 tinyVision.ai Inc.
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -16,6 +17,8 @@
  */
 
 &zephyr_udc0 {
+	status = "okay";
+
 	endpoints {
 		/* For UVC */
 		ep@81 {
@@ -25,8 +28,14 @@
 		};
 	};
 
-	uvc {
+	uvc0: uvc {
 		compatible = "zephyr,uvc-device";
+
+		port {
+			uvc0_ep_in: endpoint {
+				remote-endpoint-label = "uvcmanager0_ep_out";
+			};
+		};
 	};
 };
 
@@ -36,6 +45,12 @@
 	/* The UVC Manager will add 2 pixels itself when setting the format of the image sensor. */
 	size-adjust = <2 2>;
 	status = "okay";
+
+	port {
+		uvcmanager0_ep_out: endpoint {
+			remote-endpoint-label = "uvc0_ep_in";
+		};
+	};
 };
 
 &i2c0 {
@@ -44,6 +59,7 @@
 		reg = <0x71>;
 		#address-cells = <1>;
 		#size-cells = <0>;
+		status = "disabled";
  
 		ch@0 {
 			compatible = "nxp,pca9542a-channel";
@@ -54,6 +70,7 @@
 			imx219: imx219@10 {
 				compatible = "sony,imx219";
 				reg = <0x10>;
+				status = "disabled";
 			};
 		};
 	};
