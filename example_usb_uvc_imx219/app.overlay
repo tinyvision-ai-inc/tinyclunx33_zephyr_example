@@ -16,7 +16,6 @@
  * - IMX219 sensor, with configuration coming from the UVC Manager and the host before it.
  */
 
-#if 0
 &zephyr_udc0 {
 	status = "okay";
 
@@ -53,7 +52,6 @@
 		};
 	};
 };
-#endif
 
 &i2c0 {
 	status = "okay";
