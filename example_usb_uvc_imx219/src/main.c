@@ -5,7 +5,9 @@
 
 LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
 
+#if 0
 static const struct device *uvc_dev = DEVICE_DT_GET(DT_NODELABEL(uvc0));
+#endif
 
 int main(void)
 {
@@ -13,6 +15,12 @@ int main(void)
 	struct video_format fmt = {0};
 	int ret;
 
+	while (true) {
+		LOG_DBG("tick");
+		k_sleep(K_MSEC(100));
+	}
+
+#if 0
 	/* Get the video format once it is selected by the host */
 	while (true) {
 		ret = video_get_format(uvc_dev, VIDEO_EP_IN, &fmt);
@@ -39,6 +47,7 @@ int main(void)
 		LOG_ERR("failed to enqueue the video buffer");
 		return ret;
 	}
+#endif
 
 	k_sleep(K_FOREVER);
 	return 0;
