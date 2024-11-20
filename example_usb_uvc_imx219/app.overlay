@@ -15,7 +15,7 @@
  * - UVC Manager, controlled by the UVC class protocol, doing I/O between the sensor and USB.
  * - IMX219 sensor, with configuration coming from the UVC Manager and the host before it.
  */
-
+#if 0
 &zephyr_udc0 {
 	status = "okay";
 
@@ -52,16 +52,17 @@
 		};
 	};
 };
+#endif
 
 &i2c0 {
 	status = "okay";
-
+#if 0
 	pca9542a@71 {
 		compatible = "nxp,pca9542a";
 		reg = <0x71>;
 		#address-cells = <1>;
 		#size-cells = <0>;
- 
+#endif
 		ch@0 {
 			compatible = "nxp,pca9542a-channel";
 			reg = <0>;
@@ -73,5 +74,5 @@
 				reg = <0x10>;
 			};
 		};
-	};
+//	};
 };
