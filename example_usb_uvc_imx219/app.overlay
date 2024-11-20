@@ -56,13 +56,11 @@
 
 &i2c0 {
 	status = "okay";
-#if 0
 	pca9542a@71 {
 		compatible = "nxp,pca9542a";
 		reg = <0x71>;
 		#address-cells = <1>;
 		#size-cells = <0>;
-#endif
 		ch@0 {
 			compatible = "nxp,pca9542a-channel";
 			reg = <0>;
@@ -74,5 +72,5 @@
 				reg = <0x10>;
 			};
 		};
-//	};
+	};
 };
