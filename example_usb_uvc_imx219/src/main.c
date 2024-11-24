@@ -5,11 +5,11 @@
 
 LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
 
-//static const struct device *uvc_dev = DEVICE_DT_GET(DT_NODELABEL(uvc0));
+static const struct device *uvc_dev = DEVICE_DT_GET(DT_NODELABEL(uvc0));
+static const struct device *uvcmanager_dev = DEVICE_DT_GET(DT_NODELABEL(uvcmanager0));
 
 int main(void)
 {
-#if 0
 	struct video_buffer vbuf = {0};
 	struct video_format fmt = {0};
 	int ret;
@@ -28,19 +28,18 @@ int main(void)
 		k_sleep(K_MSEC(10));
 	}
 
-	/* The buffer address is the FIFO endpoint */
-	vbuf.buffer = (void *)DT_REG_ADDR_BY_NAME(DT_NODELABEL(uvcmanager0), fifo);
+	LOG_DBG("frame %ux%u, %u bytes", fmt.width, fmt.height, fmt.pitch * fmt.height);
+
+	/* The buffer address is not used, only the size matters */
 	vbuf.size = vbuf.bytesused = fmt.pitch * fmt.height;
 
-	LOG_DBG("frame %ux%u, %u bytes, addr %p", fmt.width, fmt.height, fmt.pitch * fmt.height, vbuf.buffer);
-
 	/* Only the first buffer needs to be enqueued when using the UVC Manager */
-	ret = video_enqueue(uvc_dev, VIDEO_EP_IN, &vbuf);
+	ret = video_enqueue(uvcmanager_dev, VIDEO_EP_IN, &vbuf);
 	if (ret) {
 		LOG_ERR("failed to enqueue the video buffer");
 		return ret;
 	}
-#endif
+
 	k_sleep(K_FOREVER);
 	return 0;
 }

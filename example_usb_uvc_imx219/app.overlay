@@ -10,49 +10,6 @@
 	};
 };
 
-/* This builds a complete chain through "source = <&...>;":
- * - USB Video Class (UVC), exposing the controls to the host and communicating with it.
- * - UVC Manager, controlled by the UVC class protocol, doing I/O between the sensor and USB.
- * - IMX219 sensor, with configuration coming from the UVC Manager and the host before it.
- */
-
-&zephyr_udc0 {
-	status = "okay";
-
-	endpoints {
-		/* For UVC */
-		ep@81 {
-			reg = <0x81>;
-			num-trbs = <4>;
-			uvcmanager = <&uvcmanager0>;
-		};
-	};
-
-	uvc0: uvc {
-		compatible = "zephyr,uvc-device";
-
-		port {
-			uvc0_ep_in: endpoint {
-				remote-endpoint-label = "uvcmanager0_ep_out";
-			};
-		};
-	};
-};
-
-&uvcmanager0 {
-	source = <&imx219>;
-	fourcc = "BGGR";
-	/* The UVC Manager will add 2 pixels itself when setting the format of the image sensor. */
-	size-adjust = <2 2>;
-	status = "okay";
-
-	port {
-		uvcmanager0_ep_out: endpoint {
-			remote-endpoint-label = "uvc0_ep_in";
-		};
-	};
-};
-
 &i2c0 {
 	status = "okay";
 
@@ -61,6 +18,7 @@
 		reg = <0x71>;
 		#address-cells = <1>;
 		#size-cells = <0>;
+
 		ch@0 {
 			compatible = "nxp,pca9542a-channel";
 			reg = <0>;
@@ -70,6 +28,49 @@
 			imx219: imx219@10 {
 				compatible = "sony,imx219";
 				reg = <0x10>;
+
+				port {
+					imx219_ep_out: endpoint {
+						remote-endpoint-label = "uvcmanager0_ep_in";
+					};
+				};
+			};
+		};
+	};
+};
+
+&uvcmanager0 {
+	usb-endpoint = <0x81>;
+	status = "okay";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		uvcmanager0_ep_in: endpoint@0 {
+			reg = <0x0>;
+			remote-endpoint-label = "imx219_ep_out";
+		};
+
+		uvcmanager0_ep_out: endpoint@1 {
+			reg = <0x1>;
+			remote-endpoint-label = "uvc0_ep_in";
+		};
+	};
+};
+
+&zephyr_udc0 {
+	num-out-endpoints = <1>;
+	num-in-endpoints = <2>;
+	maximum-speed = "super-speed";
+	status = "okay";
+
+	uvc0: uvc {
+		compatible = "zephyr,uvc-device";
+
+		port {
+			uvc0_ep_in: endpoint {
+				remote-endpoint-label = "uvcmanager0_ep_out";
 			};
 		};
 	};
