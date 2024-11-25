@@ -13,7 +13,7 @@
         compatible = "tinyvision,dummy-sxga";
 
         port {
-            video0_ep_out: endpoint {
+            dummy_sxga_ep_out: endpoint {
                 remote-endpoint-label = "uvc0_ep_in";
             };
         };
