@@ -26,7 +26,7 @@ struct video_format_cap fmts[] = {
 	 .width_min = 1280,
 	 .width_max = 1280,
 	 .height_min = 1024,
-	 .height_max = 1024}, /* SXGA */
+	 .height_max = 1024},
 	{0},
 };
 
@@ -129,9 +129,9 @@ static int customcore_init(const struct device *dev)
 	return customcore_set_fmt(dev, VIDEO_EP_OUT, &fmt);
 }
 
-#define CUSTOMCORE_INIT(n)                                                                       \
-	struct customcore_data customcore_data_##n;                                            \
-	DEVICE_DT_INST_DEFINE(n, &customcore_init, NULL, &customcore_data_##n, NULL,           \
+#define CUSTOMCORE_INIT(n)                                                                         \
+	struct customcore_data customcore_data_##n;                                                \
+	DEVICE_DT_INST_DEFINE(n, &customcore_init, NULL, &customcore_data_##n, NULL,               \
 			      POST_KERNEL, CONFIG_VIDEO_INIT_PRIORITY, &customcore_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(CUSTOMCORE_INIT)
