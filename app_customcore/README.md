@@ -1,12 +1,7 @@
 # Custom RTL examle
 
 This is a starting point for building a custom RTL design specific to an application.
-
-The entire SoC definition can be done in `app.overlay`, integrating
-pre-configured blocks or newly defined ones.
-
-This example uses the USB Video class (UVC) to display the image feed from an
-application-specific FPGA core to USB.
+See [`drivers/video/customcore.c`](../drivers/video/customcore.c) for the driver assotiated with this example.
 
 
 ## Building guide
