@@ -1,9 +1,6 @@
 # USB IMX219 Example
 
-Release:
-[2024_09_28.bin](https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example/releases/download/2024_09_28/tinyclunx33_zephyr_example_usb_uvc_imx219_2024_09_28.bin)
-
-Works with:
+Tested with:
 [rtl009](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.9),
 [rtl010](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.10)
 
@@ -34,8 +31,6 @@ This uses the USB Video class (UVC) to display the image feed from an IMX219 cam
   adapter to the other end.
 
 - Plug the adapter to the adapter on the right side: `Expansion #2` for Rev1, `Pod A` for Rev2
-
-- Load the [`RTLv0.9.mipi`](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.9) which is built exclusively for this example.
 
 
 ## Running guide
