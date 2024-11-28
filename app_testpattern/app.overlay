@@ -1,0 +1,13 @@
+/*
+ * Copyright (c) 2024 tinyVision.ai Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <riscv/tinyvision/tinyclunx33_add_uvcmanager0.dtsi>
+
+/ {
+	chosen {
+		zephyr,shell-uart = &uart0;
+	};
+};

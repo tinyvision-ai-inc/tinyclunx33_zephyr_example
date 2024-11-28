@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2024 tinyVision.ai Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <riscv/tinyvision/tinyclunx33_add_litex_i2c.dtsi>
+#include <riscv/tinyvision/tinyclunx33_add_uvcmanager0.dtsi>
+
+/ {
+	chosen {
+		zephyr,shell-uart = &uart0;
+	};
+
+	soc {
+		customcore0: customcore@b1200000 {
+			compatible = "tinyvision,customcore";
+			reg = <0xb1200000 0x100000>;
+
+			port {
+				customcore0_ep_out: endpoint {
+					remote-endpoint-label = "uvcmanager0_ep_in";
+				};
+			};
+		};
+	};
+};
+
+&uvcmanager0_ep_in {
+	remote-endpoint-label = "customcore0_ep_out";
+};
+
+&i2c0 {
+	status = "okay";
+};
