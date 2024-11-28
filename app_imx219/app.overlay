@@ -8,7 +8,7 @@
 
 / {
 	chosen {
-		zephyr,shell-uart = &uart0;
+		zephyr,shell-uart = &cdc_acm_uart0;
 	};
 };
 
@@ -38,6 +38,15 @@
 				};
 			};
 		};
+	};
+};
+
+&zephyr_udc0 {
+	num-in-endpoints = <4>;
+	num-out-endpoints = <4>;
+
+	cdc_acm_uart0: cdc-acm-uart {
+		compatible = "zephyr,cdc-acm-uart";
 	};
 };
 
