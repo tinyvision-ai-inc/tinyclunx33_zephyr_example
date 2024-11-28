@@ -4,12 +4,27 @@ Release:
 [2024_09_28.bin](https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example/releases/download/2024_09_28/tinyclunx33_zephyr_example_usb_uvc_imx219_2024_09_28.bin)
 
 Works with:
-[RTLv0.9](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.9),
-[RTLv0.10](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.10)
+[rtl009](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.9),
+[rtl010](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.10)
+
+
+## Building guide
+
+Visit the
+[`tinyclunx33_sdk`](https://github.com/tinyvision-ai-inc/zephyr_internal/tree/tinyclunx33_sdk)
+documentation for a complete guide.
+
+Example using the Rev2 SoM, Rev2 Devkit, FPGA releasea `rtl010`:
+
+```
+west build --board tinyclunx33@rev2/rtl010 --shield tinyclunx33_devkit_rev2
+west flash
+```
+
+
+## Crafting guide
 
 This uses the USB Video class (UVC) to display the image feed from an IMX219 camera over MIPI.
-
-Crafting guide:
 
 - Attach an [IMX219 module](https://tinyvision.ai/products/imx219-raspberry-pi-camera-v2) to an FPC cable
 
@@ -22,31 +37,12 @@ Crafting guide:
 
 - Load the [`RTLv0.9.mipi`](https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.9) which is built exclusively for this example.
 
+
+## Running guide
+
 After programming the device and power cycling the board, a video interface
 would show-up, such as `/dev/video0` or `/dev/video2` on Linux.
 
-```
-# Use a web browser to open the camera, such as https://meet.jit.si/
-
-# Or play it using https://gstreamer.freedesktop.org/
-gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! autovideosink
-
-# Or play it using https://mpv.io/
-mpv /dev/video0
-
-# Or play it using https://www.videolan.org/vlc/
-vlc v4l2:///dev/video0
-
-# Or play it using https://ffmpeg.org/ffplay.html
-ffplay /dev/video0
-
-# Or play it using https://opencv.org/
-import cv2
-cv2.namedWindow("preview")
-vc = cv2.VideoCapture(0)
-while (val := vc.read())[0]:
-    cv2.waitKey(20)
-    cv2.imshow("preview", val[1])
-cv2.destroyWindow("preview")
-vc.release()
-```
+See the
+[UVC](https://github.com/tinyvision-ai-inc/zephyr/blob/pr-usb-uvc/samples/subsys/usb/uvc/README.rst#playing-the-stream)
+Zephyr sample for a more commplete guide.
