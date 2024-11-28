@@ -8,37 +8,47 @@
 	chosen {
 		zephyr,shell-uart = &uart0;
 	};
-
-    dummy_sxga: dummy-sxga {
-        compatible = "tinyvision,dummy-sxga";
-
-        port {
-            dummy_sxga_ep_out: endpoint {
-                remote-endpoint-label = "uvc0_ep_in";
-            };
-        };
-    };
 };
 
-
-&uvcmanager0 {
-	usb-endpoint = <0x81>;
+&i2c0 {
 	status = "okay";
 
-	port {
+	pca9542a@71 {
+		compatible = "nxp,pca9542a";
+		reg = <0x71>;
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		uvcmanager0_ep_in: endpoint@0 {
-			reg = <0x0>;
-			remote-endpoint-label = "dummy_sxga_ep_out";
-		};
+		ch@0 {
+			compatible = "nxp,pca9542a-channel";
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
 
-		uvcmanager0_ep_out: endpoint@1 {
-			reg = <0x1>;
-			remote-endpoint-label = "uvc0_ep_in";
+			imx219: imx219@10 {
+				compatible = "sony,imx219";
+				reg = <0x10>;
+
+				port {
+					imx219_ep_out: endpoint {
+						remote-endpoint-label = "debayer0_ep_in";
+					};
+				};
+			};
 		};
 	};
+};
+
+&debayer0_ep_in {
+	remote-endpoint-label = "imx219_ep_out";
+};
+
+&uvcmanager0 {
+	usb-endpoint = <0x81>;
+};
+
+&uvcmanager0_ep_out {
+	remote-endpoint-label = "uvc0_ep_in";
 };
 
 &zephyr_udc0 {
