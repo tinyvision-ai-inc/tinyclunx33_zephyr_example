@@ -1,0 +1,105 @@
+/*
+ * Copyright (c) 2024 tinyVision.ai Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* Welcome to the Zephyr devicetree. This configuration file will
+ * setup the interconnection between the drivers and explain to
+ * Zephyr how to configure driver instances accordingly.
+ *
+ * Extra devicetree is provided by default, and once a project is
+ * built, it is possible to review the full devicetree under:
+ *    build/zephyr/zephyr.dts
+ *
+ * See https://docs.zephyrproject.org/latest/build/dts/intro.html
+ * for more details about the devicetree and its usage.
+ */
+
+/ {
+	chosen {
+		zephyr,shell-uart = &uart0;
+	};
+};
+
+/* First, declare the image sensor over I2C, going through an I2C
+ * multiplexer in this example
+ */
+&i2c0 {
+	status = "okay";
+
+	pca9542a@71 {
+		compatible = "nxp,pca9542a";
+		reg = <0x71>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ch@0 {
+			compatible = "nxp,pca9542a-channel";
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			imx219: imx219@10 {
+				compatible = "sony,imx219";
+				reg = <0x10>;
+
+				port {
+					/* Then, hook the image sensor with the next core
+					 */
+					imx219_ep_out: endpoint {
+						remote-endpoint-label = "debayer0_ep_in";
+					};
+				};
+			};
+		};
+	};
+};
+
+/* Also hook the next core back to the image sensor
+ */
+&debayer0_ep_in {
+	remote-endpoint-label = "imx219_ep_out";
+};
+
+/* The UVC Manager is already connected to the debayer core.
+ * Declare the USB Endpoint with which the UVC Manager will operate
+ * If there is a single endpoint, it is 0x81.
+ */
+&uvcmanager0 {
+	usb-endpoint = <0x81>;
+};
+
+/* Finally, interconnect UVCManager with UVC, so that it recieves the
+ * commands from UVC, and forward them to the other peripherals
+ */
+&uvcmanager0_ep_out {
+	remote-endpoint-label = "uvc0_ep_in";
+};
+
+/* Configure the USB driver properties: adjusting the number of endponts
+ * to only use as much RAM as needed, and max USB speed.
+ */
+&zephyr_udc0 {
+	num-out-endpoints = <1>;
+	num-in-endpoints = <2>;
+	maximum-speed = "super-speed";
+	status = "okay";
+
+	/* Then declare the USB classes inside. In this example, only UVC
+	 * is present, but it is possible to add more, such as CDC ACM.
+	 * In which case, adjusting `num-out-endpoints`, `num-in-endpoints`,
+	 * `usb-endpoint` would be required.
+	 */
+	uvc0: uvc {
+		compatible = "zephyr,uvc-device";
+
+		port {
+			/* Connect UVC back to the UVC Manager.
+			 */
+			uvc0_ep_in: endpoint {
+				remote-endpoint-label = "uvcmanager0_ep_out";
+			};
+		};
+	};
+};
