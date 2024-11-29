@@ -41,15 +41,31 @@
 	};
 };
 
-&zephyr_udc0 {
-	num-in-endpoints = <4>;
-	num-out-endpoints = <4>;
-
-	cdc_acm_uart0: cdc-acm-uart {
-		compatible = "zephyr,cdc-acm-uart";
-	};
+&debayer0 {
+	status = "okay";
 };
 
 &debayer0_ep_in {
 	remote-endpoint-label = "imx219_ep_out";
+};
+
+&uvcmanager0 {
+	status = "okay";
+
+	/* From UVC's "bEndpointAddress" in "lsusb -v -d 1209:0001" output */
+	usb-endpoint = <0x83>;
+};
+
+&uvc0 {
+	status = "okay";
+};
+
+&zephyr_udc0 {
+	num-in-endpoints = <4>;
+	num-out-endpoints = <2>;
+	status = "okay";
+
+	cdc_acm_uart0: cdc-acm-uart {
+		compatible = "zephyr,cdc-acm-uart";
+	};
 };

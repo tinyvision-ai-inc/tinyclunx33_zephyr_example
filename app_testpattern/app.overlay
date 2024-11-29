@@ -9,3 +9,11 @@
 		zephyr,shell-uart = &uart0;
 	};
 };
+
+&testpattern0 {
+	status = "okay";
+};
+
+&uvc0 {
+	status = "okay";
+};

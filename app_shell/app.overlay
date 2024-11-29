@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2024 tinyVision.ai Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <riscv/tinyvision/tinyclunx33_add_uvcmanager0.dtsi>
+
+/ {
+	chosen {
+		zephyr,shell-uart = &cdc_acm_uart0;
+	};
+};
+
+&zephyr_udc0 {
+	num-in-endpoints = <3>;
+	num-out-endpoints = <2>;
+	status = "okay";
+
+	cdc_acm_uart0: cdc-acm-uart {
+		compatible = "zephyr,cdc-acm-uart";
+	};
+};
+
+&debayer0_ep_in {
+	remote-endpoint-label = "empty";
+};

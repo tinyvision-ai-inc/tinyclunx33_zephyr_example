@@ -26,10 +26,18 @@
 	};
 };
 
+&zephyr_udc0 {
+	status = "okay";
+};
+
+&uvcmanager0 {
+	status = "okay";
+};
+
 &uvcmanager0_ep_in {
 	remote-endpoint-label = "customcore0_ep_out";
 };
 
-&i2c0 {
+&uvc0 {
 	status = "okay";
 };
