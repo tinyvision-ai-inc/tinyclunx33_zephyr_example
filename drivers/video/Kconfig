@@ -3,6 +3,6 @@
 
 if VIDEO
 
-rsource "Kconfig.customcore"
+rsource "Kconfig.example"
 
 endif

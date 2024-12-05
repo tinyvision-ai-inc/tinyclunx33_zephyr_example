@@ -13,12 +13,12 @@
 	};
 
 	soc {
-		customcore0: customcore@b1200000 {
-			compatible = "tinyvision,customcore";
+		example0: example@b1200000 {
+			compatible = "tinyvision,example";
 			reg = <0xb1200000 0x100000>;
 
 			port {
-				customcore0_ep_out: endpoint {
+				example0_ep_out: endpoint {
 					remote-endpoint-label = "uvcmanager0_ep_in";
 				};
 			};
@@ -35,7 +35,7 @@
 };
 
 &uvcmanager0_ep_in {
-	remote-endpoint-label = "customcore0_ep_out";
+	remote-endpoint-label = "example0_ep_out";
 };
 
 &uvc0 {

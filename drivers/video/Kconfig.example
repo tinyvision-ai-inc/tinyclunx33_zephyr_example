@@ -1,9 +1,9 @@
 # Copyright (c) 2024 tinyVision.ai Inc.
 # SPDX-License-Identifier: Apache-2.0
 
-config VIDEO_TINYVISION_CUSTOMCORE
+config VIDEO_TINYVISION_EXAMPLE
 	bool "Example of custom RTL defined by the application"
-	depends on DT_HAS_TINYVISION_CUSTOMCORE_ENABLED
+	depends on DT_HAS_TINYVISION_EXAMPLE_ENABLED
 	default y
 	help
 	  Enable driver for an application-specific FPGA peripheral.

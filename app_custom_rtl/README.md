@@ -1,7 +1,7 @@
 # Custom RTL examle
 
 This is a starting point for building a custom RTL design specific to an application.
-See [`drivers/video/customcore.c`](../drivers/video/customcore.c) for the driver assotiated with this example.
+See [`drivers/video/example.c`](../drivers/video/example.c) for the driver assotiated with this example.
 
 
 ## Building guide

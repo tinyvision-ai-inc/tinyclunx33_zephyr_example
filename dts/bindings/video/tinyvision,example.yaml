@@ -3,7 +3,7 @@
 
 description: Custom RTL core integrated into the tinyCLUNX33
 
-compatible: "tinyvision,customcore"
+compatible: "tinyvision,example"
 
 include: base.yaml
 

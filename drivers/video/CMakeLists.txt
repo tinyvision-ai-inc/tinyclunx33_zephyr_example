@@ -3,4 +3,4 @@
 
 zephyr_library()
 
-zephyr_library_sources_ifdef(CONFIG_VIDEO_TINYVISION_CUSTOMCORE customcore.c)
+zephyr_library_sources_ifdef(CONFIG_VIDEO_TINYVISION_EXAMPLE example.c)

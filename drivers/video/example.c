@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define DT_DRV_COMPAT tinyvision_customcore
+#define DT_DRV_COMPAT tinyvision_example
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/i2c.h>
@@ -15,9 +15,9 @@
 #include <zephyr/sys/util.h>
 #include <zephyr/logging/log.h>
 
-LOG_MODULE_REGISTER(customcore, CONFIG_VIDEO_LOG_LEVEL);
+LOG_MODULE_REGISTER(example, CONFIG_VIDEO_LOG_LEVEL);
 
-struct customcore_data {
+struct example_data {
 	struct video_format fmt;
 };
 
@@ -30,10 +30,10 @@ struct video_format_cap fmts[] = {
 	{0},
 };
 
-static int customcore_set_fmt(const struct device *dev, enum video_endpoint_id ep,
+static int example_set_fmt(const struct device *dev, enum video_endpoint_id ep,
 			  struct video_format *fmt)
 {
-	struct customcore_data *data = dev->data;
+	struct example_data *data = dev->data;
 	int i;
 
 	if (ep != VIDEO_EP_OUT && ep != VIDEO_EP_ALL) {
@@ -56,23 +56,23 @@ static int customcore_set_fmt(const struct device *dev, enum video_endpoint_id e
 	return 0;
 }
 
-static int customcore_get_fmt(const struct device *dev, enum video_endpoint_id ep,
+static int example_get_fmt(const struct device *dev, enum video_endpoint_id ep,
 			  struct video_format *fmt)
 {
-	struct customcore_data *data = dev->data;
+	struct example_data *data = dev->data;
 
 	*fmt = data->fmt;
 	return 0;
 }
 
-static int customcore_get_caps(const struct device *dev, enum video_endpoint_id ep,
+static int example_get_caps(const struct device *dev, enum video_endpoint_id ep,
 			   struct video_caps *caps)
 {
 	caps->format_caps = fmts;
 	return 0;
 }
 
-static int customcore_get_frmival(const struct device *dev, enum video_endpoint_id ep,
+static int example_get_frmival(const struct device *dev, enum video_endpoint_id ep,
 			       struct video_frmival *frmival)
 {
 	if (ep != VIDEO_EP_OUT && ep != VIDEO_EP_ALL) {
@@ -84,7 +84,7 @@ static int customcore_get_frmival(const struct device *dev, enum video_endpoint_
 	return 0;
 }
 
-static int customcore_enum_frmival(const struct device *dev, enum video_endpoint_id ep,
+static int example_enum_frmival(const struct device *dev, enum video_endpoint_id ep,
 				struct video_frmival_enum *fie)
 {
 	if (fie->index > 0) {
@@ -98,27 +98,27 @@ static int customcore_enum_frmival(const struct device *dev, enum video_endpoint
 	return 0;
 }
 
-static int customcore_stream_start(const struct device *dev)
+static int example_stream_start(const struct device *dev)
 {
 	return 0;
 }
 
-static int customcore_stream_stop(const struct device *dev)
+static int example_stream_stop(const struct device *dev)
 {
 	return 0;
 }
 
-static const struct video_driver_api customcore_driver_api = {
-	.set_format = customcore_set_fmt,
-	.get_format = customcore_get_fmt,
-	.get_caps = customcore_get_caps,
-	.get_frmival = customcore_get_frmival,
-	.enum_frmival = customcore_enum_frmival,
-	.stream_start = customcore_stream_start,
-	.stream_stop = customcore_stream_stop,
+static const struct video_driver_api example_driver_api = {
+	.set_format = example_set_fmt,
+	.get_format = example_get_fmt,
+	.get_caps = example_get_caps,
+	.get_frmival = example_get_frmival,
+	.enum_frmival = example_enum_frmival,
+	.stream_start = example_stream_start,
+	.stream_stop = example_stream_stop,
 };
 
-static int customcore_init(const struct device *dev)
+static int example_init(const struct device *dev)
 {
 	struct video_format fmt;
 
@@ -126,12 +126,12 @@ static int customcore_init(const struct device *dev)
 	fmt.width = 1280;
 	fmt.height = 1024;
 	fmt.pitch = fmt.width * 2;
-	return customcore_set_fmt(dev, VIDEO_EP_OUT, &fmt);
+	return example_set_fmt(dev, VIDEO_EP_OUT, &fmt);
 }
 
-#define CUSTOMCORE_INIT(n)                                                                         \
-	struct customcore_data customcore_data_##n;                                                \
-	DEVICE_DT_INST_DEFINE(n, &customcore_init, NULL, &customcore_data_##n, NULL,               \
-			      POST_KERNEL, CONFIG_VIDEO_INIT_PRIORITY, &customcore_driver_api);
+#define EXAMPLE_INIT(n)                                                                            \
+	struct example_data example_data_##n;                                                      \
+	DEVICE_DT_INST_DEFINE(n, &example_init, NULL, &example_data_##n, NULL, POST_KERNEL,        \
+			      CONFIG_VIDEO_INIT_PRIORITY, &example_driver_api);
 
-DT_INST_FOREACH_STATUS_OKAY(CUSTOMCORE_INIT)
+DT_INST_FOREACH_STATUS_OKAY(EXAMPLE_INIT)
