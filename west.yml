@@ -5,12 +5,12 @@ manifest:
   projects:
 
     - name: zephyr
-      url: git@github.com:tinyvision-ai-inc/zephyr
+      url: https://github.com/tinyvision-ai-inc/zephyr
       revision: usb3
       import:
         name-allowlist:
           - zephyr
 
     - name: tinyvision_zephyr_sdk
-      url: git@github.com:tinyvision-ai-inc/tinyvision_zephyr_sdk
+      url: https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk
       revision: main
