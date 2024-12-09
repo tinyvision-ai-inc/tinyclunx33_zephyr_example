@@ -11,6 +11,6 @@ manifest:
         name-allowlist:
           - zephyr
 
-    - name: tinyclunx33_sdk
-      url: git@github.com:tinyvision-ai-inc/zephyr_internal
-      revision: tinyclunx33_sdk
+    - name: tinyvision_zephyr_sdk
+      url: git@github.com:tinyvision-ai-inc/tinyvision_zephyr_sdk
+      revision: main
