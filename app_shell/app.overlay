@@ -21,7 +21,3 @@
 		compatible = "zephyr,cdc-acm-uart";
 	};
 };
-
-&debayer0_ep_in {
-	remote-endpoint-label = "empty";
-};
