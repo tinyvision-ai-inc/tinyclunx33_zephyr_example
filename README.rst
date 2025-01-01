@@ -12,7 +12,7 @@ instructions.
 Then, setup the project to use
 `tinyVision.ai Zephyr SDK <https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk>`_:
 
-..code-block:: console
+.. code-block:: console
 
    # Reset the workspace directory you created from Zephyr's Getting Started Guide
    cd ~/zephyrproject
