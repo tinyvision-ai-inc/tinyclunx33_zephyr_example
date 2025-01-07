@@ -22,6 +22,6 @@ Then, setup the project to use
    west init -m https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example
    west update
 
-You are now ready to build any of the provided examples, in the ``app_...`
+You are now ready to build any of the provided examples, in the ``app_...``
 directories of this repository, each with a ``README`` file providing further
 build instructions.

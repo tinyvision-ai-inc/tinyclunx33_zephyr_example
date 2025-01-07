@@ -12,7 +12,7 @@ Visit the
 `tinyclunx33_sdk <https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk/>`_
 documentation for a complete guide.
 
-Example using the Rev2 SoM, Rev2 Devkit, FPGA releasea `rtl010`:
+Example using the Rev2 SoM, Rev2 Devkit, FPGA release `rtl010`:
 
 .. code-block:: console
 
