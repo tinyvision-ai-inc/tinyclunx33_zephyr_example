@@ -1,9 +1,6 @@
 USB IMX219 Example
 ##################
 
-This example is a work in progress, and some elements are still missing.
-Expect a complete update early January 2025.
-
 
 Building
 ========
