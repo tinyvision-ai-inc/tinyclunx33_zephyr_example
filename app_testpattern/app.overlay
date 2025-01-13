@@ -14,6 +14,14 @@
 	status = "okay";
 };
 
+&uvcmanager0 {
+	status = "okay";
+};
+
 &uvc {
+	status = "okay";
+};
+
+&zephyr_udc0 {
 	status = "okay";
 };
