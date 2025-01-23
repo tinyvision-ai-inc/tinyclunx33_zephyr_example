@@ -25,3 +25,7 @@ Then, setup the project to use
 You are now ready to build any of the provided examples, in the ``app_...``
 directories of this repository, each with a ``README`` file providing further
 build instructions.
+
+An end-to-end example of how to build the ``app_imx219`` is provided via the
+``getting_started_on_linux.sh``, expected to build a working ``zephyr.elf``
+binary.
