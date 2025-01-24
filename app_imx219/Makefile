@@ -1,7 +1,7 @@
 TTY = /dev/ttyUSB1
 
 all:
-	west build --board tinyclunx33@rev2/rtl010 --shield tinyclunx33_devkit_rev2
+	west build --board tinyclunx33@rev2/rtl011 --shield tinyclunx33_devkit_rev2
 
 clean:
 	rm -rf build
