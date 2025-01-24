@@ -1,0 +1,26 @@
+---
+name: getting_started_on_linux
+
+on:
+
+  schedule:
+    - cron: "53 5 * * *"
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -m 700 -p "$HOME/.ssh"
+      - run: ssh-keyscan github.com >>$HOME/.ssh/known_hosts
+      - run: chmod 400 "$HOME/.ssh/known_hosts"
+      - run: echo "${{ secrets.SSH_KEY_ED25519 }}" >>$HOME/.ssh/id_ed25519
+      - run: chmod 400 "$HOME/.ssh/id_ed25519"
+      - run: ssh git@github.com 2>&1 | grep "successfully authenticated"
+      - run: sh getting_started_on_linux.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zephyr.bin
+          path: /home/runner/zephyrproject/tinyclunx33_zephyr_example_app_imx219_*.bin

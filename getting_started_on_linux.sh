@@ -27,5 +27,5 @@ git clone --depth 1 git@github.com:tinyvision-ai-inc/zephyr_private
 # Build the firmware, guessing the most likely user setup
 west build --board tinyclunx33@rev2/rtl010 --shield tinyclunx33_devkit_rev2 tinyclunx33_zephyr_example/app_imx219
 
-# Print a comment about what just completed
-: "Setup completed successfully, you can now navigate to ~/zephyrproject and run: west flash"
+# Rename the file to feature the current date
+mv build/zephyr/zephyr.bin tinyclunx33_zephyr_example_app_imx219_rtl010_$(date +%Y_%m_%d)_nightly.bin

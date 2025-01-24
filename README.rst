@@ -1,6 +1,9 @@
 tinyCLUNX33 Zephyr Example
 ##########################
 
+.. image:: https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example/actions/workflows/getting_started_on_linux.yml/badge.svg
+   :target: https://github.com/tinyvision-ai-inc/tinyclunx33_zephyr_example/actions/workflows/getting_started_on_linux.yml
+
 This repository acts as an example project, and contain several sample
 applications that can be used as a starting point for writing new firmware
 for the tinyCLUNX33 SoM.
