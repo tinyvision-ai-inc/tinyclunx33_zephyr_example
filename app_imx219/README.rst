@@ -9,11 +9,11 @@ Visit the
 `tinyclunx33_sdk <https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk/>`_
 documentation for a complete guide.
 
-Example using the Rev2 SoM, Rev2 Devkit, FPGA release `rtl010`:
+Example using the Rev2 SoM, Rev2 Devkit, FPGA release `rtl_0_10`:
 
 .. code-block:: console
 
-   west build --board tinyclunx33@rev2/rtl010 --shield tinyclunx33_devkit_rev2
+   west build --board tinyclunx33@rev2/rtl_0_10 --shield tinyclunx33_devkit_rev2
    west flash
 
 
@@ -30,7 +30,7 @@ This uses the USB Video class (UVC) to display the image feed from an IMX219 cam
   `Syzygy in/out <https://tinyvision.ai/products/syzygy-mipi-to-usb-input-output-adapter>`_
   adapter to the other end.
 
-* Plug the adapter to the adapter on the right side: ``Expansion #2`` for Rev1, ``Pod A`` for Rev2
+* Plug the adapter to the devkit on the right side: ``Expansion #2`` for Rev1, ``Pod A`` for Rev2
 
 
 Running
