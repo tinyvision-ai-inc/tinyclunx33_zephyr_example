@@ -1,6 +1,9 @@
 USB IMX219 Example
 ##################
 
+**Note: this cannot be used with the latest RTL versions, see app_imx219_dual instead, even if you
+have a single camera.**
+
 
 Building
 ========

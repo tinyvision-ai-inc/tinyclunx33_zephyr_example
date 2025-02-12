@@ -1,6 +1,9 @@
 USB IMX219 Example
 ##################
 
+**Note: this only works with the latest versions (``1.x.x``, not ``0.xx``). Make sure you use the
+correct RTL release when testing**
+
 
 Building
 ========
