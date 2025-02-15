@@ -1,4 +1,5 @@
-# USB CDC Echo Example
+USB CDC RAW Example
+###################
 
 This uses the CDC ACM USB class, but a custom ``usbd_cdc_raw.c`` implementation to allow
 to enqueue data without using a ring buffer.
