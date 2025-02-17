@@ -13,4 +13,4 @@ manifest:
 
     - name: tinyvision_zephyr_sdk
       url: https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk
-      revision: 659ab06ec5391830e456922f0109ca43e1b46602
+      revision: ca196ff35a5f6668fecf8464af3b307f65c52972

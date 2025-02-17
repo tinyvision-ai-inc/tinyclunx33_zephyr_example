@@ -12,7 +12,8 @@ LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
 NET_BUF_POOL_DEFINE(app_buf_pool, 2, 0, sizeof(struct udc_buf_info), NULL);
 
 /* And then define the actual buffer that is going to be used, with an attribute
- * that makes the linker script place it on a DMA-accessible memory */
+ * that makes the linker script place it on a DMA-accessible memory
+ */
 static __nocache uint8_t input_buf[1024];
 
 static const struct device *const cdc0_dev = DEVICE_DT_GET(DT_NODELABEL(cdc0));
