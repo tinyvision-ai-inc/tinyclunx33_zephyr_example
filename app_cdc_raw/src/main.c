@@ -11,9 +11,9 @@ LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
 /* Static pool of buffer with no data in it */
 NET_BUF_POOL_DEFINE(app_buf_pool, 2, 0, sizeof(struct udc_buf_info), NULL);
 
-/* And then define the actual buffer that is going to be used, with a prefix
+/* And then define the actual buffer that is going to be used, with an attribute
  * that makes the linker script place it on a DMA-accessible memory */
-static uint8_t usb23_dma_buf[1024];
+static __nocache uint8_t input_buf[1024];
 
 static const struct device *const cdc0_dev = DEVICE_DT_GET(DT_NODELABEL(cdc0));
 
@@ -65,7 +65,7 @@ int main(void)
 	cdc_raw_set_write_callback(cdc0_dev, &my_write_callback);
 
 	/* Allocate a buffer with existing data */
-	buf = net_buf_alloc_with_data(&app_buf_pool, usb23_dma_buf, sizeof(usb23_dma_buf),
+	buf = net_buf_alloc_with_data(&app_buf_pool, input_buf, sizeof(input_buf),
 		Z_TIMEOUT_NO_WAIT);
 	if (buf == NULL) {
 		LOG_ERR("failed creating a pre-allocated buffer");
