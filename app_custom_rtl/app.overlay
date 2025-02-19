@@ -38,6 +38,6 @@
 	remote-endpoint-label = "example0_ep_out";
 };
 
-&uvc0 {
+&uvc {
 	status = "okay";
 };
