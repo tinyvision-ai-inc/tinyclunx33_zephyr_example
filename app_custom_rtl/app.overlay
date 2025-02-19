@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <riscv/tinyvision/tinyclunx33_add_litex_i2c.dtsi>
+#include <riscv/tinyvision/tinyclunx33_add_opencores_i2c.dtsi>
 #include <riscv/tinyvision/tinyclunx33_add_uvcmanager0.dtsi>
 
 / {
