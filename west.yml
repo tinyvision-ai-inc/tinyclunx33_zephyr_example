@@ -6,7 +6,7 @@ manifest:
 
     - name: zephyr
       url: https://github.com/tinyvision-ai-inc/zephyr
-      revision: usb3-and-video-stats
+      revision: pr-usb3-wip
       import:
         name-allowlist:
           - zephyr
