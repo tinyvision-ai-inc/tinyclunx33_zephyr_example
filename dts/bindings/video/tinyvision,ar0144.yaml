@@ -1,0 +1,12 @@
+# Copyright (c) 2025 tinyVision.ai Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+description: OnSemi AR0144 sensor
+
+compatible: "tinyvision,ar0144"
+
+include: base.yaml
+
+child-binding:
+  child-binding:
+    include: video-interfaces.yaml
