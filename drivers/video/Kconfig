@@ -4,5 +4,6 @@
 if VIDEO
 
 rsource "Kconfig.example"
+rsource "Kconfig.ar0144"
 
 endif

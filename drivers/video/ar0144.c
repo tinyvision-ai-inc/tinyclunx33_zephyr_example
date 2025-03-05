@@ -123,9 +123,9 @@ static int ar0144_init(const struct device *dev)
 	return ar0144_set_fmt(dev, VIDEO_EP_OUT, &fmt);
 }
 
-#define EXAMPLE_INIT(n)                                                                            \
-	struct ar0144_data ar0144_data_##n;                                                      \
-	DEVICE_DT_INST_DEFINE(n, &ar0144_init, NULL, &ar0144_data_##n, NULL, POST_KERNEL,        \
+#define AR0144_INIT(n)                                                                             \
+	struct ar0144_data ar0144_data_##n;                                                        \
+	DEVICE_DT_INST_DEFINE(n, &ar0144_init, NULL, &ar0144_data_##n, NULL, POST_KERNEL,          \
 			      CONFIG_VIDEO_INIT_PRIORITY, &ar0144_driver_api);
 
-DT_INST_FOREACH_STATUS_OKAY(EXAMPLE_INIT)
+DT_INST_FOREACH_STATUS_OKAY(AR0144_INIT)
