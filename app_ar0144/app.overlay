@@ -6,6 +6,7 @@
 
 #include <riscv/tinyvision/tinyclunx33_add_opencores_i2c.dtsi>
 #include <riscv/tinyvision/tinyclunx33_add_uvcmanager0.dtsi>
+#include <riscv/tinyvision/tinyclunx33_add_debayer0.dtsi>
 
 / {
 	chosen {
@@ -19,7 +20,7 @@
 
 			port {
 				ar01440_ep_out: endpoint {
-					remote-endpoint-label = "uvcmanager0_ep_in";
+					remote-endpoint-label = "debayer0_ep_in";
 				};
 			};
 		};
@@ -33,23 +34,19 @@
 	num-out-endpoints = <2>;
 	status = "okay";
 
-	cdc_acm_uart0: cdc-acm-uart {
-		compatible = "zephyr,cdc-acm-uart";
-	};
-
 	uvc0: uvc0 {
 		compatible = "zephyr,uvc-device";
 	};
-};
-
-&zephyr_udc0 {
-	status = "okay";
 };
 
 &uvcmanager0 {
 	status = "okay";
 };
 
-&uvcmanager0_ep_in {
+&debayer0 {
+	status = "okay";
+};
+
+&debayer0_ep_in {
 	remote-endpoint-label = "ar01440_ep_out";
 };

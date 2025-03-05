@@ -98,6 +98,12 @@ static int ar0144_enum_frmival(const struct device *dev, enum video_endpoint_id 
 	return 0;
 }
 
+static int ar0144_set_ctrl(const struct device *dev, unsigned int cid, void *value)
+{
+	LOG_DBG("CID %u requested", cid);
+	return 0;
+}
+
 static int ar0144_set_stream(const struct device *dev, bool enable)
 {
 	return 0;
@@ -109,6 +115,7 @@ static const struct video_driver_api ar0144_driver_api = {
 	.get_caps = ar0144_get_caps,
 	.get_frmival = ar0144_get_frmival,
 	.enum_frmival = ar0144_enum_frmival,
+	.set_ctrl = ar0144_set_ctrl,
 	.set_stream = ar0144_set_stream,
 };
 

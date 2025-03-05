@@ -9,10 +9,13 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
 const bool I2C_WRITE = true;
 const bool I2C_READ = false;
-const uint8_t I2C_MUX_ADDR = 0x71;  
-const uint8_t I2C_GPIO_EXPANDER_ADDR = 0x21;  
+const uint8_t I2C_MUX_ADDR = 0x71;
+const uint8_t I2C_GPIO_EXPANDER_ADDR = 0x21;
 const uint8_t I2C_AR0144_ADDR = 0x18;
 
+const struct device *i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
+const struct device *uvc0_dev = DEVICE_DT_GET(DT_NODELABEL(uvc0));
+const struct device *uvcmanager0_dev = DEVICE_DT_GET(DT_NODELABEL(uvcmanager0));
 
 struct i2c_write_cmd {
     uint8_t addr;
@@ -108,8 +111,9 @@ const struct cam_write_cmd cam_start[] = {
 
 int main(void)
 {
+	int ret;
+
 	LOG_INF("Hello World");
-    const struct device *i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
 
     if (!device_is_ready(i2c_dev)) {
         LOG_ERR("I2C device not ready");
@@ -137,6 +141,13 @@ int main(void)
         cam_write(i2c_dev, cam_start[i].addr, cam_start[i].value);
     }
 
-    
+	uvc_set_video_dev(uvc0_dev, uvcmanager0_dev);
+
+	ret = app_usb_init();
+	if (ret != 0) {
+		LOG_ERR("Failed to initialize USB");
+		return ret;
+	}
+
 	return 0;
 }
