@@ -1,8 +1,8 @@
 USB IMX219 Example
 ##################
 
-**Note: this cannot be used with the latest RTL versions, see app_imx219_dual instead, even if you
-have a single camera.**
+**Note: this only works with the latest versions (``1.x.x``, not ``0.xx``). Make sure you use the
+correct RTL release when testing**
 
 
 Building
@@ -12,28 +12,32 @@ Visit the
 `tinyclunx33_sdk <https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk/>`_
 documentation for a complete guide.
 
-Example using the Rev2 SoM, Rev2 Devkit, FPGA release `rtl_0_10`:
+Example using the Rev2 SoM, Rev2 Devkit, FPGA release `rtl_1_0_2`:
 
 .. code-block:: console
 
-   west build --board tinyclunx33@rev2/rtl_0_10 --shield tinyclunx33_devkit_rev2
+   west build --board tinyclunx33@rev2/rtl_1_0_2 --shield tinyclunx33_devkit_rev2
    west flash
 
 
 Crafting
 ========
 
-This uses the USB Video class (UVC) to display the image feed from an IMX219 camera over MIPI.
+This uses the USB Video class (UVC) to display the image feed from two IMX219 cameras over MIPI.
 
-* Attach an `IMX219 module <https://tinyvision.ai/products/imx219-raspberry-pi-camera-v2>`_
-  to an FPC cable
+* Attach a first `IMX219 module <https://tinyvision.ai/products/imx219-raspberry-pi-camera-v2>`_
+  to an FPC cable 1.
 
-* Attach a
-  `Syzygy dual <https://tinyvision.ai/products/syzygy-adapters>`_ or
-  `Syzygy in/out <https://tinyvision.ai/products/syzygy-mipi-to-usb-input-output-adapter>`_
-  adapter to the other end.
+* Attach a first `IMX219 module <https://tinyvision.ai/products/imx219-raspberry-pi-camera-v2>`_
+  to an FPC cable 2.
 
-* Plug the adapter to the devkit on the right side: ``Expansion #2`` for Rev1, ``Pod A`` for Rev2
+* Attach a `Syzygy dual <https://tinyvision.ai/products/syzygy-adapters>`_
+  adapter to the other end of the cable 1.
+
+* Attach the same `Syzygy dual <https://tinyvision.ai/products/syzygy-adapters>`_
+  adapter to the other end of the cable 2.
+
+* Plug the adapter to the devkit, on the right side: ``Pod A`` (for Rev2)
 
 
 Running
