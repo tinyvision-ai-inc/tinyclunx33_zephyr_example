@@ -20,7 +20,7 @@
 
 			port {
 				ar01440_ep_out: endpoint {
-					remote-endpoint-label = "debayer0_ep_in";
+					remote-endpoint-label = "uvcmanager0_ep_in";
 				};
 			};
 		};
@@ -43,10 +43,6 @@
 	status = "okay";
 };
 
-&debayer0 {
-	status = "okay";
-};
-
-&debayer0_ep_in {
+&uvcmanager0_ep_in {
 	remote-endpoint-label = "ar01440_ep_out";
 };
