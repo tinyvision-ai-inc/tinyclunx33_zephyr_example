@@ -22,12 +22,7 @@ struct ar0144_data {
 };
 
 struct video_format_cap fmts[] = {
-	{.pixelformat = VIDEO_PIX_FMT_RGGB8,
-	 .width_min = 1280,
-	 .width_max = 1280,
-	 .height_min = 800,
-	 .height_max = 800},
-	{.pixelformat = VIDEO_PIX_FMT_BGGR8,
+	{.pixelformat = VIDEO_PIX_FMT_Y800,
 	 .width_min = 1280,
 	 .width_max = 1280,
 	 .height_min = 800,
@@ -128,7 +123,7 @@ static int ar0144_init(const struct device *dev)
 {
 	struct video_format fmt;
 
-	fmt.pixelformat = VIDEO_PIX_FMT_RGGB8;
+	fmt.pixelformat = VIDEO_PIX_FMT_Y800;
 	fmt.width = 1280;
 	fmt.height = 800;
 	fmt.pitch = fmt.width;
