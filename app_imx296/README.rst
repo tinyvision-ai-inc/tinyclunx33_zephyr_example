@@ -1,3 +1,5 @@
+THE IMX296 DRIVER IS NOT FUNCTIONAL YET
+
 USB IMX296 Example
 ##################
 
