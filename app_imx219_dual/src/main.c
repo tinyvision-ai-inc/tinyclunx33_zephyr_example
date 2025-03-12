@@ -7,8 +7,8 @@ LOG_MODULE_REGISTER(app_main, LOG_LEVEL_INF);
 
 static const struct device *const uvc0_dev = DEVICE_DT_GET(DT_NODELABEL(uvc0));
 static const struct device *const uvc1_dev = DEVICE_DT_GET(DT_NODELABEL(uvc1));
-static const struct device *const source0_dev = DEVICE_DT_GET(DT_NODELABEL(uvcmanager0));
-static const struct device *const source1_dev = DEVICE_DT_GET(DT_NODELABEL(uvcmanager1));
+static const struct device *const uvcmanager0_dev = DEVICE_DT_GET(DT_NODELABEL(uvcmanager0));
+static const struct device *const uvcmanager1_dev = DEVICE_DT_GET(DT_NODELABEL(uvcmanager1));
 
 int app_usb_init(void);
 
@@ -16,8 +16,10 @@ int main(void)
 {
 	int ret;
 
-	uvc_set_video_dev(uvc0_dev, source0_dev);
-	uvc_set_video_dev(uvc1_dev, source1_dev);
+	uvc_set_video_dev(uvc0_dev, uvcmanager0_dev);
+	uvc_set_video_dev(uvc1_dev, uvcmanager1_dev);
+
+	LOG_INF("Initializing USB and associated USB classes");
 
 	ret = app_usb_init();
 	if (ret != 0) {
@@ -25,17 +27,21 @@ int main(void)
 		return ret;
 	}
 
-	ret = video_set_ctrl(source0_dev, VIDEO_CID_GAIN, (void *)555);
+	LOG_INF("Started USB, configuring video stream default values");
+
+	ret = video_set_ctrl(uvcmanager0_dev, VIDEO_CID_GAIN, (void *)555);
 	if (ret != 0) {
-		LOG_ERR("Cannot set the default gain for %s", source0_dev->name);
+		LOG_ERR("Cannot set the default gain for %s", uvcmanager0_dev->name);
 		return ret;
 	}
 
-	ret = video_set_ctrl(source1_dev, VIDEO_CID_GAIN, (void *)555);
+	ret = video_set_ctrl(uvcmanager1_dev, VIDEO_CID_GAIN, (void *)555);
 	if (ret != 0) {
-		LOG_ERR("Cannot set the default gain for %s", source0_dev->name);
+		LOG_ERR("Cannot set the default gain for %s", uvcmanager0_dev->name);
 		return ret;
 	}
+
+	LOG_INF("Done, exiting main() and letting the USB stack run");
 
 	return 0;
 }
