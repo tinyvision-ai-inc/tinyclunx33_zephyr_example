@@ -4,4 +4,4 @@
 zephyr_library()
 
 zephyr_library_sources_ifdef(CONFIG_VIDEO_TINYVISION_EXAMPLE example.c)
-zephyr_library_sources_ifdef(CONFIG_VIDEO_AR0144 ar0144.c)
+#zephyr_library_sources_ifdef(CONFIG_VIDEO_AR0144 ar0144.c)
