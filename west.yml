@@ -12,5 +12,5 @@ manifest:
           - zephyr
 
     - name: tinyvision_zephyr_sdk
-      url: https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk
-      revision: d97ec1e1cce003e76ac7d866de701576a63b2d84
+      url: https://github.com/tinyvision-ai-inc/priv-modalai
+      revision: ba6ef913b21a80da04e4bb957a91a193bc846375
