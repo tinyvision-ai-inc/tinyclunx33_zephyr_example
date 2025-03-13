@@ -7,24 +7,48 @@
 #include <riscv/tinyvision/tinyclunx33_add_opencores_i2c.dtsi>
 #include <riscv/tinyvision/tinyclunx33_add_uvcmanager0.dtsi>
 #include <riscv/tinyvision/tinyclunx33_add_debayer0.dtsi>
+#include <riscv/tinyvision/tinyclunx33_add_uvcmanager1.dtsi>
+#include <riscv/tinyvision/tinyclunx33_add_debayer1.dtsi>
+#include <zephyr/dt-bindings/gpio/gpio.h>
 
 / {
 	chosen {
 		zephyr,shell-uart = &uart0;
 	};
 
-	soc {
-		ar01440: ar0144@b1200000 {
-			compatible = "tinyvision,ar0144";
-			reg = <0xb1200000 0x100000>;
+	aliases {
+        led0 = &led0;
+		led1 = &led1;
+		sw1 = &sw1;
+		sw2 = &sw2;
+    };
 
-			port {
-				ar01440_ep_out: endpoint {
-					remote-endpoint-label = "uvcmanager0_ep_in";
-				};
-			};
+	leds {
+		compatible = "gpio-leds";
+		led0: led_0 {
+			gpios = <&pi4ioe5v6416 14 GPIO_ACTIVE_HIGH>;
+			label = "Red LED";
+		};
+		led1: led_1 {
+			gpios = <&pi4ioe5v6416 15 GPIO_ACTIVE_HIGH>;
+			label = "Green LED";
 		};
 	};
+
+	buttons {
+		compatible = "gpio-keys";
+		sw1: sw1 {
+			gpios = < &pi4ioe5v6416 12 (GPIO_PULL_UP | GPIO_ACTIVE_HIGH) >;
+			label = "sw1";
+			
+		};
+		sw2: sw2 {
+			gpios = < &pi4ioe5v6416 13 (GPIO_PULL_UP | GPIO_ACTIVE_HIGH) >;
+			label = "sw2";
+			
+		};
+	};
+
 };
 
 /* USB interfaces */
@@ -33,8 +57,12 @@
 	num-in-endpoints = <4>;
 	num-out-endpoints = <2>;
 	status = "okay";
-
+	
 	uvc0: uvc0 {
+		compatible = "zephyr,uvc-device";
+	};
+	
+	uvc1: uvc1 {
 		compatible = "zephyr,uvc-device";
 	};
 };
@@ -45,4 +73,67 @@
 
 &uvcmanager0_ep_in {
 	remote-endpoint-label = "ar01440_ep_out";
+};
+
+&uvcmanager1 {
+	status = "okay";
+};
+
+&uvcmanager1_ep_in {
+	remote-endpoint-label = "ar01441_ep_out";
+};
+
+
+&i2c0 {
+	status = "okay";
+	pi4ioe5v6416: pi4ioe5v6416@21 {
+		compatible = "nxp,pcal6416a";
+		reg = <0x21>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		ngpios = <16>;
+	};
+
+	pca9542a@71 {
+		compatible = "nxp,pca9542a";
+		reg = <0x71>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		
+		ch@1 {
+			compatible = "nxp,pca9542a-channel";
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			
+			ar0144: ar0144@18 {
+				compatible = "onnn,ar0144";
+				reg = <0x18>;
+				port {
+					ar01440_ep_out: endpoint {
+						remote-endpoint-label = "uvcmanager0_ep_in";
+					};
+				};
+				zephyr,deferred-init;
+			};
+		};
+
+		ch@0 {
+			compatible = "nxp,pca9542a-channel";
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			
+			ar0144_2: ar0144_2@18 {
+				compatible = "onnn,ar0144";
+				reg = <0x18>;
+				port {
+					ar01441_ep_out: endpoint {
+						remote-endpoint-label = "uvcmanager1_ep_in";
+					};
+				};
+				zephyr,deferred-init;
+			};
+		};
+	};
 };

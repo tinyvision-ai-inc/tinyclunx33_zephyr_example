@@ -6,11 +6,11 @@ manifest:
 
     - name: zephyr
       url: https://github.com/tinyvision-ai-inc/zephyr
-      revision: pr-usb3-wip
+      revision: feature/video_pix_fmt_y800
       import:
         name-allowlist:
           - zephyr
 
     - name: tinyvision_zephyr_sdk
       url: https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk
-      revision: 797f92540425e42994b04c707b244457d0907963
+      revision: d97ec1e1cce003e76ac7d866de701576a63b2d84
