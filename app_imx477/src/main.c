@@ -10,8 +10,6 @@ static const struct device *const uvcmanager0_dev = DEVICE_DT_GET(DT_NODELABEL(u
 
 int app_usb_init(void);
 
-#warning The IMX296 driver not functional yet
-
 int main(void)
 {
 	int ret;
