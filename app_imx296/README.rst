@@ -14,11 +14,11 @@ Visit the
 `tinyclunx33_sdk <https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk/>`_
 documentation for a complete guide.
 
-Example using the Rev2 SoM, Rev2 Devkit, FPGA release `rtl_1_0_2`:
+Example using the Rev2 SoM, Rev2 Devkit, FPGA release `rtl_1_0`:
 
 .. code-block:: console
 
-   west build --board tinyclunx33@rev2/rtl_1_0_2 --shield tinyclunx33_devkit_rev2
+   west build --board tinyclunx33@rev2/rtl_1_0 --shield tinyclunx33_devkit_rev2
    west flash
 
 

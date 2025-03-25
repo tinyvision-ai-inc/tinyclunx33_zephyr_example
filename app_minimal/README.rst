@@ -18,7 +18,7 @@ Example using the Rev2 SoM, Rev2 Devkit, FPGA releasea `rtl_0_10`:
 
 .. code-block:: console
 
-   west build --board tinyclunx33@rev2/rtl_1_0_2 --shield tinyclunx33_devkit_rev2
+   west build --board tinyclunx33@rev2/rtl_1_0 --shield tinyclunx33_devkit_rev2
    west flash
 
 

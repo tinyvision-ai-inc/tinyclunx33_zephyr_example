@@ -1,4 +1,3 @@
-# Copyright (c) 2023-2024 tinyVision.ai Inc.
 # SPDX-License-Identifier: Apache-2.0
 
 manifest:
@@ -13,4 +12,4 @@ manifest:
 
     - name: tinyvision_zephyr_sdk
       url: https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk
-      revision: d66cf6e29c95fb0052d7090b43e5978709e2a04a
+      revision: 76f41624d0d0c8e500ba49a1af013715415abbac
