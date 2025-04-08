@@ -98,12 +98,7 @@ static int example_enum_frmival(const struct device *dev, enum video_endpoint_id
 	return 0;
 }
 
-static int example_stream_start(const struct device *dev)
-{
-	return 0;
-}
-
-static int example_stream_stop(const struct device *dev)
+static int example_set_stream(const struct device *dev, bool on)
 {
 	return 0;
 }
@@ -114,8 +109,7 @@ static const struct video_driver_api example_driver_api = {
 	.get_caps = example_get_caps,
 	.get_frmival = example_get_frmival,
 	.enum_frmival = example_enum_frmival,
-	.stream_start = example_stream_start,
-	.stream_stop = example_stream_stop,
+	.set_stream = example_set_stream,
 };
 
 static int example_init(const struct device *dev)

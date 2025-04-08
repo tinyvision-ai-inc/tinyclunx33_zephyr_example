@@ -94,17 +94,17 @@ int app_usb_init(void)
 	usbd_device_set_code_triple(&usbd, USBD_SPEED_SS, USB_BCC_MISCELLANEOUS, 0x02, 0x01);
 
 	LOG_DBG("Adding USB classes");
-	ret = usbd_register_all_classes(&usbd, USBD_SPEED_FS, 1);
+	ret = usbd_register_all_classes(&usbd, USBD_SPEED_FS, 1, NULL);
 	if (ret < 0) {
 		LOG_ERR("failed to register FullSpeed USB clases");
 		return ret;
 	}
-	ret = usbd_register_all_classes(&usbd, USBD_SPEED_HS, 1);
+	ret = usbd_register_all_classes(&usbd, USBD_SPEED_HS, 1, NULL);
 	if (ret < 0) {
 		LOG_ERR("failed to register HighSpeed USB clases");
 		return ret;
 	}
-	ret = usbd_register_all_classes(&usbd, USBD_SPEED_SS, 1);
+	ret = usbd_register_all_classes(&usbd, USBD_SPEED_SS, 1, NULL);
 	if (ret < 0) {
 		LOG_ERR("failed to register SuperSpeed USB clases");
 		return ret;
@@ -126,5 +126,3 @@ int app_usb_init(void)
 
 	return 0;
 }
-
-SYS_INIT(app_usb_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);

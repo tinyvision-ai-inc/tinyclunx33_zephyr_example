@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2024 tinyVision.ai Inc.
+ * Copyright (c) 2024-2025 tinyVision.ai Inc.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <riscv/tinyvision/tinyclunx33_add_opencores_i2c.dtsi>
+#include <riscv/tinyvision/tinyclunx33_add_csi0.dtsi>
+#include <riscv/tinyvision/tinyclunx33_add_debayer0.dtsi>
 #include <riscv/tinyvision/tinyclunx33_add_uvcmanager0.dtsi>
 
 / {
@@ -27,7 +29,13 @@
 };
 
 &zephyr_udc0 {
+	num-in-endpoints = <2>;
+	num-out-endpoints = <1>;
 	status = "okay";
+
+	uvc0: uvc0 {
+		compatible = "zephyr,uvc-device";
+	};
 };
 
 &uvcmanager0 {
@@ -36,8 +44,4 @@
 
 &uvcmanager0_ep_in {
 	remote-endpoint-label = "example0_ep_out";
-};
-
-&uvc {
-	status = "okay";
 };
