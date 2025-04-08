@@ -39,6 +39,7 @@
 };
 
 &uvcmanager0 {
+	usb-endpoint = <0x81>;
 	status = "okay";
 };
 
