@@ -25,11 +25,11 @@ west sdk install -t riscv64-zephyr-elf
 git clone --depth 1 git@github.com:tinyvision-ai-inc/zephyr_private
 
 # Build the firmware, guessing the most likely user setup
-west build --pristine --board tinyclunx33@rev2/rtl_0_9 --shield tinyclunx33_devkit_rev2 tinyclunx33_zephyr_example/app_imx219
+west build --pristine --board tinyclunx33@rev2/rtl_0_9 tinyclunx33_zephyr_example/app_imx219
 mv build/zephyr/zephyr.bin tinyclunx33_zephyr_example_app_imx219_rtl_0_9_on_$(date +%Y_%m_%d).bin
-west build --pristine --board tinyclunx33@rev2/rtl_0_10 --shield tinyclunx33_devkit_rev2 tinyclunx33_zephyr_example/app_imx219
+west build --pristine --board tinyclunx33@rev2/rtl_0_10 tinyclunx33_zephyr_example/app_imx219
 mv build/zephyr/zephyr.bin tinyclunx33_zephyr_example_app_imx219_rtl_0_10_on_$(date +%Y_%m_%d).bin
-west build --pristine --board tinyclunx33@rev2/rtl_0_11 --shield tinyclunx33_devkit_rev2 tinyclunx33_zephyr_example/app_imx219
+west build --pristine --board tinyclunx33@rev2/rtl_0_11 tinyclunx33_zephyr_example/app_imx219
 mv build/zephyr/zephyr.bin tinyclunx33_zephyr_example_app_imx219_rtl_0_11_on_$(date +%Y_%m_%d).bin
-west build --pristine --board tinyclunx33@rev2/rtl_1_0 --shield tinyclunx33_devkit_rev2 tinyclunx33_zephyr_example/app_imx219_dual
+west build --pristine --board tinyclunx33@rev2/rtl_1_0 tinyclunx33_zephyr_example/app_imx219_dual
 mv build/zephyr/zephyr.bin tinyclunx33_zephyr_example_app_imx219_dual_rtl_1_0_on_$(date +%Y_%m_%d).bin
