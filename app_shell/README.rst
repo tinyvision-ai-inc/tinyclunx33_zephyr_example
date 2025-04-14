@@ -1,10 +1,6 @@
 USB Shell Example
 #################
 
-Tested with:
-`rtl_0_10 <https://github.com/tinyvision-ai-inc/tinyclunx33_public/releases/tag/v0.10`_
-
-
 Building
 ========
 
@@ -12,11 +8,11 @@ Visit the
 `tinyvision_zephyr_sdk <https://github.com/tinyvision-ai-inc/tinyvision_zephyr_sdk>`_
 documentation for a complete guide.
 
-Example using the Rev2 SoM, Rev2 Devkit, FPGA releasea `rtl_0_10`:
+Example using the Rev2 SoM, Rev2 Devkit, FPGA release `rtl_1_0`:
 
 .. code-block:: console
 
-   west build --board tinyclunx33@rev2/rtl_0_10 --shield tinyclunx33_devkit_rev2
+   west build --board tinyclunx33@rev2/rtl_1_0
    west flash
 
 

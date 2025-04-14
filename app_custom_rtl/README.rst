@@ -13,11 +13,11 @@ Visit the
 `tinyclunx33_sdk <https://github.com/tinyvision-ai-inc/zephyr_internal/tree/tinyclunx33_sdk>`_
 documentation for a complete guide.
 
-Example using the Rev2 SoM, Rev2 Devkit:
+Example using the Rev2 SoM and Devkit:
 
 .. code-block:: console
 
-   west build --board tinyclunx33@rev2/custom --shield tinyclunx33_devkit_rev2
+   west build --board tinyclunx33@rev2/rtl_1_0
    west flash
 
 
