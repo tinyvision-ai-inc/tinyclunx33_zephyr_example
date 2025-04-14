@@ -4,6 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include <riscv/tinyvision/from_csi0_to_stats0.dtsi>
+#include <riscv/tinyvision/from_csi0_to_debayer0.dtsi>
+#include <riscv/tinyvision/from_debayer0_to_uvcmanager0.dtsi>
+
+#include <riscv/tinyvision/add_i2c0_pll.dtsi>
+#include <riscv/tinyvision/add_i2c0_multiplexer.dtsi>
+
 / {
 	chosen {
 		zephyr,shell-uart = &cdc_acm_uart0;
@@ -27,27 +34,15 @@
 	};
 };
 
-/* I2C multiplexer */
-
-&i2c0 {
-	status = "okay";
-
-	pca9542a@71 {
-		compatible = "nxp,pca9542a";
-		reg = <0x71>;
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		i2c0ch0: ch@0 {
-			compatible = "nxp,pca9542a-channel";
-			reg = <0>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-		};
-	};
+&uvcmanager0 {
+	usb-endpoint = <0x83>;
 };
 
-/* Stream 0 config */
+/* Camera 0 config */
+
+&csi0_ep_in {
+	remote-endpoint-label = "imx219ch0_ep_out";
+};
 
 &i2c0ch0 {
 	imx219ch0@10 {
@@ -56,22 +51,8 @@
 
 		port {
 			imx219ch0_ep_out: endpoint {
-				remote-endpoint-label = "debayer0_ep_in";
+				remote-endpoint-label = "csi0_ep_in";
 			};
 		};
 	};
-};
-
-&debayer0 {
-	status = "okay";
-};
-
-&debayer0_ep_in {
-	remote-endpoint-label = "imx219ch0_ep_out";
-};
-
-&uvcmanager0 {
-	/* From UVC's "bEndpointAddress" in "lsusb -v -d 1209:0001" output */
-	usb-endpoint = <0x83>;
-	status = "okay";
 };

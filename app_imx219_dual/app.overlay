@@ -1,8 +1,21 @@
 /*
- * Copyright (c) 2024 tinyVision.ai Inc.
+ * Copyright (c) 2024-2025 tinyVision.ai Inc.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
+#include <riscv/tinyvision/from_csi0_to_stats0.dtsi>
+#include <riscv/tinyvision/from_csi0_to_debayer0.dtsi>
+#include <riscv/tinyvision/from_debayer0_to_uvcmanager0.dtsi>
+
+#include <riscv/tinyvision/from_csi1_to_stats1.dtsi>
+#include <riscv/tinyvision/from_csi1_to_debayer1.dtsi>
+#include <riscv/tinyvision/from_debayer1_to_uvcmanager1.dtsi>
+
+#include <riscv/tinyvision/add_i2c0_pll.dtsi>
+#include <riscv/tinyvision/add_i2c0_multiplexer.dtsi>
+
+/* Global settings */
 
 / {
 	chosen {
@@ -32,34 +45,19 @@
 	};
 };
 
-/* I2C multiplexer */
-
-&i2c0 {
-	status = "okay";
-
-	pca9542a@71 {
-		compatible = "nxp,pca9542a";
-		reg = <0x71>;
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		i2c0ch0: ch@0 {
-			compatible = "nxp,pca9542a-channel";
-			reg = <0>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-		};
-
-		i2c0ch1: ch@1 {
-			compatible = "nxp,pca9542a-channel";
-			reg = <1>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-		};
-	};
+&uvcmanager0 {
+	usb-endpoint = <0x83>;
 };
 
-/* Stream 0 config */
+&uvcmanager1 {
+	usb-endpoint = <0x84>;
+};
+
+/* Camera 0 config */
+
+&csi0_ep_in {
+	remote-endpoint-label = "imx219ch0_ep_out";
+};
 
 &i2c0ch0 {
 	imx219ch0@10 {
@@ -68,27 +66,17 @@
 
 		port {
 			imx219ch0_ep_out: endpoint {
-				remote-endpoint-label = "debayer0_ep_in";
+				remote-endpoint-label = "csi0_ep_in";
 			};
 		};
 	};
 };
 
-&debayer0 {
-	status = "okay";
-};
+/* Camera 1 config */
 
-&debayer0_ep_in {
-	remote-endpoint-label = "imx219ch0_ep_out";
+&csi1_ep_in {
+	remote-endpoint-label = "imx219ch1_ep_out";
 };
-
-&uvcmanager0 {
-	/* From UVC's "bEndpointAddress" in "lsusb -v -d 1209:0001" output */
-	usb-endpoint = <0x83>;
-	status = "okay";
-};
-
-/* Stream 1 config */
 
 &i2c0ch1 {
 	imx219ch1@10 {
@@ -97,22 +85,8 @@
 
 		port {
 			imx219ch1_ep_out: endpoint {
-				remote-endpoint-label = "debayer1_ep_in";
+				remote-endpoint-label = "csi1_ep_in";
 			};
 		};
 	};
-};
-
-&debayer1 {
-	status = "okay";
-};
-
-&debayer1_ep_in {
-	remote-endpoint-label = "imx219ch1_ep_out";
-};
-
-&uvcmanager1 {
-	/* From UVC's "bEndpointAddress" in "lsusb -v -d 1209:0001" output */
-	usb-endpoint = <0x84>;
-	status = "okay";
 };

@@ -4,28 +4,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <riscv/tinyvision/tinyclunx33_add_opencores_i2c.dtsi>
-#include <riscv/tinyvision/tinyclunx33_add_csi0.dtsi>
-#include <riscv/tinyvision/tinyclunx33_add_debayer0.dtsi>
-#include <riscv/tinyvision/tinyclunx33_add_uvcmanager0.dtsi>
+#include <riscv/tinyvision/add_uvcmanager0.dtsi>
+
+#include <riscv/tinyvision/add_i2c0_pll.dtsi>
 
 / {
 	chosen {
 		zephyr,shell-uart = &uart0;
 	};
+};
 
-	soc {
-		example0: example@b1200000 {
-			compatible = "tinyvision,example";
-			reg = <0xb1200000 0x100000>;
+/* USB interfaces */
 
-			port {
-				example0_ep_out: endpoint {
-					remote-endpoint-label = "uvcmanager0_ep_in";
-				};
-			};
-		};
-	};
+&uvcmanager0 {
+	usb-endpoint = <0x81>;
 };
 
 &zephyr_udc0 {
@@ -40,9 +32,25 @@
 
 &uvcmanager0 {
 	usb-endpoint = <0x81>;
-	status = "okay";
 };
+
+/* Camera 0 config */
 
 &uvcmanager0_ep_in {
 	remote-endpoint-label = "example0_ep_out";
+};
+
+/ {
+	soc {
+		example0: example@b1200000 {
+			compatible = "tinyvision,example";
+			reg = <0xb1200000 0x100000>;
+
+			port {
+				example0_ep_out: endpoint {
+					remote-endpoint-label = "uvcmanager0_ep_in";
+				};
+			};
+		};
+	};
 };

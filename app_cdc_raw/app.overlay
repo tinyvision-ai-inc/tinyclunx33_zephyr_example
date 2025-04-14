@@ -4,6 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include <riscv/tinyvision/add_i2c0_pll.dtsi>
+
+/* USB interfaces */
+
 &zephyr_udc0 {
 	num-in-endpoints = <3>;
 	num-out-endpoints = <2>;
