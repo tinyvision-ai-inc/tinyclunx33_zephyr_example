@@ -80,7 +80,7 @@ static int example_get_frmival(const struct device *dev, enum video_endpoint_id 
 	}
 
 	frmival->numerator = 1;
-	frmival->denominator = 60;
+	frmival->denominator = 1000;
 	return 0;
 }
 
@@ -93,7 +93,7 @@ static int example_enum_frmival(const struct device *dev, enum video_endpoint_id
 
 	fie->type = VIDEO_FRMIVAL_TYPE_DISCRETE;
 	fie->discrete.numerator = 1;
-	fie->discrete.denominator = 60;
+	fie->discrete.denominator = 1000;
 	fie->index++;
 	return 0;
 }
