@@ -11,48 +11,47 @@
 #include <riscv/tinyvision/add_i2c0_pll.dtsi>
 #include <riscv/tinyvision/add_i2c0_multiplexer.dtsi>
 
-/ {
-	chosen {
-		zephyr,shell-uart = &cdc_acm_uart0;
-	};
-};
-
 /* USB interfaces */
 
 &zephyr_udc0 {
-	num-in-endpoints = <4>;
-	num-out-endpoints = <2>;
+	num-in-endpoints = <2>;
+	num-out-endpoints = <1>;
 	status = "okay";
-
-	cdc_acm_uart0: cdc-acm-uart {
-		compatible = "zephyr,cdc-acm-uart";
-	};
 
 	uvc0: uvc0 {
 		compatible = "zephyr,uvc-device";
-		interface-name = "tinyCLUNX33-PodA-Top";
+		interface-name = "tinyCLUNX33-IMX219";
 	};
 };
 
 &uvcmanager0 {
-	usb-endpoint = <0x83>;
+	usb-endpoint = <0x81>;
 };
 
 /* Camera 0 config */
 
-&csi0_ep_in {
-	remote-endpoint-label = "imx219ch0_ep_out";
+/ {
+	imx219_input_clock: imx219-input-clock {
+		compatible = "fixed-clock";
+		clock-frequency = <24000000>;
+		#clock-cells = <0>;
+	};
 };
 
 &i2c0ch0 {
-	imx219ch0@10 {
+	imx219@10 {
 		compatible = "sony,imx219";
 		reg = <0x10>;
+		clocks = <&imx219_input_clock>;
 
 		port {
-			imx219ch0_ep_out: endpoint {
+			imx219_ep_out: endpoint {
 				remote-endpoint-label = "csi0_ep_in";
 			};
 		};
 	};
+};
+
+&csi0_ep_in {
+	remote-endpoint-label = "imx219_ep_out";
 };

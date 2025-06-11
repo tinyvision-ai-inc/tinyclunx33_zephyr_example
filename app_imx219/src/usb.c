@@ -96,17 +96,17 @@ int app_usb_init(void)
 	LOG_DBG("Adding USB classes");
 	ret = usbd_register_all_classes(&usbd, USBD_SPEED_FS, 1, NULL);
 	if (ret < 0) {
-		LOG_ERR("failed to register FullSpeed USB clases");
+		LOG_ERR("failed to register FullSpeed USB classes");
 		return ret;
 	}
 	ret = usbd_register_all_classes(&usbd, USBD_SPEED_HS, 1, NULL);
 	if (ret < 0) {
-		LOG_ERR("failed to register HighSpeed USB clases");
+		LOG_ERR("failed to register HighSpeed USB classes");
 		return ret;
 	}
 	ret = usbd_register_all_classes(&usbd, USBD_SPEED_SS, 1, NULL);
 	if (ret < 0) {
-		LOG_ERR("failed to register SuperSpeed USB clases");
+		LOG_ERR("failed to register SuperSpeed USB classes");
 		return ret;
 	}
 

@@ -18,6 +18,8 @@ static __nocache uint8_t input_buf[1024];
 
 static const struct device *const cdc0_dev = DEVICE_DT_GET(DT_NODELABEL(cdc0));
 
+int app_usb_init(void);
+
 static int my_read_callback(const struct device *dev, struct net_buf *buf, int err)
 {
 	if (err) {
@@ -75,6 +77,14 @@ int main(void)
 
 	LOG_DBG("%s: buf=%p data=%p size=%u len=%u", __func__, buf, buf->data, buf->size, buf->len);
 
+	/* Start the USB stack */
+	ret = app_usb_init();
+	if (ret != 0) {
+		LOG_ERR("Failed to initialize USB");
+		return ret;
+	}
+
+	/* Wait that the user reacts */
 	while (!cdc_raw_is_ready(cdc0_dev)) {
 		k_sleep(K_MSEC(10));
 	}
