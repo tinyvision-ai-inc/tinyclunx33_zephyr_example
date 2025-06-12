@@ -61,7 +61,7 @@ static int my_write_callback(const struct device *dev, struct net_buf *buf, int 
 int main(void)
 {
 	struct net_buf *buf;
-	int err = 0;
+	int ret = 0;
 
 	/* Glue with the CDC RAW so that we can react to read and write completion. */
 	cdc_raw_set_read_callback(cdc0_dev, &my_read_callback);
@@ -91,10 +91,10 @@ int main(void)
 
 	/* Enqueue a first read request, the rest happens from the callbacks */
 	LOG_DBG("%s: buf=%p data=%p size=%u len=%u", __func__, buf, buf->data, buf->size, buf->len);
-	err = cdc_raw_read(cdc0_dev, buf);
-	if (err) {
+	ret = cdc_raw_read(cdc0_dev, buf);
+	if (ret != 0) {
 		LOG_ERR("reading from CDC inteface");
-		return err;
+		return ret;
 	}
 
 	k_sleep(K_FOREVER);
