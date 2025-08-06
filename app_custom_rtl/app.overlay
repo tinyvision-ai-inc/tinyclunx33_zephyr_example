@@ -5,6 +5,8 @@
  */
 
 #include <riscv/tinyvision/add_uvcmanager0.dtsi>
+#include <riscv/tinyvision/from_csi0_to_stats0.dtsi>
+#include <riscv/tinyvision/from_csi0_to_uvcmanager0.dtsi>
 
 #include <riscv/tinyvision/add_i2c0_pll.dtsi>
 
@@ -15,10 +17,6 @@
 };
 
 /* USB interfaces */
-
-&uvcmanager0 {
-	usb-endpoint = <0x81>;
-};
 
 &zephyr_udc0 {
 	num-in-endpoints = <2>;
@@ -36,7 +34,7 @@
 
 /* Camera 0 config */
 
-&uvcmanager0_ep_in {
+&csi0_ep_in {
 	remote-endpoint-label = "example0_ep_out";
 };
 
